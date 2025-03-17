@@ -1,4 +1,5 @@
 using System.Xml.Serialization;
+using PrtgAPI.Attributes;
 
 namespace PrtgAPI
 {
@@ -22,13 +23,17 @@ namespace PrtgAPI
         //[XmlEnum("3")]
         //SystemReset,
 
-        //[XmlEnum("4")]
-        //ProbeIPDenied,
+        /// <summary>
+        /// A remote probe whose IP has been blocked attempted to connect to the PRTG Core.
+        /// </summary>
+        [XmlEnum("4")]
+        ProbeIPDenied,
 
         /// <summary>
         /// A remote probe whose GID has been blocked attempted to connect to the PRTG Core.
         /// </summary>
         [XmlEnum("5")]
+        [XmlEnumAlternateName("15")] //Not documented in Paessler's status list, but there's no other GID item in the language files, so this seems to be a new identifier that shares the same purpose
         ProbeGidDenied,
 
         //[XmlEnum("6")]
