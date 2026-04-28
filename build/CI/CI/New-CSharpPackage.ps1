@@ -49,24 +49,21 @@ function New-CSharpPackage
     {
         $nugetArgs = @(
             "pack"
-            Join-Path $BuildFolder "src\PrtgAPI\PrtgAPI.csproj"
-            "-Exclude"
-            "**/*.tt;**/Resources/*.txt;PublicAPI.txt;*PrtgClient.Methods.xml;**/*.json"
-            "-outputdirectory"
+            Join-Path $BuildFolder "src\PrtgAPI\PrtgAPIv17.csproj"
+            "--include-symbols"
+            "--no-restore"
+            "--no-build"
+            "-c"
+            $Configuration
+            "--output"
             "$OutputFolder"
-            "-NoPackageAnalysis"
-            "-symbols"
-            "-SymbolPackageFormat"
-            "snupkg"
-            "-version"
-            $Version
-            "-properties"
-            "Configuration=$Configuration"
+            "/nologo"
+            "-p:EnableSourceLink=true;SymbolPackageFormat=snupkg"
         )
 
-        Install-CIDependency nuget
+        Install-CIDependency dotnet
 
-        $nuget = "nuget"
+        $nuget = "dotnet"
     }
 
     Write-Verbose "Executing command '$nuget $nugetArgs'"

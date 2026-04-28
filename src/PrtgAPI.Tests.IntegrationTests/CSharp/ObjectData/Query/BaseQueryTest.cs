@@ -37,14 +37,14 @@ namespace PrtgAPI.Tests.IntegrationTests.ObjectData.Query
 
             foreach (var result in preNormalResults)
             {
-                Assert.AreEqual(null, nullValidator(result), $"Property in object {result} in pre-validator was not null");
+                Assert.IsNull(nullValidator(result), $"Property in object {result} in pre-validator was not null");
             }
 
             var queryResults = queryFunc(client.QuerySensors()).ToList();
 
             foreach (var result in queryResults)
             {
-                Assert.AreEqual(null, nullValidator(result), $"Property in object {result} in query validator was not null");
+                Assert.IsNull(nullValidator(result), $"Property in object {result} in query validator was not null");
             }
 
             queryResultValidator(queryResults);
@@ -53,7 +53,7 @@ namespace PrtgAPI.Tests.IntegrationTests.ObjectData.Query
 
             foreach (var result in postNormalResults)
             {
-                Assert.AreEqual(null, nullValidator(result), $"Property in object {result} in post-validator was not null");
+                Assert.IsNull(nullValidator(result), $"Property in object {result} in post-validator was not null");
             }
         }
 

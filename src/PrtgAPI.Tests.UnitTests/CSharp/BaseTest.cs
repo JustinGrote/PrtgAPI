@@ -29,6 +29,14 @@ namespace PrtgAPI.Tests.UnitTests
             return Initialize_Client(new ReadOnlyResponse(response));
         }
 
+        // Public for use in PowerShell tests to create a client with a custom server name
+        public static PrtgClient Initialize_Client_WithServer(string server, IWebResponse response)
+        {
+            var webClient = new MockWebClient(response);
+            var client = new PrtgClient(server, "username", "12345678", AuthMode.PassHash, webClient);
+            return client;
+        }
+
         internal static PrtgClient Initialize_Client(IWebResponse response, RequestVersion version)
         {
             var client = Initialize_Client(response);

@@ -1,16 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup Condition="$(IsWindows)">
-    <!-- Undefine targets specified in PrtgAPI.Common.props.
-
-         Cannot specify TargetFrameworks for this project as this causes issues with dotnet pack
-    -->
-    <TargetFrameworks Condition="'$(TargetFrameworks)' != ''"></TargetFrameworks>
-
-    <!-- If we are not Windows, the default netcoreapp TargetFrameworks value will be left as is (to ensure we can compile).
-         However, the code in this project will not actually be usable.
-    -->
-    <TargetFramework>net452</TargetFramework>
+  <PropertyGroup>
+    <TargetFramework Condition="'$(TargetFramework)' == ''">netstandard2.0</TargetFramework>
+    <LangVersion>13.0</LangVersion>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
   <Import Project="..\..\..\build\Common.props" />

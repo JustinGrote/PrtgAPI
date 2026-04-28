@@ -389,13 +389,13 @@ Describe "Appveyor" {
             TestPackageContents $false @(
                 @{Type = "File"; Path = "[Content_Types].xml"}
                 @{Type = "File"; Path = "_rels\blah.txt"}
-                @{Type = "File"; Path = "lib\net452\PrtgAPI.dll"}
-                @{Type = "File"; Path = "lib\net452\PrtgAPI.xml"}
+                @{Type = "File"; Path = "lib\netstandard2.0\PrtgAPI.dll"}
+                @{Type = "File"; Path = "lib\netstandard2.0\PrtgAPI.xml"}
                 @{Type = "File"; Path = "package\foo\bar.txt"}
                 @{Type = "File"; Path = "PrtgAPI.nuspec"}
                 @{Type = "Folder"; Path = "_rels"}
                 @{Type = "Folder"; Path = "lib"}
-                @{Type = "Folder"; Path = "lib\net452"}
+                @{Type = "Folder"; Path = "lib\netstandard2.0"}
                 @{Type = "Folder"; Path = "package"}
                 @{Type = "Folder"; Path = "package\foo"}
             )
@@ -425,8 +425,8 @@ Describe "Appveyor" {
             TestPackageContents $true @(
                 @{Type = "File"; Path = "[Content_Types].xml"}
                 @{Type = "File"; Path = "_rels\blah.txt"}
-                @{Type = "File"; Path = "lib\net452\PrtgAPI.dll"}
-                @{Type = "File"; Path = "lib\net452\PrtgAPI.xml"}
+                @{Type = "File"; Path = "lib\netstandard2.0\PrtgAPI.dll"}
+                @{Type = "File"; Path = "lib\netstandard2.0\PrtgAPI.xml"}
                 @{Type = "File"; Path = "lib\netstandard2.0\PrtgAPI.dll"}
                 @{Type = "File"; Path = "lib\netstandard2.0\PrtgAPI.xml"}
                 @{Type = "File"; Path = "package\foo\bar.txt"}
@@ -434,7 +434,7 @@ Describe "Appveyor" {
                 @{Type = "File"; Path = "PrtgAPI.nuspec"}
                 @{Type = "Folder"; Path = "_rels"}
                 @{Type = "Folder"; Path = "lib"}
-                @{Type = "Folder"; Path = "lib\net452"}
+                @{Type = "Folder"; Path = "lib\netstandard2.0"}
                 @{Type = "Folder"; Path = "lib\netstandard2.0"}
                 @{Type = "Folder"; Path = "package"}
                 @{Type = "Folder"; Path = "package\foo"}
@@ -446,8 +446,8 @@ Describe "Appveyor" {
             $missing = @(
                 "'[Content_Types].xml'"
                 "'_rels\*'"
-                "'lib\net452\PrtgAPI.dll'"
-                "'lib\net452\PrtgAPI.xml'"
+                "'lib\netstandard2.0\PrtgAPI.dll'"
+                "'lib\netstandard2.0\PrtgAPI.xml'"
                 "'package\*'"
                 "'PrtgAPI.nuspec'"
             )
@@ -458,13 +458,13 @@ Describe "Appveyor" {
         It "is missing one file" {
             { TestPackageContents $false @(
                 @{Type = "File"; Path = "_rels\blah.txt"}
-                @{Type = "File"; Path = "lib\net452\PrtgAPI.dll"}
-                @{Type = "File"; Path = "lib\net452\PrtgAPI.xml"}
+                @{Type = "File"; Path = "lib\netstandard2.0\PrtgAPI.dll"}
+                @{Type = "File"; Path = "lib\netstandard2.0\PrtgAPI.xml"}
                 @{Type = "File"; Path = "package\foo\bar.txt"}
                 @{Type = "File"; Path = "PrtgAPI.nuspec"}
                 @{Type = "Folder"; Path = "_rels"}
                 @{Type = "Folder"; Path = "lib"}
-                @{Type = "Folder"; Path = "lib\net452"}
+                @{Type = "Folder"; Path = "lib\netstandard2.0"}
                 @{Type = "Folder"; Path = "package"}
                 @{Type = "Folder"; Path = "package\foo"}
             ) } | Should Throw "Package is missing required items:`n'[Content_Types].xml'"
@@ -474,12 +474,12 @@ Describe "Appveyor" {
             { TestPackageContents $false @(
                 @{Type = "File"; Path = "[Content_Types].xml"}
                 @{Type = "File"; Path = "_rels\blah.txt"}
-                @{Type = "File"; Path = "lib\net452\PrtgAPI.dll"}
-                @{Type = "File"; Path = "lib\net452\PrtgAPI.xml"}
+                @{Type = "File"; Path = "lib\netstandard2.0\PrtgAPI.dll"}
+                @{Type = "File"; Path = "lib\netstandard2.0\PrtgAPI.xml"}
                 @{Type = "File"; Path = "PrtgAPI.nuspec"}
                 @{Type = "Folder"; Path = "_rels"}
                 @{Type = "Folder"; Path = "lib"}
-                @{Type = "Folder"; Path = "lib\net452"}
+                @{Type = "Folder"; Path = "lib\netstandard2.0"}
             ) } | Should Throw "Package is missing required items:`n'package\*'"
         }
     }

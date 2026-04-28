@@ -126,16 +126,18 @@ namespace PrtgAPI.PowerShell.Base
         {
             IEnumerable<TObject> records;
 
+            Func<IEnumerable<TObject>> op = () => ForEachClient(() => GetObjects(parameters));
+
             if (ProgressManager.GetRecordsWithVariableProgress)
-                records = GetResultsWithVariableProgress(() => GetObjects(parameters));
+                records = GetResultsWithVariableProgress(op);
             else if (ProgressManager.GetResultsWithProgress)
-                records = GetResultsWithProgress(() => GetObjects(parameters));
+                records = GetResultsWithProgress(op);
             else
             {
                 if (StreamProvider.StreamResults || StreamProvider.ForceStream)
-                    records = StreamProvider.StreamResultsWithProgress(parameters, Count, () => GetObjects(parameters));
+                    records = StreamProvider.StreamResultsWithProgress(parameters, Count, () => ForEachClient(() => GetObjects(parameters)));
                 else
-                    records = GetObjects(parameters);
+                    records = op();
             }
 
             records = PostProcessRecords(records);

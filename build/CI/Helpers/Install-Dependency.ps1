@@ -259,7 +259,7 @@ function Install-Chocolatey
             {
                 WriteDependencyResult $PackageName "Chocolatey" $existingVersion "Skipped"
             }
-            
+
             return
         }
     }
@@ -409,7 +409,7 @@ function Install-PSPackageProvider
         {
             Write-LogInfo "`tInstalling '$PackageName' package provider"
         }
-        
+
         $result = Install-PackageProvider @packageArgs
 
         if(!$Log)
@@ -463,7 +463,7 @@ function Get-ChocolateyCommand
         $bin = Join-Path $root "bin"
         $exe = Join-Path $bin $CommandName
 
-        if(Test-Path $exe) 
+        if (Test-Path $exe)
         {
             return $exe
         }
@@ -510,11 +510,6 @@ function Install-NETFrameworkTargetingPack
 
         switch($PackageName)
         {
-            "net452" {
-                $url = "https://download.microsoft.com/download/4/3/B/43B61315-B2CE-4F5B-9E32-34CCA07B2F0E/NDP452-KB2901951-x86-x64-DevPack.exe"
-                $hash = "E37AA3BC40DAF9B4625F8CE44C1568A4"
-            }
-
             "net461" {
                 $url = "https://download.microsoft.com/download/F/1/D/F1DEB8DB-D277-4EF9-9F48-3A65D4D8F965/NDP461-DevPack-KB3105179-ENU.exe"
                 $hash = "C0FD653B0FB4A712DF609E9A52767CAE"

@@ -2204,10 +2204,10 @@ namespace PrtgAPI.Tests.IntegrationTests.ObjectData.Query
                 l => l.DateTime > Time.TwoDaysAgo && l.Id == sensor.Id,
                 c => c.StreamLogs(sensor.Id, endDate: Time.TwoDaysAgo, serial: true)
             );
-        } 
+        }
 
-            #endregion
-        
+        #endregion
+
         [TestMethod]
         [IntegrationTest]
         public void Data_QueryFilter_LogProperties_Name() => ExecuteLog(
@@ -2349,7 +2349,7 @@ namespace PrtgAPI.Tests.IntegrationTests.ObjectData.Query
         }
 
         #endregion
-        
+
         private void ExecuteSensor(
             Expression<Func<Sensor, bool>> predicate, Property property, object value, FilterOperator op = FilterOperator.Equals,
             Func<Sensor, bool> ignoreFilterPredicate = null, bool filterThrows = false, bool filterUnsupported = false, bool retry = false)
@@ -2605,7 +2605,7 @@ namespace PrtgAPI.Tests.IntegrationTests.ObjectData.Query
             }
 
             if (distinct)
-                filterObjects = filterObjects.DistinctBy(o => o, comparer).ToList();
+                filterObjects = PrtgAPIHelpers.DistinctBy(filterObjects, o => o, comparer).ToList();
 
             var removedFilterObjects = originalFiltered.Except(filterObjects).ToList();
 
@@ -2615,8 +2615,8 @@ namespace PrtgAPI.Tests.IntegrationTests.ObjectData.Query
                 AssertEx.IsTrue(queryObjects.Count > 0, "Query objects did not return any results");
             }
 
-            var extraFiltered = filterObjects.ExceptBy(queryObjects, o => o, comparer).ToList();
-            var extraQuery = queryObjects.ExceptBy(filterObjects, o => o, comparer).ToList();
+            var extraFiltered = PrtgAPIHelpers.ExceptBy(filterObjects, queryObjects, o => o, comparer).ToList();
+            var extraQuery = PrtgAPIHelpers.ExceptBy(queryObjects, filterObjects, o => o, comparer).ToList();
 
             if (removedFilterObjects.Count > 0)
             {
@@ -2665,8 +2665,8 @@ namespace PrtgAPI.Tests.IntegrationTests.ObjectData.Query
             if (lambda != null && str.Count > 0)
             {
                 builder.Append($". Expected: {filter.Value}{Environment.NewLine}{Environment.NewLine}Values of each object:{Environment.NewLine}");
-                
-                for(var i = 0; i < str.Count; i++)
+
+                for (var i = 0; i < str.Count; i++)
                 {
                     builder.Append($"{str[i].Name}: '{lambda(str[i])}'");
 

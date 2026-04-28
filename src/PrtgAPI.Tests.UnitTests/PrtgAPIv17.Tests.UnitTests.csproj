@@ -3,11 +3,12 @@
   <!-- Project Configuration -->
 
   <PropertyGroup>
-    <TargetFrameworks Condition="'$(TargetFrameworks)' == ''">netcoreapp2.1;net461</TargetFrameworks>
+    <TargetFramework Condition="'$(TargetFramework)' == ''">net10.0</TargetFramework>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
     <AssemblyName>PrtgAPI.Tests.UnitTests</AssemblyName>
     <RootNamespace>PrtgAPI.Tests.UnitTests</RootNamespace>
+    <LangVersion>13.0</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -26,29 +27,16 @@
   </ItemGroup>
 
   <!-- References -->
-  <!-- For PackageReference versions please see build\Common.props -->
-  
+  <!-- For PackageReference versions please see Directory.Packages.props -->
+
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="$(RoslynVersion)" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(TestSdkVersion)" />
-    <PackageReference Include="MSTest.TestAdapter" Version="$(TestAdapterVersion)" />
-    <PackageReference Include="MSTest.TestFramework" Version="$(TestFrameworkVersion)" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="MSTest.TestAdapter" />
+    <PackageReference Include="MSTest.TestFramework" />
+    <PackageReference Include="System.Management.Automation" PrivateAssets="all" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(FrameworkType)' == 'Full'">
-    <PackageReference Include="Microsoft.PowerShell.5.ReferenceAssemblies" Version="$(PowerShellReferenceAssembliesVersion)" />
-
-    <!-- Microsoft.CSharp is part of netcoreapp* SDK, so we only include it for fullclr -->
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Net.Http" />
-
-    <ProjectReference Include="..\Tools\PrtgAPI.CodeGenerator\PrtgAPIv17.CodeGenerator.csproj" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(FrameworkType)' == 'Core'">
-    <PackageReference Include="System.Management.Automation" Version="$(SystemManagementAutomationVersion)" />
-    <PackageReference Include="System.Net.Http" Version="$(SystemNetHttpVersion)" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\PrtgAPI\PrtgAPIv17.csproj" />

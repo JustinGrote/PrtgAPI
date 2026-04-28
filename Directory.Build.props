@@ -1,5 +1,5 @@
 ﻿<Project>
-  <Import Project="..\build\Version.props" />
+  <Import Project="build\Version.props" />
 
   <PropertyGroup>
     <!-- Project-->
@@ -44,6 +44,5 @@
   </PropertyGroup>
   <PropertyGroup>
     <UseArtifactsOutput>true</UseArtifactsOutput>
-    <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 </Project>

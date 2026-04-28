@@ -14,8 +14,6 @@ function Get-CIDependency
         @{ Name = "PowerShellGet";            PowerShell = $true;      MinimumVersion = "2.0.0" }
         @{ Name = "Pester";                   PowerShell = $true;      MinimumVersion = "3.4.5";     Version = "3.4.6"; SkipPublisherCheck = $true }
         @{ Name = "PSScriptAnalyzer";         PowerShell = $true }
-        @{ Name = "net452";                   TargetingPack = $true;   Version = "4.5.2" }
-        @{ Name = "net461";                   TargetingPack = $true ;  Version = "4.6.1" }
     )
 
     if($PSEdition -eq "Core" -and !$IsWindows)

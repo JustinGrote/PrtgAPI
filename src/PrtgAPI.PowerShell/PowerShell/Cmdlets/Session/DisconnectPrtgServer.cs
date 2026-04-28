@@ -4,7 +4,7 @@ namespace PrtgAPI.PowerShell.Cmdlets
 {
     /// <summary>
     /// <para type="synopsis">Invalidates a <see cref="PrtgClient"/> previously created with Connect-PrtgServer.</para>
-    /// 
+    ///
     /// <para type="description">The Disconnect-PrtgServer cmdlet invalidates a PrtgClient previously created
     /// with Connect-PrtgServer. As PRTG uses a stateless REST API, it is not necessary to call
     /// Disconnect-PrtgServer when you have finished making requests unless you are developing a script,
@@ -12,7 +12,7 @@ namespace PrtgAPI.PowerShell.Cmdlets
     /// in the current session. This can be circumvented by specifying the -Force parameter when establishing
     /// the connection. For more information, see Connect-PrtgServer.</para>
     /// <para type="description">If Disconnect-PrtgServer is called when you are not connected to a PRTG Server, this cmdlet does nothing.</para>
-    /// 
+    ///
     /// <example>
     ///     <code>C:\> Disconnect-PrtgServer</code>
     ///     <para>Disconnect from the current PRTG Server</para>
@@ -26,11 +26,27 @@ namespace PrtgAPI.PowerShell.Cmdlets
     public class DisconnectPrtgServer : PSCmdlet
     {
         /// <summary>
+        /// <para type="description">Specifies one or more server URLs to disconnect from. If not specified, disconnects from all servers.</para>
+        /// </summary>
+        [Parameter(Mandatory = false, Position = 0, ValueFromPipeline = true)]
+        public string[] Server { get; set; }
+
+        /// <summary>
         /// Performs record-by-record processing functionality for the cmdlet.
         /// </summary>
         protected override void ProcessRecord()
         {
-            PrtgSessionState.Client = null;
+            if (Server != null && Server.Length > 0)
+            {
+                foreach (var server in Server)
+                {
+                    PrtgSessionState.ClientManager.RemoveClient(server);
+                }
+            }
+            else
+            {
+                PrtgSessionState.ClientManager.Clear();
+            }
         }
     }
 }

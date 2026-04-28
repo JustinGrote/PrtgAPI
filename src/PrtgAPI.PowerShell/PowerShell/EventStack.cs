@@ -8,6 +8,7 @@ namespace PrtgAPI.PowerShell
     class EventStack<TEventArgs> where TEventArgs : EventArgs
     {
         Stack<Action<object, TEventArgs>> stack = new Stack<Action<object, TEventArgs>>();
+        private readonly object syncRoot = new object();
 
         private Func<EventHandler<TEventArgs>> getHandler;
         private Action<Action<object, TEventArgs>> addEvent;
@@ -22,41 +23,55 @@ namespace PrtgAPI.PowerShell
 
         public void Push(Action<object, TEventArgs> item)
         {
-            var events = getHandler()?.GetInvocationList().Cast<EventHandler<TEventArgs>>().ToList();
-
-            if (events != null)
+            lock (syncRoot)
             {
-                foreach (var e in events)
+                var events = getHandler()?.GetInvocationList().Cast<EventHandler<TEventArgs>>().ToList();
+
+                if (events != null)
                 {
-                    removeEvent(((Action<object, TEventArgs>) e.Target));
+                    foreach (var e in events)
+                    {
+                        removeEvent(((Action<object, TEventArgs>)e.Target));
 
-                    var events2 = getHandler()?.GetInvocationList().Cast<EventHandler<TEventArgs>>().ToList();
+                        var events2 = getHandler()?.GetInvocationList().Cast<EventHandler<TEventArgs>>().ToList();
 
-                    Debug.Assert(events2 == null, "Events still existed but they shouldn't have");
+                        Debug.Assert(events2 == null, "Events still existed but they shouldn't have");
+                    }
                 }
+
+                stack.Push(item);
+                addEvent(stack.Peek());
+
+                var events3 = getHandler()?.GetInvocationList().Cast<EventHandler<TEventArgs>>().ToList();
+
+                Debug.Assert(events3?.Count == 1);
             }
-
-            stack.Push(item);
-            addEvent(stack.Peek());
-
-            var events3 = getHandler()?.GetInvocationList().Cast<EventHandler<TEventArgs>>().ToList();
-
-            Debug.Assert(events3?.Count == 1);
         }
 
-        public int Count => stack.Count;
+        public int Count
+        {
+            get
+            {
+                lock (syncRoot)
+                    return stack.Count;
+            }
+        }
 
         public void Pop()
         {
-            removeEvent(stack.Pop());
+            lock (syncRoot)
+            {
+                removeEvent(stack.Pop());
 
-            if (stack.Any())
-                addEvent(stack.Peek());
+                if (stack.Any())
+                    addEvent(stack.Peek());
+            }
         }
 
         public Action<object, TEventArgs> Peek()
         {
-            return stack.Peek();
+            lock (syncRoot)
+                return stack.Peek();
         }
     }
 }

@@ -81,11 +81,6 @@ function Invoke-CIBuildCore
 
     Install-CIDependency dotnet
 
-    if(Test-IsWindows)
-    {
-        Install-CIDependency net452,net461
-    }
-
     Write-Verbose "Executing command 'dotnet $dotnetBuildArgs'"
 
     Invoke-Process {

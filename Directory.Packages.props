@@ -1,0 +1,20 @@
+<Project>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="2.10.0" />
+    <PackageVersion Include="Microsoft.CSharp" Version="4.5.0" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="1.0.0" />
+    <PackageVersion Include="Microsoft.TestPlatform.ObjectModel" Version="16.1.1" />
+    <PackageVersion Include="Microsoft.TestPlatform.Portable" Version="16.1.1" />
+    <PackageVersion Include="MSTest.TestAdapter" Version="3.6.4" />
+    <PackageVersion Include="MSTest.TestFramework" Version="3.6.4" />
+    <PackageVersion Include="PowerShellStandard.Library" Version="5.1.0" />
+    <PackageVersion Include="System.Management" Version="4.5.0" />
+    <PackageVersion Include="System.Management.Automation" Version="6.1.6" />
+    <PackageVersion Include="System.ServiceProcess.ServiceController" Version="4.5.0" />
+  </ItemGroup>
+</Project>

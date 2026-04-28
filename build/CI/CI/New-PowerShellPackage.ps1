@@ -28,13 +28,6 @@ function New-PowerShellPackage
         throw "Cannot build PowerShell package as PrtgAPI has not been compiled. Could not find file '$dll'."
     }
 
-    if($Configuration -eq "Release" -and $IsCore)
-    {
-        # When we're building Release, instead of copying the normal folder we copied two folders up so we
-        # have both the net452 and netstandard2.0 folders so we can merge them together
-        $OutputDir = Join-Path $OutputDir "..\.."
-    }
-
     $RepoManager.WithTempCopy(
         $OutputDir,
         {
@@ -46,49 +39,15 @@ function New-PowerShellPackage
 
             if($PowerShell)
             {
-                $modulePath = $tempPath
-
-                if($IsCore -and $Configuration -eq "Release")
-                {
-                    $modulePath = Join-Path $tempPath "net452\PrtgAPI"
-                }
-
-                New-PowerShellPackageInternal $modulePath
-            }            
+                New-PowerShellPackageInternal $tempPath
+            }
         }
     )
 }
 
 function Update-RootModule($tempPath, $configuration, $isCore)
 {
-    if($isCore -and $configuration -eq "Release")
-    {
-        $psd1Path = Join-Path $tempPath "net452\PrtgAPI\PrtgAPI.psd1"
-
-        $contents = gc $psd1Path
-
-        $newContents = $contents | foreach {
-            if($_ -eq "RootModule = 'PrtgAPI.PowerShell.dll'")
-            {
-                return @(
-                    "RootModule = if(`$PSEdition -eq 'Core')"
-                    "{"
-                    "    'coreclr\PrtgAPI.PowerShell.dll'"
-                    "}"
-                    "else # Desktop"
-                    "{"
-                    "    'fullclr\PrtgAPI.PowerShell.dll'"
-                    "}"
-                )
-            }
-            else
-            {
-                return $_
-            }
-        }
-
-        $newContents | Set-Content $psd1Path
-    }
+    # No-op: netstandard-only package layout no longer splits fullclr/coreclr binaries.
 }
 
 function New-RedistributablePackage($tempPath, $outputDir, $configuration, $isCore, $redist)
@@ -121,46 +80,6 @@ function New-RedistributablePackage($tempPath, $outputDir, $configuration, $isCo
 
 function Move-PowerShellAssemblies($tempPath, $outputDir, $configuration, $isCore)
 {
-    if($isCore -and $configuration -eq "Release")
-    {
-        $netstandardPrtgAPI = Join-Path $tempPath "netstandard2.0\PrtgAPI"
-        $netframeworkPrtgAPI = Join-Path $tempPath "net452\PrtgAPI"
-
-        $coreclr = Join-Path $netframeworkPrtgAPI "coreclr"
-        $fullclr = Join-Path $netframeworkPrtgAPI "fullclr"
-
-        $list = @(
-            "*.dll"
-            "*.json"
-            "*.xml"
-            "*.pdb"
-        )
-
-        $standardFiles = gci $netstandardPrtgAPI -Include $list -Exclude "*-Help.xml" -Recurse
-        $netframeworkFiles = gci $netframeworkPrtgAPI -Include $list -Exclude "*-Help.xml" -Recurse
-
-        if(!(Test-Path $coreclr))
-        {
-            New-Item $coreclr -ItemType Directory | Out-Null
-        }
-
-        if(!(Test-Path $fullclr))
-        {
-            New-Item $fullclr -ItemType Directory | Out-Null
-        }
-
-        $standardFiles | Move-Item -Destination $coreclr
-        $netframeworkFiles | Move-Item -Destination $fullclr
-
-        $prtgAPIOutputDir = Join-Path $outputDir "..\..\..\PrtgAPI\bin\Release\netstandard2.0" | Resolve-Path | select -expand path
-
-        $deps = Join-Path $prtgAPIOutputDir "PrtgAPI.deps.json"
-
-        $deps | Copy-Item -Destination $coreclr
-
-        return $netframeworkPrtgAPI
-    }
-
     return $tempPath
 }
 

@@ -278,7 +278,7 @@ namespace PrtgAPI.PowerShell.Cmdlets
         {
             var connect = new ConnectPrtgServer
             {
-                Server = server,
+                Server = new[] { server },
                 Credential = credential,
                 PassHash = true,
                 Force = true

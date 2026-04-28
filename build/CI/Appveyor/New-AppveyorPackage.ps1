@@ -122,8 +122,8 @@ function Test-CSharpPackageDefinition($config, $extractFolder)
 function Test-CSharpPackageContents($config, $extractFolder)
 {
     $required = @(
-        "lib\net452\PrtgAPI.dll"
-        "lib\net452\PrtgAPI.xml"
+        "lib\netstandard2.0\PrtgAPI.dll"
+        "lib\netstandard2.0\PrtgAPI.xml"
         "package\*"
         "_rels\*"
         "PrtgAPI.nuspec"
@@ -134,23 +134,16 @@ function Test-CSharpPackageContents($config, $extractFolder)
     {
         $required += "LICENSE"
 
-        if($env:CONFIGURATION -eq "Release")
-        {
-            $required += @(
-                "lib\netstandard2.0\PrtgAPI.dll"
-                "lib\netstandard2.0\PrtgAPI.xml"
-            )
-        }
-        else
+        if($env:CONFIGURATION -ne "Release")
         {
             $debugVersion = Get-DebugTargetFramework
 
             Write-LogInfo "`t`t`t`tUsing debug build '$debugVersion' for testing nupkg contents"
 
             $required = $required | foreach {
-                if($_ -like "*net452*")
+                if ($_ -like '*netstandard2.0*')
                 {
-                    $_ -replace "net452",$debugVersion
+                    $_ -replace "netstandard2.0",$debugVersion
                 }
                 else
                 {
@@ -815,7 +808,7 @@ function Test-RedistributablePackageContents($config, $extractFolder)
             "PrtgAPI.dll"
             "PrtgAPI.pdb"
             "PrtgAPI.xml"
-            
+
             "PrtgAPI.PowerShell.dll"
             "PrtgAPI.PowerShell.pdb"
             "PrtgAPI.PowerShell.xml"
@@ -854,7 +847,7 @@ function Move-AppveyorPackages($config, $suffix)
    if($env:APPVEYOR)
    {
         Write-LogInfo "`t`t`tMoving Appveyor artifacts"
-        
+
         if(!$suffix)
         {
             $suffix = ""
@@ -866,7 +859,7 @@ function Move-AppveyorPackages($config, $suffix)
     {
         Write-LogInfo "`t`t`t`tClearing repo (not running under Appveyor)"
         Clear-Repo
-    } 
+    }
 }
 
 function Clear-Repo

@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\..\Support\PowerShell\Build.ps1
+. $PSScriptRoot\..\..\..\Support\PowerShell\Build.ps1
 
 function Mock-PSStartProcess($exe, $expected, $legacy, $additionalArguments)
 {
@@ -68,7 +68,7 @@ Describe "Start-PrtgAPI" -Tag @("PowerShell", "Build") {
 
         InModuleScope "PrtgAPI.Build" {
             Mock "Get-ChildItem" {
-                return [System.IO.DirectoryInfo](Join-PathEx $root src PrtgAPI.PowerShell bin Debug netcoreapp2.1)
+                return [System.IO.DirectoryInfo](Join-PathEx $root src PrtgAPI.PowerShell bin Debug net10.0)
             }
 
             Mock "Test-Path" {
@@ -81,7 +81,7 @@ Describe "Start-PrtgAPI" -Tag @("PowerShell", "Build") {
         }
 
         WithWindows {
-            Mock-PSStartProcess "pwsh" (Join-PathEx PrtgAPI.PowerShell bin Debug netcoreapp2.1 PrtgAPI PrtgAPI.psd1) $false
+            Mock-PSStartProcess "pwsh" (Join-PathEx PrtgAPI.PowerShell bin Debug net10.0 PrtgAPI PrtgAPI.psd1) $false
         }   
     }
 
@@ -103,7 +103,7 @@ Describe "Start-PrtgAPI" -Tag @("PowerShell", "Build") {
         InModuleScope "PrtgAPI.Build" {
             Mock "Get-ChildItem" {
 
-                return [System.IO.DirectoryInfo](Join-PathEx $root src PrtgAPI.PowerShell bin Release netcoreapp2.1)
+                return [System.IO.DirectoryInfo](Join-PathEx $root src PrtgAPI.PowerShell bin Release net10.0)
             }
 
             Mock "Test-Path" {
@@ -115,7 +115,7 @@ Describe "Start-PrtgAPI" -Tag @("PowerShell", "Build") {
             } -ParameterFilter { $Name -eq "pwsh" }
         }
 
-        Mock-PSStartProcess "pwsh" (Join-PathEx PrtgAPI.PowerShell bin Release netcoreapp2.1 PrtgAPI PrtgAPI.psd1) $false @{
+        Mock-PSStartProcess "pwsh" (Join-PathEx PrtgAPI.PowerShell bin Release net10.0 PrtgAPI PrtgAPI.psd1) $false @{
             Configuration = "Release"
         }
     }
@@ -170,13 +170,13 @@ Describe "Start-PrtgAPI" -Tag @("PowerShell", "Build") {
         InModuleScope "PrtgAPI.Build" {
             Mock "Get-ChildItem" {
                 return @(
-                    [System.IO.DirectoryInfo](Join-PathEx $root PrtgAPI.PowerShell bin Debug netcoreapp2.1)
+                    [System.IO.DirectoryInfo](Join-PathEx $root PrtgAPI.PowerShell bin Debug net10.0)
                     [System.IO.DirectoryInfo](Join-PathEx $root PrtgAPI.PowerShell bin Debug netstandard2.0)
                 )
             }
         }
 
-        { Start-PrtgAPI } | Should Throw "Unable to determine which TargetFramework to use. Please specify one of netcoreapp2.1, netstandard2.0"
+        { Start-PrtgAPI } | Should Throw "Unable to determine which TargetFramework to use. Please specify one of net10.0, netstandard2.0"
     }
 
     It "specifies a target framework" {
@@ -185,7 +185,7 @@ Describe "Start-PrtgAPI" -Tag @("PowerShell", "Build") {
         InModuleScope "PrtgAPI.Build" {
             Mock "Get-ChildItem" {
                 return @(
-                    [System.IO.DirectoryInfo](Join-PathEx $root PrtgAPI.PowerShell bin Debug netcoreapp2.1)
+                    [System.IO.DirectoryInfo](Join-PathEx $root PrtgAPI.PowerShell bin Debug net10.0)
                     [System.IO.DirectoryInfo](Join-PathEx $root PrtgAPI.PowerShell bin Debug netstandard2.0)
                 )
             }
@@ -199,8 +199,8 @@ Describe "Start-PrtgAPI" -Tag @("PowerShell", "Build") {
             } -ParameterFilter { $Name -eq "pwsh" }
         }
 
-        Mock-PSStartProcess "pwsh" (Join-PathEx PrtgAPI.PowerShell bin Debug netcoreapp2.1 PrtgAPI PrtgAPI.psd1) $false @{
-            Target = "netcoreapp2.1"
+        Mock-PSStartProcess "pwsh" (Join-PathEx PrtgAPI.PowerShell bin Debug net10.0 PrtgAPI PrtgAPI.psd1) $false @{
+            Target = "net10.0"
         }
     }
 
@@ -211,7 +211,7 @@ Describe "Start-PrtgAPI" -Tag @("PowerShell", "Build") {
         InModuleScope "PrtgAPI.Build" {
             Mock "Get-ChildItem" {
                 return @(
-                    [System.IO.DirectoryInfo](Join-PathEx $root PrtgAPI.PowerShell bin Debug netcoreapp2.1)
+                    [System.IO.DirectoryInfo](Join-PathEx $root PrtgAPI.PowerShell bin Debug net10.0)
                     [System.IO.DirectoryInfo](Join-PathEx $root PrtgAPI.PowerShell bin Debug netstandard2.0)
                 )
             }
@@ -229,7 +229,7 @@ Describe "Start-PrtgAPI" -Tag @("PowerShell", "Build") {
             }
         }
 
-        { Start-PrtgAPI -Target banana } | Should Throw "Cannot start PrtgAPI: target framework 'banana' does not exist. Please ensure PrtgAPI has been compiled for the specified TargetFramework and Configuration. Known target frameworks: netcoreapp2.1, netstandard2.0."
+        { Start-PrtgAPI -Target banana } | Should Throw "Cannot start PrtgAPI: target framework 'banana' does not exist. Please ensure PrtgAPI has been compiled for the specified TargetFramework and Configuration. Known target frameworks: net10.0, netstandard2.0."
     }
 
     It "specifies an invalid target framework when no frameworks have been compiled" {
@@ -261,11 +261,11 @@ Describe "Start-PrtgAPI" -Tag @("PowerShell", "Build") {
         }
 
         Mock "Get-ChildItem" {
-            return [System.IO.DirectoryInfo](Join-PathEx $root PrtgAPI.PowerShell bin Debug netcoreapp2.1)
+            return [System.IO.DirectoryInfo](Join-PathEx $root PrtgAPI.PowerShell bin Debug net10.0)
         }.GetNewClosure() -ModuleName "PrtgAPI.Build"
 
         WithoutWindows {
-            $path = Join-Path $root (Join-PathEx PrtgAPI.PowerShell bin Debug netcoreapp2.1 PrtgAPI PrtgAPI.psd1)
+            $path = Join-Path $root (Join-PathEx PrtgAPI.PowerShell bin Debug net10.0 PrtgAPI PrtgAPI.psd1)
 
             Mock-ImportModule $path {
                 Start-PrtgAPI

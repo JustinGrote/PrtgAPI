@@ -4,12 +4,12 @@
 
   <PropertyGroup>
     <Description>PowerShell interface for PRTG Network Monitor</Description>
-    <!-- TargetFramework listed first will be debugged in Release mode -->
-    <TargetFrameworks Condition="'$(TargetFrameworks)' == ''">netstandard2.0;net452</TargetFrameworks>
+    <TargetFramework Condition="'$(TargetFramework)' == ''">netstandard2.0</TargetFramework>
     <OutputPath>bin\$(Configuration)\$(TargetFramework)\PrtgAPI\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <IntermediateOutputPath>$(BaseIntermediateOutputPath)\$(Configuration)\$(TargetFramework.ToLowerInvariant())\</IntermediateOutputPath>
     <IsPackable>false</IsPackable>
+    <LangVersion>13.0</LangVersion>
     <AssemblyName>PrtgAPI.PowerShell</AssemblyName>
     <RootNamespace>PrtgAPI.PowerShell</RootNamespace>
     <AssemblyTitle>PowerShell interface for PRTG Network Monitor</AssemblyTitle>
@@ -30,33 +30,20 @@
   </PropertyGroup>
 
   <!-- References -->
-  <!-- For PackageReference versions please see build\Common.props -->
+  <!-- For PackageReference versions please see Directory.Packages.props -->
 
   <ItemGroup>
     <ProjectReference Include="..\PrtgAPI\PrtgAPIv17.csproj" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(EnableSourceLink)' == 'true'">
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="$(SourceLinkVersion)" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="all" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(FrameworkType)' == 'Full'">
-    <Reference Include="Microsoft.CSharp" />
-    <PackageReference Include="Microsoft.PowerShell.5.ReferenceAssemblies" Version="$(PowerShellReferenceAssembliesVersion)" />
-    <PackageReference Include="XmlDoc2CmdletDoc" Version="$(XmlDoc2CmdletDocVersion)" PrivateAssets="all" />
-    <Reference Include="System.Net.Http" />
+  <ItemGroup>
+    <PackageReference Include="PowerShellStandard.Library" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CSharp" />
   </ItemGroup>
-
-  <ItemGroup Condition="'$(FrameworkType)' == 'Core' OR '$(FrameworkType)' == 'Standard'">
-    <PackageReference Include="PowerShellStandard.Library" Version="$(PowerShellStandardLibraryVersion)" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.CSharp" Version="$(MicrosoftCSharpVersion)" />
-  </ItemGroup>
-
-  <Target Name="ClearReferenceCopyLocalPaths" AfterTargets="ResolveReferences">
-    <ItemGroup>
-      <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)" Condition="'%(ReferenceCopyLocalPaths.NuGetPackageId)' == 'Microsoft.PowerShell.5.ReferenceAssemblies'" />
-    </ItemGroup>
-  </Target>
 
   <!-- Build -->
 

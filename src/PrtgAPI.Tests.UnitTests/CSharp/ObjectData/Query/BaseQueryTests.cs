@@ -147,9 +147,9 @@ namespace PrtgAPI.Tests.UnitTests.ObjectData.Query
                 if (s.Count > 0)
                 {
                     Assert.AreEqual(3, s.Count);
-                    Assert.AreEqual(null, s[0]);
-                    Assert.AreEqual(null, s[1]);
-                    Assert.AreEqual(null, s[2]);
+                    Assert.IsNull(s[0]);
+                    Assert.IsNull(s[1]);
+                    Assert.IsNull(s[2]);
                 }
                 else
                     Assert.AreEqual(0, s.Count);

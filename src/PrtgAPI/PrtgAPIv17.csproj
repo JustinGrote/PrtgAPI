@@ -4,8 +4,8 @@
   <!-- Project Configuration -->
 
   <PropertyGroup>
-    <!-- TargetFramework listed first will be debugged in Release mode -->
-    <TargetFrameworks Condition="'$(TargetFrameworks)' == ''">netstandard2.0;net452</TargetFrameworks>
+    <TargetFramework Condition="'$(TargetFramework)' == ''">netstandard2.0</TargetFramework>
+    <LangVersion>13.0</LangVersion>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\PrtgAPI.xml</DocumentationFile>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <AssemblyName>PrtgAPI</AssemblyName>
@@ -25,20 +25,16 @@
       <_Parameter1>PrtgAPI.Tests.UnitTests</_Parameter1>
     </AssemblyAttribute>
   </ItemGroup>
-  
+
   <!-- Common Definitions -->
 
   <Import Project="..\..\build\Common.props" />
 
   <!-- References -->
-  <!-- For PackageReference versions please see build\Common.props -->
-  
-  <ItemGroup Condition="'$(EnableSourceLink)' == 'true'">
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="$(SourceLinkVersion)" PrivateAssets="all" />
-  </ItemGroup>
+  <!-- For PackageReference versions please see Directory.Packages.props -->
 
-  <ItemGroup Condition="'$(FrameworkType)' == 'Full'">
-    <Reference Include="System.Net.Http" />
+  <ItemGroup Condition="'$(EnableSourceLink)' == 'true'">
+    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="all" />
   </ItemGroup>
 
   <!-- T4 Templates -->
@@ -117,4 +113,4 @@
     </Content>
   </ItemGroup>
 </Project>
-    
+

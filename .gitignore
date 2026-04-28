@@ -10,6 +10,8 @@ appveyor.local.json
 # Visual Studio #
 #################
 
+artifacts/
+
 # Build results
 [Bb]in/
 [Oo]bj/

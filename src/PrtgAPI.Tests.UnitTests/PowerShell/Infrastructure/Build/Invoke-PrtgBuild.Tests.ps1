@@ -21,9 +21,6 @@ Describe "Invoke-PrtgBuild" -Tag @("PowerShell", "Build") {
         Mock-StartProcess
         Mock-InstallReferenceAssemblies
 
-        $expected1 = Get-Net452
-        $expected2 = Get-Net461
-
         $expected3 = @(
             "dotnet"
             "build"
@@ -34,7 +31,7 @@ Describe "Invoke-PrtgBuild" -Tag @("PowerShell", "Build") {
             "-p:EnableSourceLink=true"
         )
 
-        Mock-InvokeProcess $expected1,$expected2,$expected3 {
+        Mock-InvokeProcess $expected3 {
             Invoke-PrtgBuild
         }
     }
@@ -87,9 +84,6 @@ Describe "Invoke-PrtgBuild" -Tag @("PowerShell", "Build") {
         Mock-StartProcess
         Mock-InstallReferenceAssemblies
 
-        $expected1 = Get-Net452
-        $expected2 = Get-Net461
-
         $expected3 = @(
             "dotnet"
             "build"
@@ -100,7 +94,7 @@ Describe "Invoke-PrtgBuild" -Tag @("PowerShell", "Build") {
             "-p:EnableSourceLink=true"
         )
 
-        Mock-InvokeProcess $expected1,$expected2,$expected3 {
+        Mock-InvokeProcess $expected3 {
             Invoke-PrtgBuild prtgapiv17
         }
     }
@@ -133,16 +127,13 @@ Describe "Invoke-PrtgBuild" -Tag @("PowerShell", "Build") {
     }
 
     It "executes MSBuild in debug mode on core" {
-        
+
         Mock-InstallDotnet -Windows
         Mock-StartProcess
         Mock-InstallReferenceAssemblies
 
-        $expected1 = Get-Net452
-        $expected2 = Get-Net461
-
         $root = Get-SolutionRoot
-        
+
         $expected4 = Join-Path $root "msbuild.binlog"
 
         $expected3 = @(
@@ -156,14 +147,14 @@ Describe "Invoke-PrtgBuild" -Tag @("PowerShell", "Build") {
             "/bl:$expected4"
         )
 
-        Mock-AllProcess $expected1,$expected2,$expected3,$expected4 {
+        Mock-AllProcess $expected3, $expected4 {
             Invoke-PrtgBuild -DebugMode
         }
     }
 
-    It "executes MSBuild in debug mode on desktop" {
+    It 'executes MSBuild in debug mode on desktop' {
         Mock Get-MSBuild {
-            return "C:\msbuild.exe"
+            return 'C:\msbuild.exe'
         } -ModuleName CI
 
         $root = Get-SolutionRoot
@@ -172,49 +163,46 @@ Describe "Invoke-PrtgBuild" -Tag @("PowerShell", "Build") {
 
         $expected1 = Get-NuGet
 
-        $expected3 = Join-Path $root "msbuild.binlog"
+        $expected3 = Join-Path $root 'msbuild.binlog'
 
         $expected2 = @(
-            "&"
-            "C:\msbuild.exe"
+            '&'
+            'C:\msbuild.exe'
             Join-PathEx (Get-SourceRoot) PrtgAPI PrtgAPI.csproj
-            "/verbosity:minimal"
-            "/p:Configuration=Debug"
+            '/verbosity:minimal'
+            '/p:Configuration=Debug'
             "/bl:$expected2"
         )
 
-        Mock-AllProcess $expected1,$expected2,$expected3 {
+        Mock-AllProcess $expected1, $expected2, $expected3 {
             Invoke-PrtgBuild prtgapi -Legacy -DebugMode
         }
     }
 
-    It "executes with Release build on core" {
+    It 'executes with Release build on core' {
 
         Mock-InstallDotnet -Windows
         Mock-StartProcess
         Mock-InstallReferenceAssemblies
 
-        $expected1 = Get-Net452
-        $expected2 = Get-Net461
-
         $expected3 = @(
-            "dotnet"
-            "build"
-            Join-Path (Get-SolutionRoot) "PrtgAPIv17.sln"
-            "-nologo"
-            "-c"
-            "Release"
-            "-p:EnableSourceLink=true"
+            'dotnet'
+            'build'
+            Join-Path (Get-SolutionRoot) 'PrtgAPIv17.sln'
+            '-nologo'
+            '-c'
+            'Release'
+            '-p:EnableSourceLink=true'
         )
 
-        Mock-InvokeProcess $expected1,$expected2,$expected3 {
+        Mock-InvokeProcess $expected3 {
             Invoke-PrtgBuild -Configuration Release
         }
     }
 
-    It "executes with Release build on desktop" {
+    It 'executes with Release build on desktop' {
         Mock Get-MSBuild {
-            return "C:\msbuild.exe"
+            return 'C:\msbuild.exe'
         } -ModuleName CI
 
         Mock-NuGet
@@ -222,40 +210,37 @@ Describe "Invoke-PrtgBuild" -Tag @("PowerShell", "Build") {
         $expected1 = Get-NuGet
 
         $expected2 = @(
-            "&"
-            "C:\msbuild.exe"
-            Join-Path (Get-SolutionRoot) "PrtgAPI.sln"
-            "/verbosity:minimal"
-            "/p:Configuration=Release"
+            '&'
+            'C:\msbuild.exe'
+            Join-Path (Get-SolutionRoot) 'PrtgAPI.sln'
+            '/verbosity:minimal'
+            '/p:Configuration=Release'
         )
 
-        Mock-InvokeProcess $expected1,$expected2 {
+        Mock-InvokeProcess $expected1, $expected2 {
             Invoke-PrtgBuild -Legacy -Configuration Release
         }
     }
 
-    It "processes additional arguments" {
+    It 'processes additional arguments' {
 
         Mock-InstallDotnet -Windows
         Mock-StartProcess
         Mock-InstallReferenceAssemblies
 
-        $expected1 = Get-Net452
-        $expected2 = Get-Net461
-
         $expected3 = @(
-            "dotnet"
-            "build"
-            Join-Path (Get-SolutionRoot) "PrtgAPIv17.sln"
-            "-nologo"
-            "-c"
-            "Debug"
-            "-p:EnableSourceLink=true"
-            "first"
-            "second"
+            'dotnet'
+            'build'
+            Join-Path (Get-SolutionRoot) 'PrtgAPIv17.sln'
+            '-nologo'
+            '-c'
+            'Debug'
+            '-p:EnableSourceLink=true'
+            'first'
+            'second'
         )
 
-        Mock-InvokeProcess $expected1,$expected2,$expected3 {
+        Mock-InvokeProcess $expected3 {
             Invoke-PrtgBuild -Args "first","second"
         }
     }

@@ -34,12 +34,14 @@ namespace PrtgAPI.PowerShell.Base
         {
             IEnumerable<T> records;
 
+            Func<IEnumerable<T>> op = () => ForEachClient(GetRecords);
+
             if (ProgressManager.GetRecordsWithVariableProgress)
-                records = GetResultsWithVariableProgress(GetRecords);
+                records = GetResultsWithVariableProgress(op);
             else if (ProgressManager.GetResultsWithProgress)
-                records = GetResultsWithProgress(GetRecords);
+                records = GetResultsWithProgress(op);
             else
-                records = GetRecords();
+                records = op();
 
             WriteList(records);
         }

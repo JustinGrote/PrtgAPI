@@ -87,7 +87,7 @@ Describe "Install-PrtgDependency" -Tag @("PowerShell", "Build") {
             } -ParameterFilter { $Path -eq "C:\chocolatey.exe" } -Verifiable
 
             Mock-Command "chocolatey"
-        }    
+        }
 
         Mock-InvokeProcess "choco upgrade chocolatey --limitoutput --no-progress -y" {
             Install-PrtgDependency chocolatey
@@ -207,7 +207,7 @@ Describe "Install-PrtgDependency" -Tag @("PowerShell", "Build") {
                 return
             } -Verifiable
 
-            Mock "Install-PackageEx" {                
+            Mock "Install-PackageEx" {
                 $Name | Should Be "Pester"
 
                 if($PSEdition -eq "Core" -and !$IsWindows)
@@ -218,7 +218,7 @@ Describe "Install-PrtgDependency" -Tag @("PowerShell", "Build") {
                 {
                     $Version | Should Be "3.4.6"
                 }
-                
+
                 $MinimumVersion | Should BeNullOrEmpty
             } -Verifiable
         }
@@ -244,41 +244,6 @@ Describe "Install-PrtgDependency" -Tag @("PowerShell", "Build") {
         Install-PrtgDependency PSScriptAnalyzer
 
         Assert-VerifiableMocks
-    }
-
-    It "installs .NET Framework 4.5.2 Targeting Pack" {
-
-        Mock-StartProcess
-
-        InModuleScope "CI" {
-            Mock "Test-Path" {
-                return $false
-            }
-
-            Mock "Invoke-WebRequest" {
-
-                $Uri | Should BeLike "*NDP452*"
-            }
-
-            Mock Test-CIIsWindows {
-                return $true
-            }
-
-            if($PSEdition -eq "Core" -and !$IsWindows)
-            {
-                Mock "Get-ProgramFiles" {
-                    return "/Program Files"
-                }
-            }
-        }
-
-        $temp = [IO.Path]::GetTempPath()
-
-        $expected = Get-Net452
-
-        WithExpected $expected {
-            Install-PrtgDependency net452
-        }
     }
 
     It "installs .NET Framework 4.6.1 Targeting Pack" {
@@ -332,7 +297,7 @@ Describe "Install-PrtgDependency" -Tag @("PowerShell", "Build") {
                 return $obj
             } -Verifiable
 
-            Mock "Install-PackageEx" {                
+            Mock "Install-PackageEx" {
                 throw "Should not have attempted to install package"
             }
         }
@@ -357,7 +322,6 @@ Describe "Install-PrtgDependency" -Tag @("PowerShell", "Build") {
             "PowerShellGet"
             "Pester"
             "PSScriptAnalyzer"
-            "net452"
             "net461"
         )
         $global:actual = @()

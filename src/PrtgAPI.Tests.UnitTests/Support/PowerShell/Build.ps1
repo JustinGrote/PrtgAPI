@@ -146,7 +146,7 @@ function global:EvaluateExpression($expr, $ie)
         $arguments = $null
     }
 
-    $command = EscapeString $command 
+    $command = EscapeString $command
     $arguments = EscapeString $arguments
 
     $command = & $ie "`"$command`""
@@ -480,7 +480,6 @@ function Mock-InstallReferenceAssemblies
             return $false
         } -ParameterFilter { $Path -like "*Reference Assemblies*" }
 
-        Mock "Invoke-WebRequest" {} -ParameterFilter { $Uri -like "*NDP452*" } -Verifiable
         Mock "Invoke-WebRequest" {} -ParameterFilter { $Uri -like "*NDP461*" } -Verifiable
 
         if($PSEdition -eq "Core" -and !$IsWindows)
@@ -490,19 +489,6 @@ function Mock-InstallReferenceAssemblies
             }
         }
     }
-}
-
-function Get-Net452
-{
-    $temp = [IO.Path]::GetTempPath()
-
-    $expected = @(
-        Join-Path $temp "NDP452-KB2901951-x86-x64-DevPack.exe"
-        "/quiet"
-        "/norestart"
-    )
-
-    return $expected
 }
 
 function Get-Net461

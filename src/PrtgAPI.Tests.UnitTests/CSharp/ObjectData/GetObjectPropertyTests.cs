@@ -235,7 +235,7 @@ namespace PrtgAPI.Tests.UnitTests.ObjectData
 
             T val = await getProperty(client);
 
-            Assert.AreEqual(expected, val);
+            Assert.AreEqual(expected, val?.ToString());
         }
     }
 }

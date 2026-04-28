@@ -14,12 +14,12 @@ namespace PrtgAPI.PowerShell.Cmdlets
 {
     /// <summary>
     /// <para type="synopsis">Retrieves the current session's <see cref="PrtgClient"/></para>
-    /// 
+    ///
     /// <para type="description">The Get-PrtgClient cmdlet allows you to access the <see cref="PrtgClient"/> of the current session
     /// previously created with a call to Connect-PrtgServer. This allows you to view/edit the properties of the <see cref="PrtgClient"/>
     /// previously defined in your call to Connect-PrtgServer, as well as access the raw C# PrtgAPI should you wish to bypass or access
     /// methods not in the PowerShell interface.</para>
-    /// 
+    ///
     /// <example>
     ///     <code>C:\> Get-PrtgClient</code>
     ///     <para>View the settings of the session's PrtgClient. If the session does not have a PrtgClient, the cmdlet returns null</para>
@@ -45,6 +45,12 @@ namespace PrtgAPI.PowerShell.Cmdlets
     public class GetPrtgClient : PSCmdlet
     {
         /// <summary>
+        /// <para type="description">Specifies one or more server URLs to retrieve clients for. If not specified, returns all connected clients.</para>
+        /// </summary>
+        [Parameter(Mandatory = false, Position = 0)]
+        public string[] Server { get; set; }
+
+        /// <summary>
         /// <para type="description">Displays diagnostic information to assist when raising a PrtgAPI issue.</para>
         /// </summary>
         [Parameter(Mandatory = false)]
@@ -58,7 +64,23 @@ namespace PrtgAPI.PowerShell.Cmdlets
             if (Diagnostic)
                 WriteDiagnostic();
             else
-                WriteObject(PrtgSessionState.Client);
+            {
+                if (Server != null && Server.Length > 0)
+                {
+                    var clients = PrtgSessionState.ClientManager.GetClients(Server).ToList();
+                    WriteObject(clients, true);
+                }
+                else
+                {
+                    var allClients = PrtgSessionState.ClientManager.AllClients.ToList();
+                    if (allClients.Count == 0)
+                        WriteObject(null);
+                    else if (allClients.Count == 1)
+                        WriteObject(allClients[0]);
+                    else
+                        WriteObject(allClients, true);
+                }
+            }
         }
 
         private void WriteDiagnostic()

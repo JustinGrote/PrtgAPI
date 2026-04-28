@@ -35,9 +35,6 @@ Describe "Simulate-PrtgCI" -Tag @("PowerShell", "Build") {
             Mock-StartProcess
             Mock-InstallReferenceAssemblies
 
-            $expected1 = Get-Net452
-            $expected2 = Get-Net461
-
             $root = Get-SolutionRoot
 
             $expected3 = @(
@@ -51,7 +48,7 @@ Describe "Simulate-PrtgCI" -Tag @("PowerShell", "Build") {
                 "--no-restore"
             )
 
-            Mock-InvokeProcess $expected1,$expected2,$expected3 {
+            Mock-InvokeProcess $expected3 {
                 Simulate-PrtgCI -Appveyor -Task Build
             }
         }
@@ -107,7 +104,7 @@ Describe "Simulate-PrtgCI" -Tag @("PowerShell", "Build") {
                     if($Path -match ".+net4$($ch)*")
                     {
                         # GetPowerShellOutputDir
-                        return [System.IO.DirectoryInfo](Join-PathEx $env:APPVEYOR_BUILD_FOLDER PrtgAPI.PowerShell bin $env:CONFIGURATION netcoreapp2.1)
+                        return [System.IO.DirectoryInfo](Join-PathEx $env:APPVEYOR_BUILD_FOLDER PrtgAPI.PowerShell bin $env:CONFIGURATION net10.0)
                     }
                     elseif($Path -like "*$($ch)TempRepository" -and $Filter -eq "*.nupkg")
                     {
@@ -201,7 +198,7 @@ Describe "Simulate-PrtgCI" -Tag @("PowerShell", "Build") {
                 $env:APPVEYOR = $null
             }
         }
-        
+
         It "creates coverage" -Skip:($env:CI -ne $null) {
 
             Mock-InstallDotnet -Windows
@@ -434,7 +431,7 @@ Describe "Simulate-PrtgCI" -Tag @("PowerShell", "Build") {
                         {
                             $RequiredVersion | Should Be "3.4.6" | Out-Null
                         }
-                        
+
                         $Force | Should Be $true | Out-Null
                         $ForceBootstrap | Should Be $true
                         $ProviderName | Should Be "PowerShellGet" | Out-Null

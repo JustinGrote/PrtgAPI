@@ -23,8 +23,7 @@ function Install-PrtgDependency
         [Parameter(Mandatory = $false, Position = 0)]
         [ValidateSet(
             "chocolatey", "dotnet", "Pester", "Codecov", "OpenCover", "ReportGenerator",
-            "VSWhere", "NuGet", "NuGetProvider", "PowerShellGet", "PSScriptAnalyzer",
-            "net452", "net461"
+            'VSWhere', 'NuGet', 'NuGetProvider', 'PowerShellGet', 'PSScriptAnalyzer'
         )]
         [string[]]$Name
     )
