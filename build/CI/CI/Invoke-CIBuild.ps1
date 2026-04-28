@@ -25,7 +25,7 @@ function Invoke-CIBuild
     {
         if($IsCore)
         {
-            $Target = Join-Path $BuildFolder "PrtgAPIv17.sln"
+            $Target = Join-Path $BuildFolder "PrtgAPI.sln"
         }
         else
         {

@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\..\Support\PowerShell\Build.ps1
+. $PSScriptRoot\..\..\..\Support\PowerShell\Build.ps1
 
 Describe "Simulate-PrtgCI" -Tag @("PowerShell", "Build") {
 
@@ -20,7 +20,7 @@ Describe "Simulate-PrtgCI" -Tag @("PowerShell", "Build") {
             $expected = @(
                 "dotnet"
                 "restore"
-                "`"" + (Join-Path $root "PrtgAPIv17.sln") + "`""
+                "`"" + (Join-Path $root "PrtgAPI.sln") + "`""
                 "`"-p:EnableSourceLink=true`""
             )
 
@@ -40,7 +40,7 @@ Describe "Simulate-PrtgCI" -Tag @("PowerShell", "Build") {
             $expected3 = @(
                 "dotnet"
                 "build"
-                Join-Path $root "PrtgAPIv17.sln"
+                Join-Path $root "PrtgAPI.sln"
                 "-nologo"
                 "-c"
                 "Debug"
@@ -140,7 +140,7 @@ Describe "Simulate-PrtgCI" -Tag @("PowerShell", "Build") {
                 "&"
                 "dotnet"
                 "pack"
-                Join-PathEx $root PrtgAPI PrtgAPIv17.csproj
+                Join-PathEx $root PrtgAPI PrtgAPI.csproj
                 "--include-symbols"
                 "--no-restore"
                 "--no-build"
@@ -178,7 +178,7 @@ Describe "Simulate-PrtgCI" -Tag @("PowerShell", "Build") {
                     "&"
                     "`"dotnet`""
                     "test"
-                    Join-PathEx $root PrtgAPI.Tests.UnitTests PrtgAPIv17.Tests.UnitTests.csproj
+                    Join-PathEx $root PrtgAPI.Tests.UnitTests PrtgAPI.Tests.UnitTests.csproj
                     "-nologo"
                     "--no-restore"
                     "--no-build"
@@ -230,7 +230,7 @@ Describe "Simulate-PrtgCI" -Tag @("PowerShell", "Build") {
                 "&"
                 "`"C:\ProgramData\chocolatey\bin\OpenCover.Console.exe`""
                 "-target:$dotnet"
-                "-targetargs:test --filter TestCategory!=SkipCoverage&TestCategory!=SkipCI `"$(Join-PathEx $root PrtgAPI.Tests.UnitTests PrtgAPIv17.Tests.UnitTests.csproj)`" --verbosity:n --no-build -c Debug"
+                "-targetargs:test --filter TestCategory!=SkipCoverage&TestCategory!=SkipCI `"$(Join-PathEx $root PrtgAPI.Tests.UnitTests PrtgAPI.Tests.UnitTests.csproj)`" --verbosity:n --no-build -c Debug"
                 "-output:`"$($temp)opencover.xml`""
                 "-filter:+`"[PrtgAPI*]* -[PrtgAPI.Tests*]*`""
                 "-excludebyattribute:System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute"
@@ -613,13 +613,13 @@ Describe "Simulate-PrtgCI" -Tag @("PowerShell", "Build") {
             $restoreClean = @(
                 "dotnet"
                 "restore"
-                Join-Path $root "PrtgAPIv17.sln"
+                Join-Path $root "PrtgAPI.sln"
             )
 
             $clean = @(
                 "dotnet"
                 "clean"
-                "`"" + (Join-Path $root "PrtgAPIv17.sln") + "`""
+                "`"" + (Join-Path $root "PrtgAPI.sln") + "`""
                 "-c"
                 "Debug"
             )
@@ -627,7 +627,7 @@ Describe "Simulate-PrtgCI" -Tag @("PowerShell", "Build") {
             $build = @(
                 "dotnet"
                 "build"
-                Join-Path $root "PrtgAPIv17.sln"
+                Join-Path $root "PrtgAPI.sln"
                 "-nologo"
                 "-c"
                 "Debug"
@@ -637,7 +637,7 @@ Describe "Simulate-PrtgCI" -Tag @("PowerShell", "Build") {
                 "&"
                 "`"dotnet`""
                 "test"
-                Join-PathEx $root src PrtgAPI.Tests.UnitTests PrtgAPIv17.Tests.UnitTests.csproj
+                Join-PathEx $root src PrtgAPI.Tests.UnitTests PrtgAPI.Tests.UnitTests.csproj
                 "-nologo"
                 "--no-restore"
                 "--no-build"

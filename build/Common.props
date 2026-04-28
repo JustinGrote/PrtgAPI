@@ -5,12 +5,6 @@
   <PropertyGroup Condition="$(TargetFramework.StartsWith('netcoreapp')) OR ($(TargetFramework.StartsWith('net')) AND !$(TargetFramework.StartsWith('netstandard')) AND !$(TargetFramework.StartsWith('net4')))">
     <FrameworkType>Core</FrameworkType>
   </PropertyGroup>
-  <PropertyGroup Condition="$(TargetFramework.StartsWith('netstandard'))">
-    <FrameworkType>Standard</FrameworkType>
-  </PropertyGroup>
-  <PropertyGroup Condition="$(TargetFramework.StartsWith('net4'))">
-    <FrameworkType>Full</FrameworkType>
-  </PropertyGroup>
 
   <PropertyGroup Condition="'$(IsTestProject)' == 'true'">
     <DefineConstants>$(DefineConstants);MSTEST2</DefineConstants>

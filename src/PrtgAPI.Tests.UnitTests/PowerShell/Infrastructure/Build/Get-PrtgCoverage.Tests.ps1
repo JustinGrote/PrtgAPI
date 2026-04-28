@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\..\Support\PowerShell\Build.ps1
+. $PSScriptRoot\..\..\..\Support\PowerShell\Build.ps1
 
 function GetPowerShellCommand
 {
@@ -40,7 +40,7 @@ function GetCSharpCoreCommand($configuration = "Debug")
         "&"
         "`"C:\ProgramData\chocolatey\bin\OpenCover.Console.exe`""
         "-target:$dotnet"
-        "-targetargs:test --filter TestCategory!=SkipCoverage&TestCategory!=SkipCI `"$(Join-PathEx $root PrtgAPI.Tests.UnitTests PrtgAPIv17.Tests.UnitTests.csproj)`" --verbosity:n --no-build -c $configuration"
+        "-targetargs:test --filter TestCategory!=SkipCoverage&TestCategory!=SkipCI `"$(Join-PathEx $root PrtgAPI.Tests.UnitTests PrtgAPI.Tests.UnitTests.csproj)`" --verbosity:n --no-build -c $configuration"
         "-output:`"$($temp)opencover.xml`""
         "-filter:+`"[PrtgAPI*]* -[PrtgAPI.Tests*]*`""
         "-excludebyattribute:System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute"
@@ -240,7 +240,7 @@ Describe "Get-PrtgCoverage" -Tag @("PowerShell", "Build") {
             "&"
             "`"C:\ProgramData\chocolatey\bin\OpenCover.Console.exe`""
             "-target:$dotnet"
-            "-targetargs:test --filter TestCategory!=SkipCoverage&TestCategory!=SkipCI&FullyQualifiedName~dynamic `"$(Join-PathEx $root PrtgAPI.Tests.UnitTests PrtgAPIv17.Tests.UnitTests.csproj)`" --verbosity:n --no-build -c Debug"
+            "-targetargs:test --filter TestCategory!=SkipCoverage&TestCategory!=SkipCI&FullyQualifiedName~dynamic `"$(Join-PathEx $root PrtgAPI.Tests.UnitTests PrtgAPI.Tests.UnitTests.csproj)`" --verbosity:n --no-build -c Debug"
             "-output:`"$($temp)opencover.xml`""
             "-filter:+`"[PrtgAPI*]* -[PrtgAPI.Tests*]*`""
             "-excludebyattribute:System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute"

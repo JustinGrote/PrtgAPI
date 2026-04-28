@@ -112,7 +112,7 @@ function Get-TestProject($IsCore, $integration = $false)
 
     if($IsCore)
     {
-        $csproj = "PrtgAPIv17.Tests.$($name)Tests.csproj"
+        $csproj = "PrtgAPI.Tests.$($name)Tests.csproj"
     }
 
     return [PSCustomObject]@{
@@ -133,7 +133,7 @@ function Get-BuildProject($IsCore)
     }
     else
     {
-        $projects = $projects | where { $_.Name -notlike "PrtgAPIv17.*"}
+        $projects = $projects | where { $_.Name -notlike "PrtgAPI.*"}
     }
 
     return $projects

@@ -29,7 +29,7 @@ function New-CSharpPackage
         # and so we don't need to manually specify a list of exclusions
         $nugetArgs = @(
             "pack"
-            Join-Path $BuildFolder "src\PrtgAPI\PrtgAPIv17.csproj"
+            Join-Path $BuildFolder "src\PrtgAPI\PrtgAPI.csproj"
             "--include-symbols"
             "--no-restore"
             "--no-build"
@@ -49,7 +49,7 @@ function New-CSharpPackage
     {
         $nugetArgs = @(
             "pack"
-            Join-Path $BuildFolder "src\PrtgAPI\PrtgAPIv17.csproj"
+            Join-Path $BuildFolder "src\PrtgAPI\PrtgAPI.csproj"
             "--include-symbols"
             "--no-restore"
             "--no-build"

@@ -38,7 +38,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PrtgAPI.Tests.UnitTests\PrtgAPIv17.Tests.UnitTests.csproj" />
-    <ProjectReference Include="..\PrtgAPI\PrtgAPIv17.csproj" />
+    <ProjectReference Include="..\PrtgAPI.Tests.UnitTests\PrtgAPI.Tests.UnitTests.csproj" />
+    <ProjectReference Include="..\PrtgAPI\PrtgAPI.csproj" />
   </ItemGroup>
 </Project>

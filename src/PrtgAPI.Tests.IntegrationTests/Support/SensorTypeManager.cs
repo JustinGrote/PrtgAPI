@@ -64,9 +64,7 @@ namespace PrtgAPI.Tests.IntegrationTests.Support
             {
                 Logger.LogTestDetail($"    Adding {missingCount} missing types");
 
-                var dll = new Uri(Assembly.GetExecutingAssembly().CodeBase);
-                var root = dll.Host + dll.PathAndQuery + dll.Fragment;
-                var rootStr = Uri.UnescapeDataString(root).ToLower();
+                var rootStr = Assembly.GetExecutingAssembly().Location.ToLower();
 
                 var thisProject = Assembly.GetExecutingAssembly().GetName().Name.ToLower();
 

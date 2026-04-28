@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\..\src\PrtgAPI.Tests.UnitTests\Support\PowerShell\Init.ps1
+. $PSScriptRoot\..\..\..\src\PrtgAPI.Tests.UnitTests\Support\PowerShell\Init.ps1
 
 function Get-CodeCoverage
 {
@@ -116,7 +116,7 @@ class CodeCoverage
 
         if($this.IsCore)
         {
-            $csproj = Join-PathEx $this.BuildFolder src PrtgAPI.Tests.UnitTests PrtgAPIv17.Tests.UnitTests.csproj
+            $csproj = Join-PathEx $this.BuildFolder src PrtgAPI.Tests.UnitTests PrtgAPI.Tests.UnitTests.csproj
 
             $testParams = @(
                 "test"

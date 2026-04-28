@@ -33,7 +33,7 @@
   <!-- For PackageReference versions please see Directory.Packages.props -->
 
   <ItemGroup>
-    <ProjectReference Include="..\PrtgAPI\PrtgAPIv17.csproj" />
+    <ProjectReference Include="..\PrtgAPI\PrtgAPI.csproj" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(EnableSourceLink)' == 'true'">

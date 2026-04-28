@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/Tools/">
+    <File Path="Tools/README.md" />
+    <Project Path="src/Tools/PowerShell.TestAdapter/PowerShell.TestAdapter.csproj" />
+    <Project Path="src/Tools/PrtgAPI.CodeGenerator/PrtgAPI.CodeGenerator.csproj" />
+  </Folder>
+  <Project Path="src/PrtgAPI.PowerShell/PrtgAPI.PowerShell.csproj" />
+  <Project Path="src/PrtgAPI.Tests.IntegrationTests/PrtgAPI.Tests.IntegrationTests.csproj" />
+  <Project Path="src/PrtgAPI.Tests.UnitTests/PrtgAPI.Tests.UnitTests.csproj" />
+  <Project Path="src/PrtgAPI/PrtgAPI.csproj">
+    <BuildDependency Project="src/Tools/PrtgAPI.CodeGenerator/PrtgAPI.CodeGenerator.csproj" />
+  </Project>
+</Solution>

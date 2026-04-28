@@ -19,7 +19,7 @@ function Clear-CIBuild
         {
             Install-CIDependency dotnet
 
-            $path = (Join-Path $BuildFolder PrtgAPIv17.sln)
+            $path = (Join-Path $BuildFolder PrtgAPI.sln)
 
             $cleanArgs = @(
                 "clean"

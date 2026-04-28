@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\..\Support\PowerShell\Build.ps1
+. $PSScriptRoot\..\..\..\Support\PowerShell\Build.ps1
 
 function MockInvokePester($action)
 {
@@ -31,7 +31,7 @@ Describe "Invoke-PrtgTest" -Tag @("PowerShell", "Build") {
         $expected = @(
             "& `"dotnet`""
             "test"
-            Join-PathEx $sourceRoot PrtgAPI.Tests.UnitTests PrtgAPIv17.Tests.UnitTests.csproj
+            Join-PathEx $sourceRoot PrtgAPI.Tests.UnitTests PrtgAPI.Tests.UnitTests.csproj
             "-nologo"
             "--no-restore"
             "--no-build"
@@ -95,7 +95,7 @@ Describe "Invoke-PrtgTest" -Tag @("PowerShell", "Build") {
         $expected = @(
             "& `"dotnet`""
             "test"
-            Join-PathEx $sourceRoot PrtgAPI.Tests.UnitTests PrtgAPIv17.Tests.UnitTests.csproj
+            Join-PathEx $sourceRoot PrtgAPI.Tests.UnitTests PrtgAPI.Tests.UnitTests.csproj
             "-nologo"
             "--no-restore"
             "--no-build"
@@ -122,7 +122,7 @@ Describe "Invoke-PrtgTest" -Tag @("PowerShell", "Build") {
         $expected = @(
             "& `"dotnet`""
             "test"
-            Join-PathEx $sourceRoot PrtgAPI.Tests.UnitTests PrtgAPIv17.Tests.UnitTests.csproj
+            Join-PathEx $sourceRoot PrtgAPI.Tests.UnitTests PrtgAPI.Tests.UnitTests.csproj
             "-nologo"
             "--no-restore"
             "--no-build"
@@ -163,7 +163,7 @@ Describe "Invoke-PrtgTest" -Tag @("PowerShell", "Build") {
         $expected = @(
             "& `"dotnet`""
             "test"
-            Join-PathEx $sourceRoot PrtgAPI.Tests.IntegrationTests PrtgAPIv17.Tests.IntegrationTests.csproj
+            Join-PathEx $sourceRoot PrtgAPI.Tests.IntegrationTests PrtgAPI.Tests.IntegrationTests.csproj
             "-nologo"
             "--no-restore"
             "--no-build"
@@ -190,7 +190,7 @@ Describe "Invoke-PrtgTest" -Tag @("PowerShell", "Build") {
         $expected = @(
             "& `"dotnet`""
             "test"
-            Join-PathEx $sourceRoot PrtgAPI.Tests.UnitTests PrtgAPIv17.Tests.UnitTests.csproj
+            Join-PathEx $sourceRoot PrtgAPI.Tests.UnitTests PrtgAPI.Tests.UnitTests.csproj
             "-nologo"
             "--no-restore"
             "--no-build"
@@ -239,7 +239,7 @@ Describe "Invoke-PrtgTest" -Tag @("PowerShell", "Build") {
         $expected = @(
             "& `"dotnet`""
             "test"
-            Join-PathEx $sourceRoot PrtgAPI.Tests.UnitTests PrtgAPIv17.Tests.UnitTests.csproj
+            Join-PathEx $sourceRoot PrtgAPI.Tests.UnitTests PrtgAPI.Tests.UnitTests.csproj
             "-nologo"
             "--no-restore"
             "--no-build"

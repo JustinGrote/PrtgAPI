@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\..\Support\PowerShell\Build.ps1
+. $PSScriptRoot\..\..\..\Support\PowerShell\Build.ps1
 
 Describe "Clear-PrtgBuild" -Tag @("PowerShell", "Build") {
 
@@ -9,7 +9,7 @@ Describe "Clear-PrtgBuild" -Tag @("PowerShell", "Build") {
         Mock-InstallDotnet -Windows
         Mock "Remove-Item" {} -ModuleName "CI"
 
-        Mock-InvokeProcess "dotnet clean `"$(Join-PathEx $solutionRoot PrtgAPIv17.sln)`" -c Debug" {
+        Mock-InvokeProcess "dotnet clean `"$(Join-PathEx $solutionRoot PrtgAPI.sln)`" -c Debug" {
             Clear-PrtgBuild
         }
     }

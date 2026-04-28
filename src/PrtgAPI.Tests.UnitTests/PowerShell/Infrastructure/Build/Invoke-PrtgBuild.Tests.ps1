@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\..\Support\PowerShell\Build.ps1
+. $PSScriptRoot\..\..\..\Support\PowerShell\Build.ps1
 
 function Get-NuGet
 {
@@ -24,7 +24,7 @@ Describe "Invoke-PrtgBuild" -Tag @("PowerShell", "Build") {
         $expected3 = @(
             "dotnet"
             "build"
-            Join-Path (Get-SolutionRoot) "PrtgAPIv17.sln"
+            Join-Path (Get-SolutionRoot) "PrtgAPI.sln"
             "-nologo"
             "-c"
             "Debug"
@@ -67,7 +67,7 @@ Describe "Invoke-PrtgBuild" -Tag @("PowerShell", "Build") {
         $expected = @(
             "dotnet"
             "build"
-            Join-Path (Get-SolutionRoot) "PrtgAPIv17.sln"
+            Join-Path (Get-SolutionRoot) "PrtgAPI.sln"
             "-nologo"
             "-c"
             "Debug"
@@ -87,7 +87,7 @@ Describe "Invoke-PrtgBuild" -Tag @("PowerShell", "Build") {
         $expected3 = @(
             "dotnet"
             "build"
-            Join-PathEx (Get-SourceRoot) PrtgAPI PrtgAPIv17.csproj
+            Join-PathEx (Get-SourceRoot) PrtgAPI PrtgAPI.csproj
             "-nologo"
             "-c"
             "Debug"
@@ -95,7 +95,7 @@ Describe "Invoke-PrtgBuild" -Tag @("PowerShell", "Build") {
         )
 
         Mock-InvokeProcess $expected3 {
-            Invoke-PrtgBuild prtgapiv17
+            Invoke-PrtgBuild prtgapi
         }
     }
 
@@ -123,7 +123,7 @@ Describe "Invoke-PrtgBuild" -Tag @("PowerShell", "Build") {
     }
 
     It "throws when more than one project is specified" {
-        { Invoke-PrtgBuild *test* } | Should Throw "Can only specify one project at a time, however wildcard '*test*' matched multiple projects: PowerShell.TestAdapter, PrtgAPIv17.Tests.IntegrationTests, PrtgAPIv17.Tests.UnitTests"
+        { Invoke-PrtgBuild *test* } | Should Throw "Can only specify one project at a time, however wildcard '*test*' matched multiple projects: PowerShell.TestAdapter, PrtgAPI.Tests.IntegrationTests, PrtgAPI.Tests.UnitTests"
     }
 
     It "executes MSBuild in debug mode on core" {
@@ -139,7 +139,7 @@ Describe "Invoke-PrtgBuild" -Tag @("PowerShell", "Build") {
         $expected3 = @(
             "dotnet"
             "build"
-            Join-Path $root "PrtgAPIv17.sln"
+            Join-Path $root "PrtgAPI.sln"
             "-nologo"
             "-c"
             "Debug"
@@ -188,7 +188,7 @@ Describe "Invoke-PrtgBuild" -Tag @("PowerShell", "Build") {
         $expected3 = @(
             'dotnet'
             'build'
-            Join-Path (Get-SolutionRoot) 'PrtgAPIv17.sln'
+            Join-Path (Get-SolutionRoot) 'PrtgAPI.sln'
             '-nologo'
             '-c'
             'Release'
@@ -231,7 +231,7 @@ Describe "Invoke-PrtgBuild" -Tag @("PowerShell", "Build") {
         $expected3 = @(
             'dotnet'
             'build'
-            Join-Path (Get-SolutionRoot) 'PrtgAPIv17.sln'
+            Join-Path (Get-SolutionRoot) 'PrtgAPI.sln'
             '-nologo'
             '-c'
             'Debug'

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
-using System.Security.Permissions;
 using System.Security.Principal;
 using Microsoft.Win32.SafeHandles;
 
@@ -23,7 +22,6 @@ namespace PrtgAPI.Tests.IntegrationTests
         const int LOGON32_PROVIDER_DEFAULT = 0;
         const int LOGON32_LOGON_NEW_CREDENTIALS = 9;
 
-        [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
         private static SafeAccessTokenHandle GetHandle(string domain, string username, string password)
         {
             var tokenHandle = IntPtr.Zero;

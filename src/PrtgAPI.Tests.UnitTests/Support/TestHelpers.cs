@@ -30,9 +30,7 @@ namespace PrtgAPI.Tests.UnitTests.Support
 
         internal static string GetProjectRoot(bool solution = false)
         {
-            var dll = new Uri(typeof(PrtgClient).Assembly.CodeBase);
-            var root = dll.Host + dll.PathAndQuery + dll.Fragment;
-            var rootStr = Uri.UnescapeDataString(root);
+            var rootStr = typeof(PrtgClient).Assembly.Location;
 
             var thisProject = Assembly.GetExecutingAssembly().GetName().Name;
 

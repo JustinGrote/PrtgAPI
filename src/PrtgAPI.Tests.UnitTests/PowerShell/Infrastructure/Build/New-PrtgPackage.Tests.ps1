@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\..\Support\PowerShell\Build.ps1
+. $PSScriptRoot\..\..\..\Support\PowerShell\Build.ps1
 
 $testCases = @(
     @{name = "Debug"}
@@ -25,7 +25,7 @@ Describe "New-PrtgPackage" -Tag @("PowerShell", "Build") {
             "&"
             "dotnet"
             "pack"
-            Join-PathEx $root PrtgAPI PrtgAPIv17.csproj
+            Join-PathEx $root PrtgAPI PrtgAPI.csproj
             "--include-symbols"
             "--no-restore"
             "--no-build"
