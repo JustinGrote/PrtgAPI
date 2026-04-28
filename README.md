@@ -1,7 +1,6 @@
 # PrtgAPI
 
-[![Travis status](https://travis-ci.com/lordmilko/PrtgAPI.svg?branch=master)](https://travis-ci.com/lordmilko/PrtgAPI)
-[![Appveyor status](https://ci.appveyor.com/api/projects/status/m2q2r875yvewn7x9?svg=true)](https://ci.appveyor.com/project/lordmilko/prtgapi)
+[![CI](https://github.com/JustinGrote/PrtgAPI/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/JustinGrote/PrtgAPI/actions/workflows/ci.yml)
 [![NuGet](https://img.shields.io/nuget/v/PrtgAPI.svg)](https://www.nuget.org/packages/PrtgAPI/)
 [![Coverage](https://img.shields.io/codecov/c/github/lordmilko/PrtgAPI.svg)](https://codecov.io/gh/lordmilko/PrtgAPI)
 [![Donate](http://img.shields.io/liberapay/patrons/lordmilko.svg?logo=liberapay)](https://liberapay.com/lordmilko/donate)
@@ -51,7 +50,7 @@ If you are using Windows PowerShell, due to the PowerShell Gallery now requiring
 
 ### Manual
 
-1. Download the [latest build](https://ci.appveyor.com/api/projects/lordmilko/prtgapi/artifacts/PrtgAPI.zip)
+1. Download the latest package from [GitHub Releases](https://github.com/JustinGrote/PrtgAPI/releases)
 2. Right click **PrtgAPI.zip** -> **Properties**
 3. On the *General* tab, under *Security* select **Unblock**
 4. Unzip the file

@@ -4,7 +4,6 @@
 
 # Local Settings
 Settings.Local.cs
-appveyor.local.json
 
 #################
 # Visual Studio #

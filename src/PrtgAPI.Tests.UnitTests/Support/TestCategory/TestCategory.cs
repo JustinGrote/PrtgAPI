@@ -6,7 +6,7 @@
     public static class TestCategory
     {
         /// <summary>
-        /// Specifies that the test should not be run under CI (Travis/Appveyor).
+        /// Specifies that the test should not be run under CI.
         /// </summary>
         public const string SkipCI = "SkipCI";
 

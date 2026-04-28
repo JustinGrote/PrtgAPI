@@ -5,7 +5,7 @@ function Get-CodeCoverage
     [CmdletBinding()]
     param(
         [string]$Name = "*",
-        [string]$BuildFolder = $env:APPVEYOR_BUILD_FOLDER,
+        [string]$BuildFolder = (Get-SolutionRoot),
         [string[]]$Type,
         [string]$Configuration = "Debug",
         [switch]$TestOnly,

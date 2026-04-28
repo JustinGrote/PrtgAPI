@@ -1,103 +1,90 @@
 <#
 .SYNOPSIS
-Simulates building PrtgAPI under a Continuous Integration environment
+Runs PrtgAPI CI tasks in a provider-neutral way
 
 .DESCRIPTION
-The Simulate-PrtgCI simulates the entire workflow of building PrtgAPI under either Appveyor or Travis CI. By default, Simulate-PrtgCI will invoke all steps that would normally be performed as part of the CI process. This can be limited by specifying a specific list of tasks that should be simulated via the -Task parameter.
-
-.PARAMETER Appveyor
-Specifies to simulate Appveyor CI
-
-.PARAMETER Travis
-Specifies to simulate Travis CI
+Test-PrtgCI executes the same core CI tasks used by GitHub Actions and local CI simulation.
+By default, Test-PrtgCI will build and run tests. This can be limited by specifying
+individual tasks via the -Task parameter.
 
 .PARAMETER Task
-CI task to execute. If no value is specified, all CI tasks will be executed.
+CI task to execute. If no value is specified, Build and Test tasks will be executed.
 
 .PARAMETER Legacy
-Specifies whether to use .NET Core CLI or legacy .NET infrastructure when simulating CI tasks
+Specifies whether to use legacy .NET infrastructure when running CI tasks
 
 .EXAMPLE
 C:\> Simulate-PrtgCI
-Simulate Appveyor CI
-
-.EXAMPLE
-C:\> Simulate-PrtgCI -Travis
-Simulate Travis CI
+Run default CI tasks (Build and Test)
 
 .EXAMPLE
 C:\> Simulate-PrtgCI -Task Test
-Simulate Appveyor CI tests
+Run CI tests only
 #>
-function Test-PrtgCI
-{
-    [CmdletBinding(DefaultParameterSetName = "Appveyor")]
+function Test-PrtgCI {
+    [CmdletBinding()]
     param(
-        [Parameter(Mandatory = $false, ParameterSetName = "Appveyor")]
-        [switch]$Appveyor,
-
-        [Parameter(Mandatory = $true, ParameterSetName = "Travis")]
-        [switch]$Travis,
-
-        [Parameter(Mandatory = $false, Position = 0, ParameterSetName="Appveyor")]
-        [ValidateSet("Install", "Restore", "Build", "Package", "Test", "Coverage")]
+        [Parameter(Mandatory = $false, Position = 0)]
+        [ValidateSet('Install', 'Restore', 'Build', 'Package', 'Test')]
         [string[]]$Task,
 
-        [Parameter(Mandatory=$false)]
-        [Configuration]$Configuration = "Debug",
+        [Parameter(Mandatory = $false)]
+        [Configuration]$Configuration = 'Debug',
 
         [ValidateScript({
-            if($_ -and !(Test-IsWindows)) {
-                throw "Parameter is only supported on Windows."
-            }
-            return $true
-        })]
+                if ($_ -and !(Test-IsWindows)) {
+                    throw 'Parameter is only supported on Windows.'
+                }
+                return $true
+            })]
         [Parameter(Mandatory = $false)]
         [switch]$Legacy
     )
 
-    switch($PSCmdlet.ParameterSetName)
-    {
-        "Appveyor" {
+    $buildFolder = Get-SolutionRoot
+    $configurationName = $Configuration.ToString()
+    $isCore = -not $Legacy
 
-            if(!(Test-IsWindows))
-            {
-                throw "Appveyor can only be simulated on Windows"
-            }
+    if ($null -eq $Task) {
+        $Task = @('Build', 'Test')
+    }
 
-            Set-AppveyorBuildMode -IsCore:(-not $Legacy)
+    if ('Install' -in $Task -or 'Restore' -in $Task) {
+        Install-CIDependency dotnet
+        Invoke-Process { dotnet restore (Join-Path $buildFolder 'PrtgAPI.slnx') } -WriteHost
+    }
 
-            if($null -eq $Task)
-            {
-                Simulate-Appveyor -Configuration $Configuration
-            }
-            else
-            {
-                Simulate-Environment {
-                    if("Install" -in $Task) {
-                        Invoke-AppveyorInstall
-                    }
-                    if("Restore" -in $Task) {
-                        Invoke-AppveyorBeforeBuild
-                    }
-                    if("Build" -in $Task) {
-                        Invoke-AppveyorBuild
-                    }
-                    if("Package" -in $Task) {
-                        Invoke-AppveyorBeforeTest
-                    }
-                    if("Test" -in $Task) {
-                        Invoke-AppveyorTest
-                    }
-                    if("Coverage" -in $Task)
-                    {
-                        Invoke-AppveyorAfterTest
-                    }
-                } -Configuration $Configuration
-            }
+    if ('Build' -in $Task) {
+        Invoke-CIBuild -BuildFolder $buildFolder -Configuration $configurationName -IsCore:$isCore -SourceLink
+    }
+
+    if ('Package' -in $Task) {
+        $outputFolder = Join-Path $buildFolder 'artifacts\packages'
+
+        if (!(Test-Path $outputFolder)) {
+            New-Item -ItemType Directory -Path $outputFolder | Out-Null
         }
-        "Travis" {
-            Simulate-Travis -Configuration $Configuration
+
+        $version = (Get-CIVersion -IsCore:$isCore).Package.ToString()
+        $manager = New-PackageManager
+
+        $manager.InstallCSharpPackageSource()
+
+        try {
+            New-CSharpPackage -BuildFolder $buildFolder -OutputFolder (PackageManager -RepoLocation) -Version $version -Configuration $configurationName -IsCore:$isCore
+
+            if ($isCore) {
+                $powerShellOutput = Get-PowerShellOutputDir -BuildFolder $buildFolder -Configuration $configurationName -IsCore:$isCore
+                New-PowerShellPackage -OutputDir $powerShellOutput -RepoManager $manager -Configuration $configurationName -IsCore:$isCore -Redist
+            }
+
+            Move-Packages '' $outputFolder | Out-Null
+        } finally {
+            $manager.UninstallCSharpPackageSource()
         }
+    }
+
+    if ('Test' -in $Task) {
+        Invoke-CITest -BuildFolder $buildFolder -Configuration $configurationName -IsCore:$isCore
     }
 }

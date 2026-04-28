@@ -1,13 +1,6 @@
 function Write-LogHeader($msg)
 {
-    if($env:APPVEYOR)
-    {
-        Write-LogInfo $msg
-    }
-    else
-    {
-        Write-Log $msg Cyan
-    }
+    Write-Log $msg Cyan
 }
 
 function Write-LogSubHeader($msg)

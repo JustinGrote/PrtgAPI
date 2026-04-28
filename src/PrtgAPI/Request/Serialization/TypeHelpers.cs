@@ -48,7 +48,7 @@ namespace PrtgAPI.Request.Serialization
 
         internal static double ConvertToPrtgDateTime(DateTime dateTime)
         {
-            //Travis CI started using 12 decimal points, so fix it to 10 to ensure new .NET Core versions don't cause
+            // Some CI environments started using 12 decimal points, so fix it to 10 to ensure new .NET versions don't cause
             //issues with unit tests
             return Math.Round(dateTime.ToUniversalTime().ToOADate(), 10);
         }

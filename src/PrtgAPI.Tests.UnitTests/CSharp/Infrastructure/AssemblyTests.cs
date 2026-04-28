@@ -208,11 +208,9 @@ namespace PrtgAPI.Tests.UnitTests.Infrastructure
                 "ConnectGoPrtgServer.cs",
                 "GetGoPrtgServer.cs",
                 "UpdateGoPrtgCredential.cs",
-                "New-AppveyorPackage.ps1",
                 "Get-CIVersion.ps1",
                 "Get-CodeCoverage.ps1",
                 "Invoke-Process.ps1",
-                "Appveyor.Tests.ps1",
                 "Start-PrtgAPI.ps1",
                 "MethodXmlDocBuilder.cs",
                 "New-PowerShellPackage.ps1",
@@ -862,7 +860,7 @@ namespace PrtgAPI.Tests.UnitTests.Infrastructure
         public void UpdatePublicAPI()
         {
             var sln = TestHelpers.GetProjectRoot(true);
-            
+
             ProcessPublicAPI(Path.Combine(sln, "PrtgAPI"), typeof(PrtgClient));
         }
 
@@ -1139,7 +1137,7 @@ namespace PrtgAPI.Tests.UnitTests.Infrastructure
                         , "(.+)`\\d+(.*)", "$1$2"
                     )
                 ).Append("<");
-                
+
                 var args = type.GetGenericArguments();
 
                 for (int i = 0; i < args.Length; i++)

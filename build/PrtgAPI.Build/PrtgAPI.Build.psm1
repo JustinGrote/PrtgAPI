@@ -4,8 +4,6 @@ param(
 )
 
 ipmo $PSScriptRoot\..\CI\ci.psm1 -Scope Local
-ipmo $PSScriptRoot\..\CI\Appveyor.psm1 -Scope Local -DisableNameChecking
-ipmo $PSScriptRoot\..\CI\Travis.psm1 -Scope Local -DisableNameChecking
 
 . $PSScriptRoot\..\CI\Helpers\Import-ModuleFunctions.ps1
 . Import-ModuleFunctions "$PSScriptRoot\Functions" -Exclude "Initialize-BuildEnvironment*"
@@ -51,7 +49,7 @@ function Complete-PrtgProgress
     {
         Write-Progress @global:prtgProgressArgs -Completed
         $global:prtgProgressArgs = $null
-    }    
+    }
 }
 
 Export-ModuleMember Test-PrtgCI -Alias Simulate-PrtgCI
