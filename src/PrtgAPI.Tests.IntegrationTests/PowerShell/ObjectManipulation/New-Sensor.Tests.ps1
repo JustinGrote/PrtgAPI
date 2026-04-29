@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\IntegrationTest.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\IntegrationTest.ps1
 
 function TestSensor($arguments, $ignore)
 {
@@ -25,7 +25,7 @@ function TestSensorWithTargets($sensorArgs, $targetArgs, $expectedSensorNames, $
 
         for($i = 0; $i -lt $expectedNames.Count; $i++)
         {
-            $actualNames[$i] | Should BeLike $expectedNames[$i]
+            $actualNames[$i] | Should -BeLike $expectedNames[$i]
         }
     }
     catch
@@ -43,7 +43,7 @@ function TestSensorWithTargets($sensorArgs, $targetArgs, $expectedSensorNames, $
 
 function TestSensorFactory($arguments, $expectedDefinition, $count, $throw)
 {
-    $expectedDefinition | Should Not BeNullOrEmpty
+    $expectedDefinition | Should -Not -BeNullOrEmpty
 
     $device = Get-Device -Id (Settings Device)
 
@@ -60,7 +60,7 @@ function TestSensorFactory($arguments, $expectedDefinition, $count, $throw)
     {
         if($throw)
         {
-            { Get-Sensor @getSensorArgs | New-Sensor @arguments } | Should Throw (ForeignMessage "Error in channel")
+            { Get-Sensor @getSensorArgs | New-Sensor @arguments } | Should -Throw (ForeignMessage "Error in channel")
             return
         }
         else
@@ -97,7 +97,7 @@ function TestSensorFactory($arguments, $expectedDefinition, $count, $throw)
     {
         if($throw)
         {
-            { New-Sensor @newArguments -DestinationId $arguments["DestinationId"] } | Should Throw (ForeignMessage "Error in channel")
+            { New-Sensor @newArguments -DestinationId $arguments["DestinationId"] } | Should -Throw (ForeignMessage "Error in channel")
             return
         }
         else
@@ -108,7 +108,7 @@ function TestSensorFactory($arguments, $expectedDefinition, $count, $throw)
 
     try
     {
-        $sensor.ParentId | Assert-Equal $arguments["DestinationId"] -Message "Destination ID should have been <expected> but was <actual>"
+        $sensor.ParentId | Assert-Equal $arguments["DestinationId"] -Message "Destination ID Should -have been <expected> but was <actual>"
     }
     catch
     {
@@ -156,7 +156,7 @@ function TestFactorySummary($count, $definition, $name)
 {
     $sensors = Get-Sensor -Type ping -Count $count
 
-    $sensors.Count | Should Be $count
+    $sensors.Count | Should -Be $count
 
     $definition = [string]::Format($definition, $($sensors|select -expand Id))
 
@@ -288,7 +288,7 @@ Describe "New-Sensor_IT" -Tag @("PowerShell", "IntegrationTest") {
 
             $sensors = Get-Sensor -Type ping -Count $count
 
-            $sensors.Count | Should Be $count
+            $sensors.Count | Should -Be $count
 
             $definition = [string]::Format($definition, $($sensors|select -expand Id))
 

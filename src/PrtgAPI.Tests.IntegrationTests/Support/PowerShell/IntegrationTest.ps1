@@ -1,19 +1,42 @@
 ﻿. $PSScriptRoot\Init.ps1
 
 function Describe($name, $script) {
+    $canRun = $true
 
-    Pester\Describe $name {
-        BeforeAll {
-            Startup $name
+    try
+    {
+        . $PSScriptRoot\Init.ps1
+        InitializeModules "PrtgAPI.Tests.IntegrationTests" $PSScriptRoot
+    }
+    catch
+    {
+        $canRun = $false
+    }
 
-            LogTest "Running unsafe test '$name'"
+    Pester\Describe $name -Skip:(-not $canRun) {
+
+        if(-not $canRun)
+        {
+            return
         }
+
+        BeforeAll {
+            . $PSScriptRoot\Init.ps1
+            $currentName = $Pester.CurrentBlock.Name
+            Startup $currentName
+
+            LogTest "Running unsafe test '$currentName'"
+        }
+
         AfterAll {
+            . $PSScriptRoot\Init.ps1
+
             try
             {
-                LogTest "Completed '$name' tests. Shutting down"
+                $currentName = $Pester.CurrentBlock.Name
+                LogTest "Completed '$currentName' tests. Shutting down"
                 Shutdown
-                LogTest "'$name' shut down successfully"
+                LogTest "'$currentName' shut down successfully"
             }
             finally
             {

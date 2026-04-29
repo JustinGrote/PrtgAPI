@@ -1,10 +1,10 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\IntegrationTestSafe.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\IntegrationTestSafe.ps1
 
 function RetrieveProperties([ScriptBlock]$getObjects)
 {
     $properties = (& $getObjects) | Get-ObjectProperty
 
-    $properties.Count | Should BeGreaterThan 1
+    $properties.Count | Should -BeGreaterThan 1
 }
 
 Describe "Get-ObjectProperty_IT" -Tag @("PowerShell", "IntegrationTest") {
@@ -29,7 +29,7 @@ Describe "Get-ObjectProperty_IT" -Tag @("PowerShell", "IntegrationTest") {
 
         $property = $device | Get-ObjectProperty -RawProperty "name"
 
-        $property | Should Be (Settings DeviceName)
+        $property | Should -Be (Settings DeviceName)
     }
 
     It "retrieves an raw property with a trailing underscore" {
@@ -37,7 +37,7 @@ Describe "Get-ObjectProperty_IT" -Tag @("PowerShell", "IntegrationTest") {
 
         $property = $device | Get-ObjectProperty -RawProperty "name_"
 
-        $property | Should Be (Settings DeviceName)
+        $property | Should -Be (Settings DeviceName)
     }
 
     It "retrieves multiple raw properties" {
@@ -47,9 +47,9 @@ Describe "Get-ObjectProperty_IT" -Tag @("PowerShell", "IntegrationTest") {
 
         $name = (Settings DeviceName)
 
-        $result.name | Should Be $name
-        $result.host | Should Be $name
-        $result.serviceurl | Should Be "http://$name"
+        $result.name | Should -Be $name
+        $result.host | Should -Be $name
+        $result.serviceurl | Should -Be "http://$name"
     }
 
     It "retrieves properties from a sub object" {
@@ -59,12 +59,12 @@ Describe "Get-ObjectProperty_IT" -Tag @("PowerShell", "IntegrationTest") {
 
         $channel = Get-Channel -SensorId $sensorId -Id $channelId
 
-        $channel | Should Not BeNullOrEmpty
-        $channel.UpperErrorLimit | Should Not BeNullOrEmpty
+        $channel | Should -Not -BeNullOrEmpty
+        $channel.UpperErrorLimit | Should -Not -BeNullOrEmpty
 
         $val = Get-ObjectProperty -Id $sensorId -SubId $channelId -RawSubType channel -RawProperty limitmaxerror
 
-        $val | Should Be $channel.UpperErrorLimit
+        $val | Should -Be $channel.UpperErrorLimit
     }
 
     It "returns 'Not found' retrieving properties from an invalid sub object type" {
@@ -73,7 +73,7 @@ Describe "Get-ObjectProperty_IT" -Tag @("PowerShell", "IntegrationTest") {
 
         if(IsEnglish)
         {
-            $result | Should Be "Not found"
+            $result | Should -Be "Not found"
         }
     }
 
@@ -83,7 +83,7 @@ Describe "Get-ObjectProperty_IT" -Tag @("PowerShell", "IntegrationTest") {
 
         if(IsEnglish)
         {
-            $result | Should Be "Not found"
+            $result | Should -Be "Not found"
         }
     }
 
@@ -94,7 +94,7 @@ Describe "Get-ObjectProperty_IT" -Tag @("PowerShell", "IntegrationTest") {
 
         if(IsEnglish)
         {
-            $scriptBlock | Should Throw "A value for property 'accessgroup' could not be found"
+            $scriptBlock | Should -Throw "A value for property 'accessgroup' could not be found"
         }
         else
         {
@@ -109,7 +109,7 @@ Describe "Get-ObjectProperty_IT" -Tag @("PowerShell", "IntegrationTest") {
 
         if(IsEnglish)
         {
-            $scriptBlock | Should Throw "A value for property 'banana' could not be found"
+            $scriptBlock | Should -Throw "A value for property 'banana' could not be found"
         }
         else
         {
@@ -138,9 +138,9 @@ Describe "Get-ObjectProperty_IT" -Tag @("PowerShell", "IntegrationTest") {
 
             $obj = Invoke-Expression "Get-$name -Count 1"
 
-            $obj.Count | Should Be 1
+            $obj.Count | Should -Be 1
 
-            { $obj | Get-ObjectProperty } | Should Throw "Cannot retrieve properties for read-only"
+            { $obj | Get-ObjectProperty } | Should -Throw "Cannot retrieve properties for read-only"
         }
     }
 
@@ -151,7 +151,7 @@ Describe "Get-ObjectProperty_IT" -Tag @("PowerShell", "IntegrationTest") {
         ReadOnlyClient {
             $obj = Invoke-Expression "Get-$name -Count 1"
 
-            $obj.Count | Should Be 1
+            $obj.Count | Should -Be 1
 
             $obj | Get-ObjectProperty -Raw
         }
@@ -164,11 +164,11 @@ Describe "Get-ObjectProperty_IT" -Tag @("PowerShell", "IntegrationTest") {
         ReadOnlyClient {
              $obj = Invoke-Expression "Get-$name -Count 1"
 
-            $obj.Count | Should Be 1
+            $obj.Count | Should -Be 1
 
             $name = $obj | Get-ObjectProperty Name
 
-            $name | Should Be $obj.Name
+            $name | Should -Be $obj.Name
         }
     }
 
@@ -179,11 +179,11 @@ Describe "Get-ObjectProperty_IT" -Tag @("PowerShell", "IntegrationTest") {
         ReadOnlyClient {
             $obj = Invoke-Expression "Get-$name -Count 1"
 
-            $obj.Count | Should Be 1
+            $obj.Count | Should -Be 1
 
             $name = $obj | Get-ObjectProperty -RawProperty name_
 
-            $name | Should Be $obj.Name
+            $name | Should -Be $obj.Name
         }
     }
 }

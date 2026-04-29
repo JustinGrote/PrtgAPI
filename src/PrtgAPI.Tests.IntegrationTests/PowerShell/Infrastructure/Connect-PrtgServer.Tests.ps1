@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\IntegrationTestSafe.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\IntegrationTestSafe.ps1
 
 Describe "Connect-PrtgServer_IT" -Tag @("PowerShell", "IntegrationTest") {
     It "can retry request" {
@@ -25,9 +25,9 @@ Describe "Connect-PrtgServer_IT" -Tag @("PowerShell", "IntegrationTest") {
                 "'Get-Sensor' timed out: Unable to connect to the remote server. Retries remaining: 2`n" +
                 "'Get-Sensor' timed out: Unable to connect to the remote server. Retries remaining: 1"
 
-            $output | Should Be $expected
+            $output | Should -Be $expected
 
-            { Get-Sensor | Get-Channel } | Should Throw "Server rejected HTTP connection on port 80"
+            { Get-Sensor | Get-Channel } | Should -Throw "Server rejected HTTP connection on port 80"
         }
         finally
         {

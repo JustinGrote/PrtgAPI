@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\..\Support\PowerShell\Build.ps1
+. $PSScriptRoot\..\..\..\Support\PowerShell\Build.ps1
 
 function MockVersion
 {
@@ -75,12 +75,12 @@ Describe "Set-PrtgVersion" -Tag @("PowerShell", "Build") {
 
         $result = Set-PrtgVersion 4.5.6
 
-        $result.Package | Should Be "1.2.3 -> 4.5.6"
-        $result.Assembly | Should Be "1.2.0.0 -> 4.5.0.0"
-        $result.File | Should Be "1.2.3.4 -> 4.5.6.0"
-        $result.Info | Should Be "1.2.3 -> 4.5.6"
-        $result.Module | Should Be "1.2.3 -> 4.5.6"
-        $result.ModuleTag | Should Be "v1.2.3 -> v4.5.6"
+        $result.Package | Should -Be "1.2.3 -> 4.5.6"
+        $result.Assembly | Should -Be "1.2.0.0 -> 4.5.0.0"
+        $result.File | Should -Be "1.2.3.4 -> 4.5.6.0"
+        $result.Info | Should -Be "1.2.3 -> 4.5.6"
+        $result.Module | Should -Be "1.2.3 -> 4.5.6"
+        $result.ModuleTag | Should -Be "v1.2.3 -> v4.5.6"
     }
 
     It "sets a version with Desktop" {
@@ -92,12 +92,12 @@ Describe "Set-PrtgVersion" -Tag @("PowerShell", "Build") {
 
         $result = Set-PrtgVersion 4.5.6 -Legacy
 
-        $result.Package | Should Be "1.2.3 -> 4.5.6"
-        $result.Assembly | Should Be "1.2.0.0 -> 4.5.0.0"
-        $result.File | Should Be "1.2.3.4 -> 4.5.6.0"
-        $result.Info | Should Be "1.2.3 -> 4.5.6"
-        $result.Module | Should Be "1.2.3 -> 4.5.6"
-        $result.ModuleTag | Should Be "v1.2.3 -> v4.5.6"
+        $result.Package | Should -Be "1.2.3 -> 4.5.6"
+        $result.Assembly | Should -Be "1.2.0.0 -> 4.5.0.0"
+        $result.File | Should -Be "1.2.3.4 -> 4.5.6.0"
+        $result.Info | Should -Be "1.2.3 -> 4.5.6"
+        $result.Module | Should -Be "1.2.3 -> 4.5.6"
+        $result.ModuleTag | Should -Be "v1.2.3 -> v4.5.6"
     }
 
     It "sets a version that is the same as some existing properties" {
@@ -105,12 +105,12 @@ Describe "Set-PrtgVersion" -Tag @("PowerShell", "Build") {
 
         $result = Set-PrtgVersion 4.5.6
 
-        $result.Package | Should Be "4.5.6"
-        $result.Assembly | Should Be "1.2.0.0 -> 4.5.0.0"
-        $result.File | Should Be "1.2.3.4 -> 4.5.6.0"
-        $result.Info | Should Be "1.2.3 -> 4.5.6"
-        $result.Module | Should Be "1.2.3 -> 4.5.6"
-        $result.ModuleTag | Should Be "v1.2.3 -> v4.5.6"
+        $result.Package | Should -Be "4.5.6"
+        $result.Assembly | Should -Be "1.2.0.0 -> 4.5.0.0"
+        $result.File | Should -Be "1.2.3.4 -> 4.5.6.0"
+        $result.Info | Should -Be "1.2.3 -> 4.5.6"
+        $result.Module | Should -Be "1.2.3 -> 4.5.6"
+        $result.ModuleTag | Should -Be "v1.2.3 -> v4.5.6"
     }
     
     It "sets the same version as current" {
@@ -118,12 +118,12 @@ Describe "Set-PrtgVersion" -Tag @("PowerShell", "Build") {
 
         $result = Set-PrtgVersion 1.2.3.4
 
-        $result.Package | Should Be "1.2.3"
-        $result.Assembly | Should Be "1.2.0.0"
-        $result.File | Should Be "1.2.3.4"
-        $result.Info | Should Be "1.2.3.4"
-        $result.Module | Should Be "1.2.3"
-        $result.ModuleTag | Should Be "v1.2.3"
+        $result.Package | Should -Be "1.2.3"
+        $result.Assembly | Should -Be "1.2.0.0"
+        $result.File | Should -Be "1.2.3.4"
+        $result.Info | Should -Be "1.2.3.4"
+        $result.Module | Should -Be "1.2.3"
+        $result.ModuleTag | Should -Be "v1.2.3"
     }
 
     Context "CI" {
@@ -138,8 +138,8 @@ Describe "Set-PrtgVersion" -Tag @("PowerShell", "Build") {
             # In .NET Core, SourceLink sets the Info Version from the Package Version ("Version" XML attribute)
             # Therefore, it is expected a. this won't match the default File Version we have here and b.
             # that we didn't mess with the existing File Version
-            $result.File | Should Be "1.2.3.4"
-            $result.Info | Should Be "1.2.4"
+            $result.File | Should -Be "1.2.3.4"
+            $result.Info | Should -Be "1.2.4"
         }
 
         It "adds a build number when this is the second build or later with Core" {
@@ -151,8 +151,8 @@ Describe "Set-PrtgVersion" -Tag @("PowerShell", "Build") {
             $result = Get-PrtgVersion
 
             # Modify the existing File Version and Info Version
-            $result.File | Should Be "1.2.4.1"
-            $result.Info | Should Be "1.2.4.1"
+            $result.File | Should -Be "1.2.4.1"
+            $result.Info | Should -Be "1.2.4.1"
         }
 
         It "sets the info version when this is a preview build with Core" {
@@ -163,12 +163,12 @@ Describe "Set-PrtgVersion" -Tag @("PowerShell", "Build") {
 
             $result = Get-PrtgVersion
 
-            $result.Package | Should Be "1.2.3"
-            $result.Assembly | Should Be "1.2.0.0"
-            $result.File | Should Be "1.2.3.4"
-            $result.Info | Should Be "1.2.4-preview.1"
-            $result.Module | Should Be "1.2.3"
-            $result.ModuleTag | Should Be "v1.2.3"
+            $result.Package | Should -Be "1.2.3"
+            $result.Assembly | Should -Be "1.2.0.0"
+            $result.File | Should -Be "1.2.3.4"
+            $result.Info | Should -Be "1.2.4-preview.1"
+            $result.Module | Should -Be "1.2.3"
+            $result.ModuleTag | Should -Be "v1.2.3"
         }
 
         It "adds a build number when this is the second build or later with Desktop" {
@@ -184,8 +184,8 @@ Describe "Set-PrtgVersion" -Tag @("PowerShell", "Build") {
             $result = Get-PrtgVersion -Legacy
 
             # Modify the existing File Version and Info Version
-            $result.File | Should Be "1.2.4.1"
-            $result.Info | Should Be "1.2.4.1"
+            $result.File | Should -Be "1.2.4.1"
+            $result.Info | Should -Be "1.2.4.1"
         }
 
         It "sets the info version when this is a preview build with Desktop" {
@@ -200,12 +200,12 @@ Describe "Set-PrtgVersion" -Tag @("PowerShell", "Build") {
 
             $result = Get-PrtgVersion -Legacy
 
-            $result.Package | Should Be "1.2.3"
-            $result.Assembly | Should Be "1.2.0.0"
-            $result.File | Should Be "1.2.3.4"
-            $result.Info | Should Be "1.2.4-preview.1"
-            $result.Module | Should Be "1.2.3"
-            $result.ModuleTag | Should Be "v1.2.3"
+            $result.Package | Should -Be "1.2.3"
+            $result.Assembly | Should -Be "1.2.0.0"
+            $result.File | Should -Be "1.2.3.4"
+            $result.Info | Should -Be "1.2.4-preview.1"
+            $result.Module | Should -Be "1.2.3"
+            $result.ModuleTag | Should -Be "v1.2.3"
         }
     }
 }

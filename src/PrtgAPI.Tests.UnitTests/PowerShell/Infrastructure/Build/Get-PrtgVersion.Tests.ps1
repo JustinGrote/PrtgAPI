@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\..\Support\PowerShell\Build.ps1
+. $PSScriptRoot\..\..\..\Support\PowerShell\Build.ps1
 
 function Mock-GetContent
 {
@@ -70,12 +70,12 @@ Describe "Get-PrtgVersion" -Tag @("PowerShell", "Build") {
 
         $info = Get-PrtgVersion
 
-        $info.Package | Should Be "1.2.3"
-        $info.Assembly | Should Be "1.2.0.0"
-        $info.File | Should Be "1.2.3.4"
-        $info.Module | Should Be "1.2.3"
-        $info.ModuleTag | Should Be "v1.2.3"
-        $info.PreviousTag | Should Be "v1.2.2"
+        $info.Package | Should -Be "1.2.3"
+        $info.Assembly | Should -Be "1.2.0.0"
+        $info.File | Should -Be "1.2.3.4"
+        $info.Module | Should -Be "1.2.3"
+        $info.ModuleTag | Should -Be "v1.2.3"
+        $info.PreviousTag | Should -Be "v1.2.2"
     }
 
     It "retrieves version information for Desktop" {
@@ -103,13 +103,13 @@ Describe "Get-PrtgVersion" -Tag @("PowerShell", "Build") {
 
         $info = Get-PrtgVersion -Legacy
 
-        $info.Package | Should Be "1.2.3"
-        $info.Assembly | Should Be "1.2.0.0"
-        $info.File | Should Be "1.2.3.4"
-        $info.Info | Should Be "1.2.3"
-        $info.Module | Should Be "1.2.3"
-        $info.ModuleTag | Should Be "v1.2.3"
-        $info.PreviousTag | Should Be "v1.2.2"
+        $info.Package | Should -Be "1.2.3"
+        $info.Assembly | Should -Be "1.2.0.0"
+        $info.File | Should -Be "1.2.3.4"
+        $info.Info | Should -Be "1.2.3"
+        $info.Module | Should -Be "1.2.3"
+        $info.ModuleTag | Should -Be "v1.2.3"
+        $info.PreviousTag | Should -Be "v1.2.2"
     }
 
     It "ignores the previous git tag when the git command is missing" {
@@ -130,7 +130,7 @@ Describe "Get-PrtgVersion" -Tag @("PowerShell", "Build") {
             }
 
             Mock "GetGitTag" {
-                throw "GetGitTag should not have been called"
+                throw "GetGitTag Should -Not -have been called"
             }
 
             Mock "Test-Path" {
@@ -149,13 +149,13 @@ Describe "Get-PrtgVersion" -Tag @("PowerShell", "Build") {
 
         $info = Get-PrtgVersion
 
-        $info.Package | Should Be "1.2.3"
-        $info.Assembly | Should Be "1.2.0.0"
-        $info.File | Should Be "1.2.3.4"
-        $info.Info | Should Be "1.2.3"
-        $info.Module | Should Be "1.2.3"
-        $info.ModuleTag | Should Be "v1.2.3"
-        $info.PreviousTag | Should Be $null
+        $info.Package | Should -Be "1.2.3"
+        $info.Assembly | Should -Be "1.2.0.0"
+        $info.File | Should -Be "1.2.3.4"
+        $info.Info | Should -Be "1.2.3"
+        $info.Module | Should -Be "1.2.3"
+        $info.ModuleTag | Should -Be "v1.2.3"
+        $info.PreviousTag | Should -Be $null
     }
 
     It "ignores the previous git tag when the git folder is missing" {
@@ -176,13 +176,13 @@ Describe "Get-PrtgVersion" -Tag @("PowerShell", "Build") {
 
         $info = Get-PrtgVersion
 
-        $info.Package | Should Be "1.2.3"
-        $info.Assembly | Should Be "1.2.0.0"
-        $info.File | Should Be "1.2.3.4"
-        $info.Info | Should Be "1.2.3"
-        $info.Module | Should Be "1.2.3"
-        $info.ModuleTag | Should Be "v1.2.3"
-        $info.PreviousTag | Should Be $null
+        $info.Package | Should -Be "1.2.3"
+        $info.Assembly | Should -Be "1.2.0.0"
+        $info.File | Should -Be "1.2.3.4"
+        $info.Info | Should -Be "1.2.3"
+        $info.Module | Should -Be "1.2.3"
+        $info.ModuleTag | Should -Be "v1.2.3"
+        $info.PreviousTag | Should -Be $null
     }
 
     It "throws when package version does not match first three digits of file version" {
@@ -198,7 +198,7 @@ Describe "Get-PrtgVersion" -Tag @("PowerShell", "Build") {
             }
         } -ModuleName CI
 
-        { Get-PrtgVersion -ErrorAction Stop } | Should Throw "Expected property 'Package' to be '1.2.0' but was '1.2.3' instead."
+        { Get-PrtgVersion -ErrorAction Stop } | Should -Throw "Expected property 'Package' to be '1.2.0' but was '1.2.3' instead."
     }
 
     It "throws when assembly version does not match first two digits of file version" {
@@ -213,7 +213,7 @@ Describe "Get-PrtgVersion" -Tag @("PowerShell", "Build") {
             }
         } -ModuleName CI
         
-        { Get-PrtgVersion -ErrorAction Stop } | Should Throw "Expected property 'Assembly' to be '1.2.0.0' but was '1.0.0.0' instead."
+        { Get-PrtgVersion -ErrorAction Stop } | Should -Throw "Expected property 'Assembly' to be '1.2.0.0' but was '1.0.0.0' instead."
     }
 
     It "throws when module version does not match first three digits of file version" {
@@ -228,7 +228,7 @@ Describe "Get-PrtgVersion" -Tag @("PowerShell", "Build") {
             }
         } -ModuleName CI
         
-        { Get-PrtgVersion -ErrorAction Stop } | Should Throw "Expected property 'Module' to be '1.2.3' but was '1.2.0' instead."
+        { Get-PrtgVersion -ErrorAction Stop } | Should -Throw "Expected property 'Module' to be '1.2.3' but was '1.2.0' instead."
     }
 
     It "throws when module tag does not match first three digits of file version" {
@@ -243,7 +243,7 @@ Describe "Get-PrtgVersion" -Tag @("PowerShell", "Build") {
             }
         } -ModuleName CI
 
-        { Get-PrtgVersion -ErrorAction Stop } | Should Throw "Expected property 'ModuleTag' to be 'v1.2.3' but was 'v1.2.0' instead"
+        { Get-PrtgVersion -ErrorAction Stop } | Should -Throw "Expected property 'ModuleTag' to be 'v1.2.3' but was 'v1.2.0' instead"
     }
 
     It "throws when module version is less than git version" {
@@ -259,7 +259,7 @@ Describe "Get-PrtgVersion" -Tag @("PowerShell", "Build") {
             }
         } -ModuleName CI
 
-        { Get-PrtgVersion -ErrorAction Stop } | Should Throw "Module tag 'v1.2.3' should be greater than or equal to previous release tag 'v4.5.6'."
+        { Get-PrtgVersion -ErrorAction Stop } | Should -Throw "Module tag 'v1.2.3' Should -be greater than or equal to previous release tag 'v4.5.6'."
     }
 
     It "doesn't throw terminating errors when an error occurs" {

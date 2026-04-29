@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
 
 Describe "Get-ObjectProperty" -Tag @("PowerShell", "UnitTest") {
 
@@ -12,7 +12,7 @@ Describe "Get-ObjectProperty" -Tag @("PowerShell", "UnitTest") {
 
             $properties = $sensor | Get-ObjectProperty
 
-            $properties.GetType().Name | Should Be SensorSettings
+            $properties.GetType().Name | Should -Be SensorSettings
         }
 
         It "can deserialize device settings" {
@@ -20,14 +20,14 @@ Describe "Get-ObjectProperty" -Tag @("PowerShell", "UnitTest") {
 
             $properties = $device | Get-ObjectProperty
 
-            $properties.GetType().Name | Should Be DeviceSettings
+            $properties.GetType().Name | Should -Be DeviceSettings
         }
 
         It "warns when an object is read-only" {
             WithReadOnly {
                 $sensor = Get-Sensor -Count 1
 
-                { $sensor | Get-ObjectProperty } | Should Throw "Cannot retrieve properties for read-only sensor with ID 4000."
+                { $sensor | Get-ObjectProperty } | Should -Throw "Cannot retrieve properties for read-only sensor with ID 4000."
             }
         }
     }
@@ -38,8 +38,8 @@ Describe "Get-ObjectProperty" -Tag @("PowerShell", "UnitTest") {
 
             $property = $device | Get-ObjectProperty -Property Tags
 
-            $property[0] | Should Be "tag1"
-            $property[1] | Should Be "tag2"
+            $property[0] | Should -Be "tag1"
+            $property[1] | Should -Be "tag2"
         }
 
         It "retrieves multiple properties" {
@@ -47,17 +47,17 @@ Describe "Get-ObjectProperty" -Tag @("PowerShell", "UnitTest") {
 
             $properties = $sensor | Get-ObjectProperty Name,Tags
 
-            $properties.Name | Should Be "testName"
-            $properties.Tags.Count | Should Be 2
-            $properties.Tags[0] | Should Be "tag1"
-            $properties.Tags[1] | Should Be "tag2"
+            $properties.Name | Should -Be "testName"
+            $properties.Tags.Count | Should -Be 2
+            $properties.Tags[0] | Should -Be "tag1"
+            $properties.Tags[1] | Should -Be "tag2"
         }
 
         It "throws trying to retrieve a mergeable property" {
 
             $device = Get-Device -Count 1
 
-            { $Device | Get-ObjectProperty LocationName } | Should Throw "'LocationName' is a virtual property and cannot be retrieved directly. To access this value, property 'Location' should be retrieved instead."
+            { $Device | Get-ObjectProperty LocationName } | Should -Throw "'LocationName' is a virtual property and cannot be retrieved directly. To access this value, property 'Location' Should -be retrieved instead."
         }
     }
 
@@ -67,7 +67,7 @@ Describe "Get-ObjectProperty" -Tag @("PowerShell", "UnitTest") {
 
             $property = $sensor | Get-ObjectProperty -RawProperty name_
 
-            $property | Should Be "testName"
+            $property | Should -Be "testName"
         }
 
         It "retrieves a raw property with -Text" {
@@ -84,8 +84,8 @@ Describe "Get-ObjectProperty" -Tag @("PowerShell", "UnitTest") {
 
             $properties = $sensor | Get-ObjectProperty -RawProperty name_,tags_
 
-            $properties.name | Should Be "testName"
-            $properties.tags | Should Be "tag1 tag2"
+            $properties.name | Should -Be "testName"
+            $properties.tags | Should -Be "tag1 tag2"
         }
     }
 
@@ -95,9 +95,9 @@ Describe "Get-ObjectProperty" -Tag @("PowerShell", "UnitTest") {
 
             $properties = $sensor | Get-ObjectProperty -Raw
 
-            $properties.name | Should Be "Server CPU Usage"
-            $properties.interval | Should Be "60|60 seconds"
-            $properties.schedule | Should Be "627|Weekdays Nights (17:00 - 9:00) [GMT+0800]|"
+            $properties.name | Should -Be "Server CPU Usage"
+            $properties.interval | Should -Be "60|60 seconds"
+            $properties.schedule | Should -Be "627|Weekdays Nights (17:00 - 9:00) [GMT+0800]|"
         }
     }
 
@@ -109,18 +109,18 @@ Describe "Get-ObjectProperty" -Tag @("PowerShell", "UnitTest") {
 
             $property = Get-ObjectProperty -Id 1001 -Property Tags
 
-            $property[0] | Should Be "tag1"
-            $property[1] | Should Be "tag2"
+            $property[0] | Should -Be "tag1"
+            $property[1] | Should -Be "tag2"
         }
 
         It "retrieves multiple properties" {
 
             $properties = Get-ObjectProperty -Id 1001 -Property Name,Tags
 
-            $properties.Name | Should Be "testName"
-            $properties.Tags.Count | Should Be 2
-            $properties.Tags[0] | Should Be "tag1"
-            $properties.Tags[1] | Should Be "tag2"
+            $properties.Name | Should -Be "testName"
+            $properties.Tags.Count | Should -Be 2
+            $properties.Tags[0] | Should -Be "tag1"
+            $properties.Tags[1] | Should -Be "tag2"
         }
     }
 
@@ -129,7 +129,7 @@ Describe "Get-ObjectProperty" -Tag @("PowerShell", "UnitTest") {
 
             $property = Get-ObjectProperty -Id 1001 -RawProperty name_
 
-            $property | Should Be "testName"
+            $property | Should -Be "testName"
         }
 
         It "retrieves a raw property with -Text" {
@@ -143,8 +143,8 @@ Describe "Get-ObjectProperty" -Tag @("PowerShell", "UnitTest") {
 
             $properties = Get-ObjectProperty -Id 1001 -RawProperty name_,tags_
 
-            $properties.name | Should Be "testName"
-            $properties.tags | Should Be "tag1 tag2"
+            $properties.name | Should -Be "testName"
+            $properties.tags | Should -Be "tag1 tag2"
         }
     }
 
@@ -157,15 +157,15 @@ Describe "Get-ObjectProperty" -Tag @("PowerShell", "UnitTest") {
             )
 
             $response = Get-ObjectProperty -Id 1001 -SubId 5 -RawSubType channel -RawProperty limitmaxerror,limitminerror
-            $response.limitmaxerror | Should Be 90
-            $response.limitminerror | Should Be 30
+            $response.limitmaxerror | Should -Be 90
+            $response.limitminerror | Should -Be 30
         }
 
         It "retrieves a sub object property with -Text" {
             WithResponseArgs "AddressValidatorResponse" "api/getobjectproperty.htm?id=1001&name=limitmaxerror&subid=5&subtype=channel&username" {
                 $response = Get-ObjectProperty -Id 1001 -SubId 5 -RawSubType channel -RawProperty limitmaxerror -Text
 
-                $response | Should Be 90
+                $response | Should -Be 90
             }
         }
     }
@@ -177,25 +177,25 @@ Describe "Get-ObjectProperty" -Tag @("PowerShell", "UnitTest") {
 
             $properties = Get-ObjectProperty -Id 1001 -Raw
 
-            $properties.name | Should Be "Server CPU Usage"
-            $properties.interval | Should Be "60|60 seconds"
-            $properties.schedule | Should Be "627|Weekdays Nights (17:00 - 9:00) [GMT+0800]|"
+            $properties.name | Should -Be "Server CPU Usage"
+            $properties.interval | Should -Be "60|60 seconds"
+            $properties.schedule | Should -Be "627|Weekdays Nights (17:00 - 9:00) [GMT+0800]|"
         }
 
         It "throws retrieving all raw properties when no parameter specified" {
 
-            { Get-ObjectProperty -Id 1001 } | Should Throw "Parameter set cannot be resolved"
+            { Get-ObjectProperty -Id 1001 } | Should -Throw "Parameter set cannot be resolved"
         }
     }
 
     It "throws an ErrorRecord when a property doesn't exist" {
         Get-Device -Count 1 | Get-ObjectProperty -RawProperty banana -ErrorAction SilentlyContinue
 
-        $? | Should Be $false
+        $? | Should -Be $false
     }
 
     It "throws when a property doesn't exist and ErrorActionPreference is stop" {
-        { Get-Device -Count 1 | Get-ObjectProperty -RawProperty banana -ErrorAction Stop } | Should Throw "PRTG was unable to complete the request. A value for property 'banana' could not be found."
+        { Get-Device -Count 1 | Get-ObjectProperty -RawProperty banana -ErrorAction Stop } | Should -Throw "PRTG was unable to complete the request. A value for property 'banana' could not be found."
     }
 
     #endregion

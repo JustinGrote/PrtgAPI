@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\..\Support\PowerShell\ObjectProperty.ps1
+. $PSScriptRoot\..\..\..\Support\PowerShell\ObjectProperty.ps1
 
 Describe "Set-ObjectProperty_Sensors_IT" -Tag @("PowerShell", "IntegrationTest") {
   
@@ -146,6 +146,6 @@ Describe "Set-ObjectProperty_Sensors_IT" -Tag @("PowerShell", "IntegrationTest")
 
         $source = $object | Get-SensorFactorySource
 
-        $source.Id | Should Be $sensors.Id
+        $source.Id | Should -Be $sensors.Id
     }
 }

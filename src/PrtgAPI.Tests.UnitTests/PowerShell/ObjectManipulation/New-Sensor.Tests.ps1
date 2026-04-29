@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
 
 function GetService
 {
@@ -6,8 +6,8 @@ function GetService
 
     $services = $device | Get-SensorTarget WmiService prtgcoreservice
 
-    $services | Should Not BeNullOrEmpty | Out-Null
-    $services.Count | Should Be 1 | Out-Null
+    $services | Should -Not -BeNullOrEmpty | Out-Null
+    $services.Count | Should -Be 1 | Out-Null
 
     return $services
 }
@@ -57,7 +57,7 @@ Describe "New-Sensor" -Tag @("PowerShell", "UnitTest") {
 
             $expected = "Performing the operation `"New-Sensor: Name = 'test', ExeFile = 'test.ps1'`" on target `"'Probe Device' (ID: 40)`"."
 
-            ($device | New-Sensor -ExeXml test test.ps1 -Resolve:$false -Verbose 4>&1) | Should Be $expected
+            ($device | New-Sensor -ExeXml test test.ps1 -Resolve:$false -Verbose 4>&1) | Should -Be $expected
         }
     }
 
@@ -90,7 +90,7 @@ Describe "New-Sensor" -Tag @("PowerShell", "UnitTest") {
         It "throws if no services are specified" {
             SetMultiTypeResponse
 
-            { $device | New-Sensor -WmiService -Service @() } | Should Throw "Cannot bind argument to parameter 'Service' because it is an empty array."
+            { $device | New-Sensor -WmiService -Service @() } | Should -Throw "Cannot bind argument to parameter 'Service' because it is an empty array."
         }
 
         It "uses positional parameters" {
@@ -109,7 +109,7 @@ Describe "New-Sensor" -Tag @("PowerShell", "UnitTest") {
 
             $expected = "Performing the operation `"New-Sensor: Service = 'PRTG Core Server Service'`" on target `"'Probe Device' (ID: 40)`"."
 
-            ($device | New-Sensor -WmiService -Service $service -Resolve:$false -Verbose 4>&1) | Should Be $expected
+            ($device | New-Sensor -WmiService -Service $service -Resolve:$false -Verbose 4>&1) | Should -Be $expected
         }
 
         It "displays -WhatIf message with multiple services" {
@@ -117,11 +117,11 @@ Describe "New-Sensor" -Tag @("PowerShell", "UnitTest") {
             Set-PrtgClient -LogLevel None
 
             $services = $device | Get-SensorTarget WmiService *prtg*
-            $services.Count | Should Be 2
+            $services.Count | Should -Be 2
 
             $expected = "Performing the operation `"New-Sensor: Service = 'PRTG Core Server Service, PRTG Probe Service'`" on target `"'Probe Device' (ID: 40)`"."
 
-            ($device | New-Sensor -WmiService -Service $services -Resolve:$false -Verbose 4>&1) | Should Be $expected
+            ($device | New-Sensor -WmiService -Service $services -Resolve:$false -Verbose 4>&1) | Should -Be $expected
         }
     }
     
@@ -164,7 +164,7 @@ Describe "New-Sensor" -Tag @("PowerShell", "UnitTest") {
         It "throws if no services are matched" {
             SetMultiTypeResponse
 
-            { $device | New-Sensor -WmiService -ServiceName "potato" } | Should Throw "Parameter '-ServiceName' requires a value, however an empty collection was specified."
+            { $device | New-Sensor -WmiService -ServiceName "potato" } | Should -Throw "Parameter '-ServiceName' requires a value, however an empty collection was specified."
         }
 
         It "uses positional parameters" {
@@ -189,7 +189,7 @@ Describe "New-Sensor" -Tag @("PowerShell", "UnitTest") {
 
             $expected = "Performing the operation `"New-Sensor: ServiceName = 'PRTG Core Server Service'`" on target `"'Probe Device' (ID: 40)`"."
 
-            ($device | New-Sensor -WmiService -ServiceName prtgcoreservice -Resolve:$false -Verbose 4>&1) | Should Be $expected
+            ($device | New-Sensor -WmiService -ServiceName prtgcoreservice -Resolve:$false -Verbose 4>&1) | Should -Be $expected
         }
 
         It "displays -WhatIf message with multiple services" {
@@ -198,7 +198,7 @@ Describe "New-Sensor" -Tag @("PowerShell", "UnitTest") {
 
             $expected = "Performing the operation `"New-Sensor: ServiceName = 'PRTG Core Server Service, PRTG Probe Service'`" on target `"'Probe Device' (ID: 40)`"."
 
-            ($device | New-Sensor -WmiService -ServiceName *prtg* -Resolve:$false -Verbose 4>&1) | Should Be $expected
+            ($device | New-Sensor -WmiService -ServiceName *prtg* -Resolve:$false -Verbose 4>&1) | Should -Be $expected
         }
     }
 
@@ -250,7 +250,7 @@ Describe "New-Sensor" -Tag @("PowerShell", "UnitTest") {
 
             $expected = "Performing the operation `"New-Sensor: Name = 'HTTPS', HttpRequestMethod = 'POST'`" on target `"'Probe Device' (ID: 40)`"."
 
-            ($device | New-Sensor -Http HTTPS -HttpRequestMethod post -Resolve:$false -Verbose 4>&1) | Should Be $expected
+            ($device | New-Sensor -Http HTTPS -HttpRequestMethod post -Resolve:$false -Verbose 4>&1) | Should -Be $expected
         }
     }
 
@@ -320,19 +320,19 @@ Describe "New-Sensor" -Tag @("PowerShell", "UnitTest") {
 
             SetMultiTypeResponse
 
-            { $sensors | New-Sensor -Factory { $_.Device } -DestinationId 1001 -Resolve:$false } | Should Throw "Parameter set cannot be resolved"
+            { $sensors | New-Sensor -Factory { $_.Device } -DestinationId 1001 -Resolve:$false } | Should -Throw "Parameter set cannot be resolved"
         }
 
         It "throws specifying a -ChannelDefinition" {
             SetMultiTypeResponse
 
-            { $sensors | New-Sensor -Factory -Name "CPU Overview" -ChannelName { $_.Device } -DestinationId 1001 -Resolve:$false -ChannelDefinition "a","b" } | Should Throw "Parameter set cannot be resolved"
+            { $sensors | New-Sensor -Factory -Name "CPU Overview" -ChannelName { $_.Device } -DestinationId 1001 -Resolve:$false -ChannelDefinition "a","b" } | Should -Throw "Parameter set cannot be resolved"
         }
 
         It "pipes an empty list of sensors" {
             SetAddressValidatorResponse "address_not_called"
 
-            { $sensors | where name -EQ "blah" | New-Sensor -Factory "CPU Overview" { $_.Device } -DestinationId 1001 -Resolve:$false } | Should Throw "Property 'ChannelDefinition' requires a value"
+            { $sensors | where name -EQ "blah" | New-Sensor -Factory "CPU Overview" { $_.Device } -DestinationId 1001 -Resolve:$false } | Should -Throw "Property 'ChannelDefinition' requires a value"
         }
 
         It "displays -WhatIf message" {
@@ -350,7 +350,7 @@ Describe "New-Sensor" -Tag @("PowerShell", "UnitTest") {
                 "`" on target `"Device ID: 1001`"."
             ) -join "`n"
 
-            ($sensors | New-Sensor -Factory "CPU Overview" { $_.Device } -DestinationId 1001 -FactoryErrorMode WarnOnError -Resolve:$false -Verbose 4>&1) | Should Be $expected
+            ($sensors | New-Sensor -Factory "CPU Overview" { $_.Device } -DestinationId 1001 -FactoryErrorMode WarnOnError -Resolve:$false -Verbose 4>&1) | Should -Be $expected
         }
     }
 
@@ -373,7 +373,7 @@ Describe "New-Sensor" -Tag @("PowerShell", "UnitTest") {
         It "throws specifying a -ChannelDefinition" {
             SetMultiTypeResponse
 
-            { New-Sensor -Factory -Name "Manual Sensor" -ChannelName "Line at 40.2" -Value 40.2 -DestinationId 1001 -ChannelDefinition "a","b" -Resolve:$false } | Should Throw "Parameter set cannot be resolved"
+            { New-Sensor -Factory -Name "Manual Sensor" -ChannelName "Line at 40.2" -Value 40.2 -DestinationId 1001 -ChannelDefinition "a","b" -Resolve:$false } | Should -Throw "Parameter set cannot be resolved"
         }
 
         It "displays -WhatIf message" {
@@ -387,7 +387,7 @@ Describe "New-Sensor" -Tag @("PowerShell", "UnitTest") {
                 "`" on target `"Device ID: 1001`"."
             ) -join "`n"
 
-            (New-Sensor -Factory "Manual Sensor" "Line at 40.2" -Value 40.2 -DestinationId 1001 -FactoryErrorMode WarnOnError -Resolve:$false -Verbose 4>&1) | Should Be $expected
+            (New-Sensor -Factory "Manual Sensor" "Line at 40.2" -Value 40.2 -DestinationId 1001 -FactoryErrorMode WarnOnError -Resolve:$false -Verbose 4>&1) | Should -Be $expected
         }
     }
 
@@ -428,13 +428,13 @@ Describe "New-Sensor" -Tag @("PowerShell", "UnitTest") {
         It "prohibits a finalizer when a well known summary mode is specified" {
             SetMultiTypeResponse
 
-            { $sensors | New-Sensor -Factory "CPU Overview" "Aggregate Channel" -Aggregator Sum -Finalizer { "($acc)/3" } -DestinationId 1001 -Resolve:$false } | Should Throw "Cannot specify -Finalizer when -Aggregator is not a ScriptBlock."
+            { $sensors | New-Sensor -Factory "CPU Overview" "Aggregate Channel" -Aggregator Sum -Finalizer { "($acc)/3" } -DestinationId 1001 -Resolve:$false } | Should -Throw "Cannot specify -Finalizer when -Aggregator is not a ScriptBlock."
         }
 
         It "throws specifying a -ChannelDefinition" {
             SetMultiTypeResponse
 
-            { $sensors | New-Sensor -Factory -Name "CPU Overview" -ChannelName "Aggregate Channel" -Aggregator Sum -ChannelDefinition "a","b" -DestinationId 1001 -Resolve:$false } | Should Throw "Parameter set cannot be resolved"
+            { $sensors | New-Sensor -Factory -Name "CPU Overview" -ChannelName "Aggregate Channel" -Aggregator Sum -ChannelDefinition "a","b" -DestinationId 1001 -Resolve:$false } | Should -Throw "Parameter set cannot be resolved"
         }
 
         It "displays -WhatIf message" {
@@ -448,7 +448,7 @@ Describe "New-Sensor" -Tag @("PowerShell", "UnitTest") {
                 "`" on target `"Device ID: 1001`"."
             ) -join "`n"
 
-            ($sensors | New-Sensor -Factory "CPU Overview" "Aggregate Channel" -Aggregator Sum -DestinationId 1001 -FactoryErrorMode WarnOnError -Resolve:$false -Verbose 4>&1) | Should Be $expected
+            ($sensors | New-Sensor -Factory "CPU Overview" "Aggregate Channel" -Aggregator Sum -DestinationId 1001 -FactoryErrorMode WarnOnError -Resolve:$false -Verbose 4>&1) | Should -Be $expected
         }
     }
 
@@ -501,13 +501,13 @@ Describe "New-Sensor" -Tag @("PowerShell", "UnitTest") {
         It "prohibits a finalizer when a well known summary mode is specified" {
             SetMultiTypeResponse
 
-            { $sensors | New-Sensor -Factory "CPU Overview" { $_.Device } -SummaryName "Average CPU Usage" -SummaryExpression Sum -SummaryFinalizer { "($acc)/3" } -DestinationId 1001 -Resolve:$false } | Should Throw "Cannot specify -SummaryFinalizer when -SummaryExpression is not a ScriptBlock."
+            { $sensors | New-Sensor -Factory "CPU Overview" { $_.Device } -SummaryName "Average CPU Usage" -SummaryExpression Sum -SummaryFinalizer { "($acc)/3" } -DestinationId 1001 -Resolve:$false } | Should -Throw "Cannot specify -SummaryFinalizer when -SummaryExpression is not a ScriptBlock."
         }
 
         It "throws specifying a -ChannelDefinition" {
             SetMultiTypeResponse
 
-            { $sensors | New-Sensor -Factory -Name "CPU Overview" -ChannelName { $_.Device } -SummaryName "Average CPU Usage" -SummaryExpression Sum -ChannelDefinition "a","b" } | Should Throw "Parameter set cannot be resolved"
+            { $sensors | New-Sensor -Factory -Name "CPU Overview" -ChannelName { $_.Device } -SummaryName "Average CPU Usage" -SummaryExpression Sum -ChannelDefinition "a","b" } | Should -Throw "Parameter set cannot be resolved"
         }
 
         It "specifies an alias" {
@@ -548,7 +548,7 @@ Describe "New-Sensor" -Tag @("PowerShell", "UnitTest") {
                 "`" on target `"Device ID: 1001`"."
             ) -join "`n"
 
-            ($sensors | New-Sensor -Factory "CPU Overview" { $_.Device } -sn "Average CPU Usage" -se Average -DestinationId 1001 -FactoryErrorMode WarnOnError -Resolve:$false -Verbose 4>&1) | Should Be $expected
+            ($sensors | New-Sensor -Factory "CPU Overview" { $_.Device } -sn "Average CPU Usage" -se Average -DestinationId 1001 -FactoryErrorMode WarnOnError -Resolve:$false -Verbose 4>&1) | Should -Be $expected
         }
     }
 
@@ -674,7 +674,7 @@ Describe "New-Sensor" -Tag @("PowerShell", "UnitTest") {
         It "throws specifying a New-SensorFactoryDefinition parameter" {
             SetMultiTypeResponse
 
-            { New-Sensor -Factory -Name "CPU Overview" -ChannelDefinition "#1:dc1","channel(4000,0)" -ChannelName "test" -DestinationId 1001 -Resolve:$false } | Should Throw "Parameter set cannot be resolved"
+            { New-Sensor -Factory -Name "CPU Overview" -ChannelDefinition "#1:dc1","channel(4000,0)" -ChannelName "test" -DestinationId 1001 -Resolve:$false } | Should -Throw "Parameter set cannot be resolved"
         }
 
         It "processes additional parameters" {
@@ -697,7 +697,7 @@ Describe "New-Sensor" -Tag @("PowerShell", "UnitTest") {
         It "cannot be used positionally" {
             SetMultiTypeResponse
 
-            { New-Sensor -Factory "CPU Overview" "#1:dc1","channel(4000,0)" -DestinationId 1001 -Resolve:$false } | Should Throw "Cannot bind parameter 'HashTable'. Cannot convert the `"#1:dc1`" value of type `"System.String`" to type `"System.Collections.Hashtable`""
+            { New-Sensor -Factory "CPU Overview" "#1:dc1","channel(4000,0)" -DestinationId 1001 -Resolve:$false } | Should -Throw "Cannot bind parameter 'HashTable'. Cannot convert the `"#1:dc1`" value of type `"System.String`" to type `"System.Collections.Hashtable`""
         }
 
         It "displays -WhatIf message" {
@@ -713,7 +713,7 @@ Describe "New-Sensor" -Tag @("PowerShell", "UnitTest") {
                 "`" on target `"Device ID: 1001`"."
             ) -join "`n"
 
-            (New-Sensor -Factory "CPU Overview" -ChannelDefinition "#1:dc1","channel(4000,0)","#2:dc2","channel(4001,0)" -DestinationId 1001 -FactoryErrorMode WarnOnError -Resolve:$false -Verbose 4>&1) | Should Be $expected
+            (New-Sensor -Factory "CPU Overview" -ChannelDefinition "#1:dc1","channel(4000,0)","#2:dc2","channel(4001,0)" -DestinationId 1001 -FactoryErrorMode WarnOnError -Resolve:$false -Verbose 4>&1) | Should -Be $expected
         }
     }
 
@@ -725,7 +725,7 @@ Describe "New-Sensor" -Tag @("PowerShell", "UnitTest") {
         SetResponseAndClient "DiffBasedResolveResponse"
 
         $sensor = $device | New-Sensor -ExeXml test test.ps1
-        $sensor.Count | Should Be 2 # DiffBasedResolveResponse resolves 2 instead of 1
+        $sensor.Count | Should -Be 2 # DiffBasedResolveResponse resolves 2 instead of 1
     }
 
     It "specifies common sensor parameters" {
@@ -758,7 +758,7 @@ Describe "New-Sensor" -Tag @("PowerShell", "UnitTest") {
 
         $device = Get-Device -Count 1
 
-        { $device | New-Sensor -ExeXml test test.ps1 -Source $device -Resolve:$false } | Should Throw "A parameter cannot be found that matches parameter name 'Source'."
+        { $device | New-Sensor -ExeXml test test.ps1 -Source $device -Resolve:$false } | Should -Throw "A parameter cannot be found that matches parameter name 'Source'."
     }
 
     It "has contexts for all sensor types" {
@@ -772,7 +772,7 @@ Describe "New-Sensor" -Tag @("PowerShell", "UnitTest") {
         # so these parameters are always included anyway
 
         $device = Run Device { Get-Device }
-        $device.Count | Should Be 1
+        $device.Count | Should -Be 1
 
         SetAddressValidatorResponse @(
             [Request]::Status()

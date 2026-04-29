@@ -1,15 +1,15 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\UnitTest.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\UnitTest.ps1
 
 Describe "Get-Probe" -Tag @("PowerShell", "UnitTest") {
 
     It "can deserialize" {
         $probes = Get-Probe
-        $probes.Count | Should Be 1
+        $probes.Count | Should -Be 1
     }
 
     It "can filter by status" {
         $items = (GetItem),(GetItem),(GetItem),(GetItem)
-        $items.Count | Should Be 4
+        $items.Count | Should -Be 4
 
         $items[0].StatusRaw = "5" # Down
         $items[1].StatusRaw = "3" # Up
@@ -19,7 +19,7 @@ Describe "Get-Probe" -Tag @("PowerShell", "UnitTest") {
         WithItems $items {
             $probes = Get-Probe -Status Up,Paused
 
-            $probes.Count | Should Be 3
+            $probes.Count | Should -Be 3
         }
     }
 
@@ -31,7 +31,7 @@ Describe "Get-Probe" -Tag @("PowerShell", "UnitTest") {
 
         WithItems ($obj1, $obj2) {
             $probes = Get-Probe -Tags *banana*
-            $probes.Count | Should Be 1
+            $probes.Count | Should -Be 1
         }
     }
 
@@ -43,7 +43,7 @@ Describe "Get-Probe" -Tag @("PowerShell", "UnitTest") {
 
         WithItems ($obj1, $obj2) {
             $probes = Get-Probe -Tags *apple*
-            $probes.Count | Should Be 0
+            $probes.Count | Should -Be 0
         }
     }
 
@@ -65,7 +65,7 @@ Describe "Get-Probe" -Tag @("PowerShell", "UnitTest") {
         }
 
         It "throws using a dynamic parameter not supported by this type" {
-            { Get-Probe -Host dc-1 } | Should Throw "A parameter cannot be found that matches parameter name 'Host'"
+            { Get-Probe -Host dc-1 } | Should -Throw "A parameter cannot be found that matches parameter name 'Host'"
         }
 
         It "uses dynamic parameters in conjunction with regular parameters" {
@@ -81,9 +81,9 @@ Describe "Get-Probe" -Tag @("PowerShell", "UnitTest") {
 
             $probe = @(Get-Probe -Count 3 -Message "*1")
 
-            $probe.Count | Should Be 1
+            $probe.Count | Should -Be 1
 
-            $probe.Name | Should Be "127.0.0.11"
+            $probe.Name | Should -Be "127.0.0.11"
         }
 
         It "uses a bool with a dynamic parameter" {
@@ -106,11 +106,11 @@ Describe "Get-Probe" -Tag @("PowerShell", "UnitTest") {
         WithItems ($obj1, $obj2, $obj3) {
             $probes = Get-Probe
 
-            $probes.Count | Should Be 2
+            $probes.Count | Should -Be 2
         }
     }
 
     It "throws specifying a ParentId other than 0" {
-        { flt parentid eq -1 | Get-Probe } | Should Throw "Cannot filter for probes based on a ParentId other than 0"
+        { flt parentid eq -1 | Get-Probe } | Should -Throw "Cannot filter for probes based on a ParentId other than 0"
     }
 }

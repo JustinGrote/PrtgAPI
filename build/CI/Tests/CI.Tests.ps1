@@ -11,14 +11,14 @@ Describe "CI" {
     It "gets the PrtgAPI version" {
         $version = Get-CIVersion
 
-        $version.File.ToString() -match "\d+\.\d+\.\d+" | Should Be $true
+        $version.File.ToString() -match "\d+\.\d+\.\d+" | Should -Be $true
     }
 
     It "gets the solution root" {
         $root = Get-SolutionRoot
 
-        $items = gci $root -Filter *.sln
+        $items = gci $root -Filter *.sln*
 
-        $items.Count | Should BeGreaterThan 0
+        $items.Count | Should -BeGreaterThan 0
     }
 }

@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\..\..\PrtgAPI.Tests.UnitTests\Support\PowerShell\BuildCore.ps1
+. $PSScriptRoot\..\..\..\..\PrtgAPI.Tests.UnitTests\Support\PowerShell\BuildCore.ps1
 
 $testCases = @(
     @{name = "Debug"}
@@ -20,7 +20,7 @@ Describe "New-PrtgPackage_IT" -Tag @("PowerShell", "Build_IT") {
         }
         else
         {
-            { New-PrtgPackage -Configuration $name } | Should Throw "$name packages can only be created on Windows."
+            { New-PrtgPackage -Configuration $name } | Should -Throw "$name packages can only be created on Windows."
         }
     }
 

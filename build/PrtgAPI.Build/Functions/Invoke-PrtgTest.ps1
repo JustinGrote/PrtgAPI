@@ -26,7 +26,7 @@ Specifies to run integration tests instead of unit tests.
 Specifies tags or test categories to execute. If a Name is specified as well, these two categories will be filtered using logical AND.
 
 .PARAMETER Build
-Specifies that PrtgAPI.Build tests should be included. If -Tag contains "Build" this parameter will also be activated.
+Specifies that PrtgAPI.Build tests Should -be included. If -Tag contains "Build" this parameter will also be activated.
 
 .EXAMPLE
 C:\> Invoke-PrtgTest

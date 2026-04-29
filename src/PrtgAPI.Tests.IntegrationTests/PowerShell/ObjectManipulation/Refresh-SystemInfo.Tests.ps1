@@ -1,11 +1,11 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\IntegrationTest.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\IntegrationTest.ps1
 
 function RefreshAndValidate($deviceId, $type)
 {
     $original = Get-SystemInfo -Id $deviceId $type
     $originalLastUpdated = $original | Select -First 1 -ExpandProperty LastUpdated
 
-    $originalLastUpdated | Should Not BeNullOrEmpty
+    $originalLastUpdated | Should -Not -BeNullOrEmpty
 
     Refresh-SystemInfo -Id $deviceId $type
 
@@ -25,7 +25,7 @@ function RefreshAndValidate($deviceId, $type)
         }
     }
 
-    $newLastUpdated | Should BeGreaterThan $originalLastUpdated
+    $newLastUpdated | Should -BeGreaterThan $originalLastUpdated
 }
 
 Describe "Refresh-SystemInfo_IT" -Tag @("PowerShell", "IntegrationTest") {

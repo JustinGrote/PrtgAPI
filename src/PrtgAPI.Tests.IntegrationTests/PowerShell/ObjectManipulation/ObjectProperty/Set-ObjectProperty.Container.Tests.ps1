@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\..\Support\PowerShell\ObjectProperty.ps1
+. $PSScriptRoot\..\..\..\Support\PowerShell\ObjectProperty.ps1
 
 Describe "Set-ObjectProperty_Containers_IT" -Tag @("PowerShell", "IntegrationTest") {
 
@@ -24,7 +24,7 @@ Describe "Set-ObjectProperty_Containers_IT" -Tag @("PowerShell", "IntegrationTes
 
         $object = (& $obj)
 
-        { SetChild "Location"        "410 Terry Ave. North Seattle" "InheritLocation" $false } | Should Throw "410 Terry Ave N, Seattle, WA 98109, United States"
+        { SetChild "Location"        "410 Terry Ave. North Seattle" "InheritLocation" $false } | Should -Throw "410 Terry Ave N, Seattle, WA 98109, United States"
 
         # Location: Coordinates
         $lat = 51.4521
@@ -32,8 +32,8 @@ Describe "Set-ObjectProperty_Containers_IT" -Tag @("PowerShell", "IntegrationTes
 
         SetValue "Location" "$lat, $lon" $true
         $prop = $object | Get-ObjectProperty
-        $prop.Coordinates.Latitude | Should Be $lat
-        $prop.Coordinates.Longitude | Should Be $lon
+        $prop.Coordinates.Latitude | Should -Be $lat
+        $prop.Coordinates.Longitude | Should -Be $lon
 
         # Location: Label
         SetLabelLocation "410 Terry Ave. North Seattle" "410 Terry Ave N, Seattle, WA 98109, United States"
@@ -65,7 +65,7 @@ Describe "Set-ObjectProperty_Containers_IT" -Tag @("PowerShell", "IntegrationTes
         SetWriteChild "LinuxPassword"             "newPassword" "HasLinuxPassword"   "InheritLinuxCredentials" $false
         SetWriteChild "LinuxPrivateKey"           "newKey"      "HasLinuxPrivateKey" "InheritLinuxCredentials" $false
         SetChild      "WbemProtocolMode"          "HTTP"                             "InheritLinuxCredentials" $false
-      { SetChild      "WbemPortMode"              "Manual"                           "InheritLinuxCredentials" $false } | Should Throw (ForeignMessage "Required field, not defined")
+      { SetChild      "WbemPortMode"              "Manual"                           "InheritLinuxCredentials" $false } | Should -Throw (ForeignMessage "Required field, not defined")
         SetGrandChild "WbemPort"                  6000                               "WbemPortMode"            "Manual"            "InheritLinuxCredentials" $false
         SetChild      "SSHPort"                   23                                 "InheritLinuxCredentials" $false
         SetChild      "SSHElevationMode"          "RunAsAnotherWithPasswordViaSudo"  "InheritLinuxCredentials" $false
@@ -112,9 +112,9 @@ Describe "Set-ObjectProperty_Containers_IT" -Tag @("PowerShell", "IntegrationTes
 
         $object = (& $obj)
 
-      { SetChild      "DBPortMode"               "Manual"                         "InheritDBCredentials"   $false } | Should Throw (ForeignMessage "Required field, not defined")
+      { SetChild      "DBPortMode"               "Manual"                         "InheritDBCredentials"   $false } | Should -Throw (ForeignMessage "Required field, not defined")
         SetGrandChild "DBPort"                   "8080"                           "DBPortMode"             "Manual"            "InheritDBCredentials"    $false
-      { SetChild      "DBAuthMode"               "SQL"                            "InheritDBCredentials"   $false } | Should Throw (ForeignMessage "Required field, not defined")
+      { SetChild      "DBAuthMode"               "SQL"                            "InheritDBCredentials"   $false } | Should -Throw (ForeignMessage "Required field, not defined")
         SetGrandChild "DBUserName"               "newUsername"                    "DBAuthMode"             "SQL"               "InheritDBCredentials"    $false
         SetWriteChild  "DBPassword"              "newPassword" "HasDBPassword"    "InheritDBCredentials"   $false
         SetChild      "DBTimeout"                "70"                             "InheritDBCredentials"   $false
@@ -137,7 +137,7 @@ Describe "Set-ObjectProperty_Containers_IT" -Tag @("PowerShell", "IntegrationTes
         $object = (& $obj)
         
         SetChild      "WmiDataSource"           "WMI"                             "InheritWindowsCompatibility" $false
-      { SetChild      "WmiTimeoutMethod"        "Manual"                          "InheritWindowsCompatibility" $false } | Should Throw (ForeignMessage "Required field, not defined")
+      { SetChild      "WmiTimeoutMethod"        "Manual"                          "InheritWindowsCompatibility" $false } | Should -Throw (ForeignMessage "Required field, not defined")
         SetGrandChild "WmiTimeout"              50                                "WmiTimeoutMethod"        "Manual"            "InheritWindowsCompatibility" $false
         SetValue      "InheritWindowsCompatibility" $false
     }

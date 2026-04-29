@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
 
 function SetCloneResponse
 {
@@ -53,7 +53,7 @@ Describe "Clone-Object" -Tag @("PowerShell", "UnitTest") {
     It "Retries resolving an object" {
         $sensor = Run Sensor { Get-Sensor }
 
-        $sensor.Count | Should Be 1
+        $sensor.Count | Should -Be 1
 
         $output = [string]::Join("`n",(&{try { $sensor | Clone-Object 1234 3>&1 | %{$_.Message} } catch [exception] { }}))
 
@@ -62,7 +62,7 @@ Describe "Clone-Object" -Tag @("PowerShell", "UnitTest") {
                     "'Copy-Object' failed to resolve sensor: object is still being created. Retries remaining: 2`n" +
                     "'Copy-Object' failed to resolve sensor: object is still being created. Retries remaining: 1"
 
-        $output | Should Be $expected
+        $output | Should -Be $expected
     }
 
     $triggerCases = @(
@@ -92,7 +92,7 @@ Describe "Clone-Object" -Tag @("PowerShell", "UnitTest") {
         }
         else
         {
-            { & $clone } | Should Throw "Channel 'Primary' is not a valid value"
+            { & $clone } | Should -Throw "Channel 'Primary' is not a valid value"
         }
     }
 
@@ -123,7 +123,7 @@ Describe "Clone-Object" -Tag @("PowerShell", "UnitTest") {
         $devices = Run Device { Get-Device }
 
         WithResponse "MultiTypeResponse" {
-            { $devices | Clone-Object -SourceId -4 } | Should Throw "Cannot clone object with ID '-4' as it is not a sensor, device or group"
+            { $devices | Clone-Object -SourceId -4 } | Should -Throw "Cannot clone object with ID '-4' as it is not a sensor, device or group"
         }
     }
 
@@ -136,10 +136,10 @@ Describe "Clone-Object" -Tag @("PowerShell", "UnitTest") {
             $devices = Get-Device -Count 2
             $sensor = Get-Sensor -Id 4000
 
-            $devices.Count | Should Be 2
+            $devices.Count | Should -Be 2
             $devices[0].Id = 2193
             $devices[1].Id = 2194
-            $sensor.ParentId | Should Be 2193
+            $sensor.ParentId | Should -Be 2193
 
             SetAddressValidatorResponse @(
                 (GetLookup @("sensors") @($sensorProperties) 4000)
@@ -149,7 +149,7 @@ Describe "Clone-Object" -Tag @("PowerShell", "UnitTest") {
 
             $output = [string]::Join("`n",(&{try { ($devices | Clone-Object -SourceId 4000 -SkipParent | Out-Null) 3>&1 | %{$_.Message} } catch [exception] { }}))
 
-            $output | Should Be "Skipping 'Probe Device0' (ID: 2193) as it is the parent of clone source 'Volume IO _Total0' (ID: 4000)."
+            $output | Should -Be "Skipping 'Probe Device0' (ID: 2193) as it is the parent of clone source 'Volume IO _Total0' (ID: 4000)."
         }
         finally
         {
@@ -162,7 +162,7 @@ Describe "Clone-Object" -Tag @("PowerShell", "UnitTest") {
 
         $result = $sensor | Clone-Object 1234 "new sensor" -Resolve:$false
 
-        $result.GetType().Name | Should Be "PSCustomObject"
+        $result.GetType().Name | Should -Be "PSCustomObject"
     }
 
     It "doesn't resolve a device" {
@@ -170,7 +170,7 @@ Describe "Clone-Object" -Tag @("PowerShell", "UnitTest") {
 
         $result = $device | Clone-Object 1234 "new device" -Resolve:$false
 
-        $result.GetType().Name | Should Be "PSCustomObject"
+        $result.GetType().Name | Should -Be "PSCustomObject"
     }
 
     It "executes with -WhatIf" {

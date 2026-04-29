@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
 
 Describe "Refresh-Object" -Tag @("PowerShell", "UnitTest") {
 
@@ -50,7 +50,7 @@ Describe "Refresh-Object" -Tag @("PowerShell", "UnitTest") {
 
         $newSensor = $sensor | Refresh-Object -PassThru -Batch:$false
 
-        $newSensor | Should Be $sensor
+        $newSensor | Should -Be $sensor
     }
 
     It "passes through with -Batch:`$true" {
@@ -60,7 +60,7 @@ Describe "Refresh-Object" -Tag @("PowerShell", "UnitTest") {
 
         $newSensor = $sensor | Refresh-Object -PassThru -Batch:$true
 
-        $newSensor | Should Be $sensor
+        $newSensor | Should -Be $sensor
     }
 
     It "specifies an ID" {

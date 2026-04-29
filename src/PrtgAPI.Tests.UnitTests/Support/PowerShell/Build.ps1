@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\BuildCore.ps1
+. $PSScriptRoot\BuildCore.ps1
 
 function Describe
 {
@@ -376,7 +376,7 @@ function Mock-InstallDotnet
             Mock Invoke-WebRequest {
                 param($Uri)
 
-                $Uri | Should Be "https://dot.net/v1/dotnet-install.ps1"
+                $Uri | Should -Be "https://dot.net/v1/dotnet-install.ps1"
             } -ParameterFilter { $Uri -like "*dotnet*" } -Verifiable:($env:CI -eq $null)
 
             if($PSEdition -eq "Core" -and $IsWindows)
@@ -392,7 +392,7 @@ function Mock-InstallDotnet
                 $root = Get-SolutionRoot
                 $dotnetSdk = Join-Path $root "packages\dotnet-sdk"
 
-                $Command | Should Be "& '$dotnetInstall' -InstallDir '$dotnetSdk' -NoPath"
+                $Command | Should -Be "& '$dotnetInstall' -InstallDir '$dotnetSdk' -NoPath"
             } -ParameterFilter { $Command -like "*dotnet*" }
 
             Mock "Test-CIIsWindows" {
@@ -406,7 +406,7 @@ function Mock-InstallDotnet
             Mock Invoke-WebRequest {
                 param($Uri)
 
-                $Uri | Should Be "https://dot.net/v1/dotnet-install.sh"
+                $Uri | Should -Be "https://dot.net/v1/dotnet-install.sh"
             } -ParameterFilter { $Uri -like "*dotnet*" } -Verifiable:($env:CI -eq $null)
 
             Mock Test-CIIsWindows {
@@ -421,7 +421,7 @@ function Mock-InstallDotnet
                 $root = Get-SolutionRoot
                 $dotnetSdk = Join-Path $root "packages\dotnet-sdk"
 
-                $Command | Should Be "chmod +x '$dotnetInstall'; & '$dotnetInstall' --install-dir '$dotnetSdk' --no-path"
+                $Command | Should -Be "chmod +x '$dotnetInstall'; & '$dotnetInstall' --install-dir '$dotnetSdk' --no-path"
             } -ParameterFilter { $Command -like "*dotnet*" }
         }
     }

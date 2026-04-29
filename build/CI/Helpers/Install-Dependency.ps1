@@ -85,7 +85,7 @@ function Install-Dotnet
 {
     if($env:CI)
     {
-        # dotnet SDK should be managed by CI system, not by us
+        # dotnet SDK Should -be managed by CI system, not by us
         return
     }
 

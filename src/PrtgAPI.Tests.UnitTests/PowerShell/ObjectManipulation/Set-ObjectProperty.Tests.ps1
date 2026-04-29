@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
 
 Describe "Set-ObjectProperty" -Tag @("PowerShell", "UnitTest") {
 
@@ -14,7 +14,7 @@ Describe "Set-ObjectProperty" -Tag @("PowerShell", "UnitTest") {
         It "sets a property with an invalid type" {
             $timeSpan = New-TimeSpan -Seconds 10
 
-            { $sensor | Set-ObjectProperty InheritAccess $timeSpan } | Should Throw "could not be assigned to property 'InheritAccess'. Expected type: 'System.Boolean'"
+            { $sensor | Set-ObjectProperty InheritAccess $timeSpan } | Should -Throw "could not be assigned to property 'InheritAccess'. Expected type: 'System.Boolean'"
         }
 
         It "sets a property with an empty string" {
@@ -29,18 +29,18 @@ Describe "Set-ObjectProperty" -Tag @("PowerShell", "UnitTest") {
         }
 
         It "sets a property with null on a type that disallows null" {
-            { $sensor | Set-ObjectProperty InheritAccess $null } | Should Throw "Null may only be assigned to properties of type 'System.String', 'System.Int32' and 'System.Double'."
+            { $sensor | Set-ObjectProperty InheritAccess $null } | Should -Throw "Null may only be assigned to properties of type 'System.String', 'System.Int32' and 'System.Double'."
         }
 
         It "sets a nullable type with its underlying type" {
             $val = $true
-            $val.GetType() | Should Be "bool"
+            $val.GetType() | Should -Be "bool"
 
             $sensor | Set-ObjectProperty InheritAccess $val
         }
 
         It "requires Value be specified" {
-            { $sensor | Set-ObjectProperty Name } | Should Throw "Value parameter is mandatory"
+            { $sensor | Set-ObjectProperty Name } | Should -Throw "Value parameter is mandatory"
         }
 
         It "setting an invalid enum value lists all valid possibilities" {
@@ -48,7 +48,7 @@ Describe "Set-ObjectProperty" -Tag @("PowerShell", "UnitTest") {
             $expected = "'test' is not a valid value for type 'PrtgAPI.IntervalErrorMode'. Please specify one of " +
                 "'DownImmediately', 'OneWarningThenDown', 'TwoWarningsThenDown', 'ThreeWarningsThenDown', 'FourWarningsThenDown' or 'FiveWarningsThenDown'"
 
-            { $sensor | Set-ObjectProperty IntervalErrorMode "test" } | Should Throw $expected
+            { $sensor | Set-ObjectProperty IntervalErrorMode "test" } | Should -Throw $expected
         }
 
         $intervalCases = @(
@@ -131,7 +131,7 @@ Describe "Set-ObjectProperty" -Tag @("PowerShell", "UnitTest") {
 
             $newSensor = $sensor | Set-ObjectProperty name blah -PassThru -Batch:$false
 
-            $newSensor | Should Be $sensor
+            $newSensor | Should -Be $sensor
         }
 
         It "passes through with -Batch:`$true" {
@@ -141,7 +141,7 @@ Describe "Set-ObjectProperty" -Tag @("PowerShell", "UnitTest") {
 
             $newSensor = $sensor | Set-ObjectProperty name blah -PassThru -Batch:$true
 
-            $newSensor | Should Be $sensor
+            $newSensor | Should -Be $sensor
         }
 
         $locationCases = @(
@@ -156,7 +156,7 @@ Describe "Set-ObjectProperty" -Tag @("PowerShell", "UnitTest") {
 
             $sensor = Get-Sensor -Count 1
 
-            $value.GetType().Name | Should Be $type
+            $value.GetType().Name | Should -Be $type
 
             SetAddressValidatorResponse @(
                 [Request]::EditSettings("id=4000&location_=1.234%2C+5.678&lonlat_=5.678%2C1.234&locationgroup=0&nosession=1")
@@ -237,7 +237,7 @@ Describe "Set-ObjectProperty" -Tag @("PowerShell", "UnitTest") {
                 Channels = 2
             }
 
-            { $sensor | Set-ObjectProperty PrimaryChannel *memory* } | Should Throw "Channel wildcard '*memory*' on parameter 'PrimaryChannel' is ambiguous between the channels: 'Percent Available Memory0', 'Percent Available Memory1'."
+            { $sensor | Set-ObjectProperty PrimaryChannel *memory* } | Should -Throw "Channel wildcard '*memory*' on parameter 'PrimaryChannel' is ambiguous between the channels: 'Percent Available Memory0', 'Percent Available Memory1'."
         }
 
         It "specifies a PrimaryChannel with a string that does not exist" {
@@ -256,7 +256,7 @@ Describe "Set-ObjectProperty" -Tag @("PowerShell", "UnitTest") {
                 Channels = 2
             }
 
-            { $sensor | Set-ObjectProperty PrimaryChannel foo } | Should Throw "Channel wildcard 'foo' does not exist on sensor ID 4000. Specify one of the following channel names and try again: 'Percent Available Memory0', 'Percent Available Memory1'."
+            { $sensor | Set-ObjectProperty PrimaryChannel foo } | Should -Throw "Channel wildcard 'foo' does not exist on sensor ID 4000. Specify one of the following channel names and try again: 'Percent Available Memory0', 'Percent Available Memory1'."
         }
 
         It "specifies a PrimaryChannel with a Channel that does not exist" {
@@ -275,7 +275,7 @@ Describe "Set-ObjectProperty" -Tag @("PowerShell", "UnitTest") {
                 Channels = 2
             }
 
-            { $sensor | Set-ObjectProperty PrimaryChannel $channel } | Should Throw "Channel wildcard 'Percent Available Memory' does not exist on sensor ID 4000. Specify one of the following channel names and try again: 'Percent Available Memory0', 'Percent Available Memory1'."
+            { $sensor | Set-ObjectProperty PrimaryChannel $channel } | Should -Throw "Channel wildcard 'Percent Available Memory' does not exist on sensor ID 4000. Specify one of the following channel names and try again: 'Percent Available Memory0', 'Percent Available Memory1'."
         }
 
         It "specifies a PrimaryChannel that has different channel IDs on different sensors" {
@@ -403,7 +403,7 @@ Describe "Set-ObjectProperty" -Tag @("PowerShell", "UnitTest") {
             $devices = Get-Device -Count 2
             $schedule = Get-PrtgSchedule | Select -First 1
 
-            { $devices | Set-ObjectProperty -RawParameters @{} -Force } | Should Throw "At least one parameter must be specified"
+            { $devices | Set-ObjectProperty -RawParameters @{} -Force } | Should -Throw "At least one parameter must be specified"
         }
     }
 
@@ -448,7 +448,7 @@ Describe "Set-ObjectProperty" -Tag @("PowerShell", "UnitTest") {
 
         It "doesn't specify any dynamic parameters" {
 
-            { $devices | Set-ObjectProperty } | Should Throw "At least one dynamic property or -Property and -Value must be specified."
+            { $devices | Set-ObjectProperty } | Should -Throw "At least one dynamic property or -Property and -Value must be specified."
         }
 
         It "splats dynamic parameters" {
@@ -543,7 +543,7 @@ Describe "Set-ObjectProperty" -Tag @("PowerShell", "UnitTest") {
                 Channels = 2
             }
 
-            { $sensor | Set-ObjectProperty -PrimaryChannel *memory* } | Should Throw "Channel wildcard '*memory*' on parameter 'PrimaryChannel' is ambiguous between the channels: 'Percent Available Memory0', 'Percent Available Memory1'."
+            { $sensor | Set-ObjectProperty -PrimaryChannel *memory* } | Should -Throw "Channel wildcard '*memory*' on parameter 'PrimaryChannel' is ambiguous between the channels: 'Percent Available Memory0', 'Percent Available Memory1'."
         }
 
         It "specifies a -PrimaryChannel with a string that does not exist" {
@@ -561,7 +561,7 @@ Describe "Set-ObjectProperty" -Tag @("PowerShell", "UnitTest") {
                 Channels = 2
             }
 
-            { $sensor | Set-ObjectProperty -PrimaryChannel foo } | Should Throw "Channel wildcard 'foo' does not exist on sensor ID 4000. Specify one of the following channel names and try again: 'Percent Available Memory0', 'Percent Available Memory1'."
+            { $sensor | Set-ObjectProperty -PrimaryChannel foo } | Should -Throw "Channel wildcard 'foo' does not exist on sensor ID 4000. Specify one of the following channel names and try again: 'Percent Available Memory0', 'Percent Available Memory1'."
         }
 
         It "specifies a -PrimaryChannel with a Channel that does not exist" {
@@ -580,7 +580,7 @@ Describe "Set-ObjectProperty" -Tag @("PowerShell", "UnitTest") {
                 Channels = 2
             }
 
-            { $sensor | Set-ObjectProperty -PrimaryChannel $channel } | Should Throw "Channel wildcard 'Percent Available Memory' does not exist on sensor ID 4000. Specify one of the following channel names and try again: 'Percent Available Memory0', 'Percent Available Memory1'."
+            { $sensor | Set-ObjectProperty -PrimaryChannel $channel } | Should -Throw "Channel wildcard 'Percent Available Memory' does not exist on sensor ID 4000. Specify one of the following channel names and try again: 'Percent Available Memory0', 'Percent Available Memory1'."
         }
 
         It "specifies a -PrimaryChannel and another property" {
@@ -713,13 +713,13 @@ Describe "Set-ObjectProperty" -Tag @("PowerShell", "UnitTest") {
 
             SetMultiTypeResponse
 
-            (Set-ObjectProperty -Id 1001 -RawProperty name -RawValue value -Force 3>&1) -join "" | Should BeLike "Property 'name' does not look correct*"
+            (Set-ObjectProperty -Id 1001 -RawProperty name -RawValue value -Force 3>&1) -join "" | Should -BeLike "Property 'name' does not look correct*"
         }
 
         It "doesn't show a warning when a known literal value doesn't contain an underscore" {
             SetMultiTypeResponse
 
-            (Set-ObjectProperty -Id 1001 -RawProperty intervalgroup -RawValue 1 -Force 3>&1) -join "" | Should BeNullOrEmpty
+            (Set-ObjectProperty -Id 1001 -RawProperty intervalgroup -RawValue 1 -Force 3>&1) -join "" | Should -BeNullOrEmpty
         }
     }
 }

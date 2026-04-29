@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\Init.ps1
+. $PSScriptRoot\Init.ps1
 
 #region Support
 
@@ -10,7 +10,7 @@ function InstallInEmptyProfile($baseExpected)
 
     $content = gc $Profile -Raw
 
-    $content | Should BeLike $baseExpected
+    $content | Should -BeLike $baseExpected
 }
 
 function InstallInProfileWithContent($baseExpected, $multiLine)
@@ -35,7 +35,7 @@ function InstallInProfileWithContent($baseExpected, $multiLine)
         $expected = "Write-Host `"hello`"$($nl)Write-Host `"what what?`"$nl$baseExpected"
     }
 
-    $content | Should BeLike $expected
+    $content | Should -BeLike $expected
 }
 
 function InstallMultipleInProfile
@@ -66,7 +66,7 @@ function InstallMultipleInProfile
 
     $expected = $expected.Replace("``", "````")
 
-    $content | Should BeLike $expected
+    $content | Should -BeLike $expected
 }
 
 function InstallMultipleWithAlias
@@ -97,7 +97,7 @@ function InstallMultipleWithAlias
 
     $expected = $expected.Replace("``", "````")
 
-    $content | Should BeLike $expected
+    $content | Should -BeLike $expected
 }
 
 function InstallInProfileFunctionWithoutHeaderFooter
@@ -119,6 +119,8 @@ function InstallInProfileFunctionWithoutHeaderFooter
 
 function GoPrtgBeforeAll
 {
+    . $PSScriptRoot\Init.ps1
+
     if($Profile)
     {
         $script:originalProfile = $Profile
@@ -183,3 +185,9 @@ function GoPrtgAfterEach
 }
 
 #endregion
+
+# Ensure Pester callback blocks can always resolve these lifecycle helpers.
+Set-Item Function:\Global:GoPrtgBeforeAll ${function:GoPrtgBeforeAll}
+Set-Item Function:\Global:GoPrtgAfterAll ${function:GoPrtgAfterAll}
+Set-Item Function:\Global:GoPrtgBeforeEach ${function:GoPrtgBeforeEach}
+Set-Item Function:\Global:GoPrtgAfterEach ${function:GoPrtgAfterEach}

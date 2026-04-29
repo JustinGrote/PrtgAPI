@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\Progress.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\Progress.ps1
 
 Describe "Test-Progress" -Tag @("PowerShell", "UnitTest") {
         
@@ -21,7 +21,7 @@ Describe "Test-Progress" -Tag @("PowerShell", "UnitTest") {
     It "1b: Variable -> Action" {
         $devices = Get-Device
 
-        $devices.Count | Should Be 2
+        $devices.Count | Should -Be 2
 
         $devices | Pause-Object -Forever -Batch:$false
 
@@ -51,7 +51,7 @@ Describe "Test-Progress" -Tag @("PowerShell", "UnitTest") {
 
         $probes = Get-Probe
 
-        $probes.Count | Should Be 2
+        $probes.Count | Should -Be 2
 
         $probes | Get-Sensor
 
@@ -127,7 +127,7 @@ Describe "Test-Progress" -Tag @("PowerShell", "UnitTest") {
         #originated with a variable. maybe look at the first progressrecord to see if its dodgy
         #or can we potentially dig back along the pipeline to the entry
 
-        $probes.Count | Should Be 2
+        $probes.Count | Should -Be 2
 
         $probes | Get-Device | Get-Sensor
 
@@ -339,7 +339,7 @@ Describe "Test-Progress" -Tag @("PowerShell", "UnitTest") {
 
         $sensors = Get-Sensor -Count 2
 
-        $sensors.Count | Should Be 2
+        $sensors.Count | Should -Be 2
         $sensors | Get-Channel
 
         Validate(@(
@@ -2752,7 +2752,7 @@ Describe "Test-Progress" -Tag @("PowerShell", "UnitTest") {
             Get-Probe
         }
 
-        $probes.Count | Should Be 3
+        $probes.Count | Should -Be 3
 
         $probes | where { $_.name -EQ "127.0.0.10" -or $_.name -eq "127.0.0.12" } | Get-Device
 
@@ -2966,7 +2966,7 @@ Describe "Test-Progress" -Tag @("PowerShell", "UnitTest") {
             Get-Probe
         }
 
-        $probes.Count | Should Be 3
+        $probes.Count | Should -Be 3
 
         $probes | where { $_.name -EQ "127.0.0.10" -or $_.name -eq "127.0.0.12" } | Get-Device | Get-Sensor
 
@@ -3004,7 +3004,7 @@ Describe "Test-Progress" -Tag @("PowerShell", "UnitTest") {
 
         $probe = Get-Probe -Count 1
 
-        $probe.Count | Should Be 1
+        $probe.Count | Should -Be 1
 
         $probe | Get-Group | Get-Device
 
@@ -5518,7 +5518,7 @@ Describe "Test-Progress" -Tag @("PowerShell", "UnitTest") {
 
         $sensors = Get-Sensor -Count 2
 
-        $sensors.Count | Should Be 2
+        $sensors.Count | Should -Be 2
 
         $sensors | Get-SensorFactorySource
 
@@ -5582,7 +5582,7 @@ Describe "Test-Progress" -Tag @("PowerShell", "UnitTest") {
 
         $sensors = Get-Sensor -Count 2
 
-        $sensors.Count | Should Be 2
+        $sensors.Count | Should -Be 2
 
         $sensors | Get-SensorFactorySource | Get-Channel
 
@@ -5769,7 +5769,7 @@ Describe "Test-Progress" -Tag @("PowerShell", "UnitTest") {
     It "100c2: Variable -> Sensor -> Get-SensorFactorySource -> Channel" {
         $devices = Get-Device
 
-        $devices.Count | Should Be 2
+        $devices.Count | Should -Be 2
 
         $devices | Get-Sensor | Get-SensorFactorySource | Get-Channel
 
@@ -5926,7 +5926,7 @@ Describe "Test-Progress" -Tag @("PowerShell", "UnitTest") {
 
         $sensors = Get-Sensor -Count 2
 
-        $sensors.Count | Should Be 2
+        $sensors.Count | Should -Be 2
 
         $sensors | Get-SensorFactorySource | Pause-Object -Forever -Batch:$false
 
@@ -7177,7 +7177,7 @@ Describe "Test-Progress" -Tag @("PowerShell", "UnitTest") {
         $channels += 1..2 | foreach { $sensors[1] | Get-Channel }
         $channels += $sensors[2] | Get-Channel
 
-        $channels.Count | Should Be 5
+        $channels.Count | Should -Be 5
 
         $channels[0].Id = 0
         $channels[0].Name = "FirstChannel"
@@ -12182,7 +12182,7 @@ Describe "Test-Progress" -Tag @("PowerShell", "UnitTest") {
     It "Doesn't show progress when a variable contains only 1 object" {
         $probe = Get-Probe -Count 1
 
-        $probe.Count | Should Be 1
+        $probe.Count | Should -Be 1
 
         $sensors = $probe | Get-Sensor
 
@@ -12315,7 +12315,7 @@ Describe "Test-Progress" -Tag @("PowerShell", "UnitTest") {
     It "Table -> Table (Throw) Completes" {
 
         WithResponseArgs "FaultyTableResponse" (GetCustomCountDictionary @{ Devices = 1 }) {
-            { Get-Probe | Get-Device } | Should Throw "Requested content 'Devices' too many times"
+            { Get-Probe | Get-Device } | Should -Throw "Requested content 'Devices' too many times"
         }
 
         Validate(@(
@@ -12329,7 +12329,7 @@ Describe "Test-Progress" -Tag @("PowerShell", "UnitTest") {
     It "Table -> Table -> Table (Throw) Completes" {
 
         WithResponseArgs "FaultyTableResponse" (GetCustomCountDictionary @{ Sensors = 1 }) {
-            { Get-Probe | Get-Device | Get-Sensor } | Should Throw "Requested content 'Sensors' too many times"
+            { Get-Probe | Get-Device | Get-Sensor } | Should -Throw "Requested content 'Sensors' too many times"
         }
 
         Validate(@(
@@ -12352,7 +12352,7 @@ Describe "Test-Progress" -Tag @("PowerShell", "UnitTest") {
 
     It "Table -> Table (Throw) -> Table Completes" {
         WithResponseArgs "FaultyTableResponse" (GetCustomCountDictionary @{ Devices = 2 }) {
-            { Get-Probe -Count 3 | Get-Device -Count 1 | Get-Sensor } | Should Throw "Requested content 'Devices' too many times"
+            { Get-Probe -Count 3 | Get-Device -Count 1 | Get-Sensor } | Should -Throw "Requested content 'Devices' too many times"
         }
 
         Validate(@(
@@ -12379,7 +12379,7 @@ Describe "Test-Progress" -Tag @("PowerShell", "UnitTest") {
 
     It "Table -> Action (Throw) Completes" {
          WithResponseArgs "FaultyTableResponse" "Pause" {
-            { Get-Sensor | Pause-Object -Forever -Batch:$false } | Should Throw "Requested function 'Pause'"
+            { Get-Sensor | Pause-Object -Forever -Batch:$false } | Should -Throw "Requested function 'Pause'"
         }
 
         Validate(@(
@@ -12394,7 +12394,7 @@ Describe "Test-Progress" -Tag @("PowerShell", "UnitTest") {
     It "Variable -> Table (Throw) Completes" {
 
         WithResponseArgs "FaultyTableResponse" (GetCustomCountDictionary @{ Devices = 2 }) {
-            { $probes = Get-Probe -Count 3; $probes | Get-Device } | Should Throw "Requested content 'Devices' too many times"
+            { $probes = Get-Probe -Count 3; $probes | Get-Device } | Should -Throw "Requested content 'Devices' too many times"
         }
 
         Validate(@(
@@ -12405,7 +12405,7 @@ Describe "Test-Progress" -Tag @("PowerShell", "UnitTest") {
     }
 
     It "Table -> Action (Throw) -Batch:`$true Completes" {
-        # When an exception is thrown in the EndProcessing block it should complete
+        # When an exception is thrown in the EndProcessing block it Should -complete
         # We force ErrorActionPreference = 'Continue' so that we can clean up our progress after the
         # ErrorRecord is written (which wouldn't happen if we were ErrorActionPreference = 'Stop')
 
@@ -12420,7 +12420,7 @@ Describe "Test-Progress" -Tag @("PowerShell", "UnitTest") {
     }
 
     It "Variable -> Action (Throw) -Batch:`$true Completes" {
-        # When an exception is thrown in the EndProcessing block it should complete
+        # When an exception is thrown in the EndProcessing block it Should -complete
         # We force ErrorActionPreference = 'Continue' so that we can clean up our progress after the
         # ErrorRecord is written (which wouldn't happen if we were ErrorActionPreference = 'Stop')
 
@@ -12436,7 +12436,7 @@ Describe "Test-Progress" -Tag @("PowerShell", "UnitTest") {
     }
 
     It "Table -> NonTerminatingException When ErrorActionPreference = 'Stop' Completes'" {
-        { Get-Sensor -Count 1 | Set-ObjectProperty PrimaryChannel *foo* } | Should Throw "Channel wildcard '*foo*' does not exist on sensor ID 4000"
+        { Get-Sensor -Count 1 | Set-ObjectProperty PrimaryChannel *foo* } | Should -Throw "Channel wildcard '*foo*' does not exist on sensor ID 4000"
 
         Validate(@(
             (Gen "PRTG Sensor Search" "Retrieving all sensors")
@@ -12449,7 +12449,7 @@ Describe "Test-Progress" -Tag @("PowerShell", "UnitTest") {
     It "Variable -> NonTerminatingException When ErrorActionPreference = 'Stop' Completes'" {
         $sensors = Get-Sensor -Count 2
 
-        { $sensors | Set-ObjectProperty PrimaryChannel *foo* } | Should Throw "Channel wildcard '*foo*' does not exist on sensor ID 4000"
+        { $sensors | Set-ObjectProperty PrimaryChannel *foo* } | Should -Throw "Channel wildcard '*foo*' does not exist on sensor ID 4000"
 
         Validate(@(
             (Gen "Modify PRTG Object Settings" "Queuing sensor 'Volume IO _Total0' (ID: 4000) (1/2)" 50)
@@ -12478,7 +12478,7 @@ Describe "Test-Progress" -Tag @("PowerShell", "UnitTest") {
         # 3. First time Action is called it will seize ownership of Second's object
         # 4. Second does not emit any additional objects
 
-        # Second's ProcessRecord will open and close several times. Action should always be declared owner
+        # Second's ProcessRecord will open and close several times. Action Should -always be declared owner
         # on all subsequent calls
 
         WithResponse "ProgressOwnershipResponse" {

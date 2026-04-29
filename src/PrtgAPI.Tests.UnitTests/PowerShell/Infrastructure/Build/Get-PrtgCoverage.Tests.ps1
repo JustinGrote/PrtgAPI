@@ -30,7 +30,7 @@ function GetCSharpCoreCommand($configuration = "Debug")
 {
     $dotnet = (gcm dotnet).Source
 
-    ( $dotnet | Should Not BeNullOrEmpty ) | Out-Null
+    ( $dotnet | Should -Not -BeNullOrEmpty ) | Out-Null
 
     $temp = [IO.Path]::GetTempPath()
 
@@ -326,6 +326,6 @@ Describe "Get-PrtgCoverage" -Tag @("PowerShell", "Build") {
             }
         }
 
-        { Get-PrtgCoverage } | Should Throw "Code coverage is only supported on Windows"
+        { Get-PrtgCoverage } | Should -Throw "Code coverage is only supported on Windows"
     }
 }

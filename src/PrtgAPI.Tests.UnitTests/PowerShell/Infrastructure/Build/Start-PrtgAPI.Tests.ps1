@@ -13,7 +13,7 @@ function Mock-PSStartProcess($exe, $expected, $legacy, $additionalArguments)
 
         $powerShell = "$exe -executionpolicy bypass -noexit -command ipmo"
 
-        $Filepath + " " + $ArgumentList -join " " | Should Be "$powerShell $(Join-Path $root $expected); cd ~"
+        $Filepath + " " + $ArgumentList -join " " | Should -Be "$powerShell $(Join-Path $root $expected); cd ~"
     }.GetNewClosure() -Verifiable -ModuleName "PrtgAPI.Build"
 
     if($additionalArguments)
@@ -33,7 +33,7 @@ function Mock-ImportModule($path, $scriptBlock)
     Mock Import-Module {
         param($Name)
 
-        $Name | Should Be $path
+        $Name | Should -Be $path
     }.GetNewClosure() -Verifiable -ModuleName "PrtgAPI.Build"
 
     & $scriptBlock
@@ -146,7 +146,7 @@ Describe "Start-PrtgAPI" -Tag @("PowerShell", "Build") {
             }
         }
 
-        { Start-PrtgAPI -Legacy } | Should Throw "Cannot start PrtgAPI: solution has not been compiled for 'Debug' build"
+        { Start-PrtgAPI -Legacy } | Should -Throw "Cannot start PrtgAPI: solution has not been compiled for 'Debug' build"
     }
 
     It "throws when PrtgAPI has not been compiled on core" {
@@ -160,7 +160,7 @@ Describe "Start-PrtgAPI" -Tag @("PowerShell", "Build") {
             }
         }
 
-        { Start-PrtgAPI } | Should Throw "Cannot find any build candidates under folder"
+        { Start-PrtgAPI } | Should -Throw "Cannot find any build candidates under folder"
     }
 
     It "throws when multiple target frameworks exist on core" {
@@ -176,7 +176,7 @@ Describe "Start-PrtgAPI" -Tag @("PowerShell", "Build") {
             }
         }
 
-        { Start-PrtgAPI } | Should Throw "Unable to determine which TargetFramework to use. Please specify one of net10.0, netstandard2.0"
+        { Start-PrtgAPI } | Should -Throw "Unable to determine which TargetFramework to use. Please specify one of net10.0, netstandard2.0"
     }
 
     It "specifies a target framework" {
@@ -229,7 +229,7 @@ Describe "Start-PrtgAPI" -Tag @("PowerShell", "Build") {
             }
         }
 
-        { Start-PrtgAPI -Target banana } | Should Throw "Cannot start PrtgAPI: target framework 'banana' does not exist. Please ensure PrtgAPI has been compiled for the specified TargetFramework and Configuration. Known target frameworks: net10.0, netstandard2.0."
+        { Start-PrtgAPI -Target banana } | Should -Throw "Cannot start PrtgAPI: target framework 'banana' does not exist. Please ensure PrtgAPI has been compiled for the specified TargetFramework and Configuration. Known target frameworks: net10.0, netstandard2.0."
     }
 
     It "specifies an invalid target framework when no frameworks have been compiled" {
@@ -246,7 +246,7 @@ Describe "Start-PrtgAPI" -Tag @("PowerShell", "Build") {
 
         $root = Get-SourceRoot
 
-        { Start-PrtgAPI -Target banana } | Should Throw "Cannot start PrtgAPI: target folder '$(Join-PathEx $root PrtgAPI.PowerShell bin Debug banana)' does not exist. Please ensure PrtgAPI has been compiled for the specified TargetFramework and Configuration."
+        { Start-PrtgAPI -Target banana } | Should -Throw "Cannot start PrtgAPI: target folder '$(Join-PathEx $root PrtgAPI.PowerShell bin Debug banana)' does not exist. Please ensure PrtgAPI has been compiled for the specified TargetFramework and Configuration."
     }
 
     It "opens PrtgAPI on Linux" {

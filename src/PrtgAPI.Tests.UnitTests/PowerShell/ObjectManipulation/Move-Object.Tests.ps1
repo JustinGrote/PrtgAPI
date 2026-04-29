@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
 
 Describe "Move-Object" -Tag @("PowerShell", "UnitTest") {
 
@@ -29,7 +29,7 @@ Describe "Move-Object" -Tag @("PowerShell", "UnitTest") {
 
         $newDevice = $device | Move-Object 5678 -PassThru
 
-        $newDevice | Should Be $device
+        $newDevice | Should -Be $device
     }
 
     It "specifies an ID" {

@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\..\Support\PowerShell\Build.ps1
+. $PSScriptRoot\..\..\..\Support\PowerShell\Build.ps1
 
 Describe "Get-PrtgCommand" -Tag @("PowerShell", "Build") {
     It "retrieves all commands" {
@@ -32,7 +32,7 @@ Describe "Get-PrtgCommand" -Tag @("PowerShell", "Build") {
 
         for($i = 0; $i -lt $expectedCommands.Count; $i++)
         {
-            $commands[$i].Name | Should Be $expectedCommands[$i]
+            $commands[$i].Name | Should -Be $expectedCommands[$i]
 
             if($commands[$i].Description.Contains("["))
             {
@@ -44,11 +44,11 @@ Describe "Get-PrtgCommand" -Tag @("PowerShell", "Build") {
     It "filters specified commands" {
         $commands = Get-PrtgCommand *invoke*
 
-        $commands.Count | Should Be 3
+        $commands.Count | Should -Be 3
 
-        $commands[0].Name | Should Be "Invoke-PrtgBuild"
-        $commands[1].Name | Should Be "Invoke-PrtgTest"
-        $commands[2].Name | Should Be "Invoke-PrtgAnalyzer"
+        $commands[0].Name | Should -Be "Invoke-PrtgBuild"
+        $commands[1].Name | Should -Be "Invoke-PrtgTest"
+        $commands[2].Name | Should -Be "Invoke-PrtgAnalyzer"
     }
 
     It "lists all commands properly in PrtgAPI.Build.psd1" {

@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\IntegrationTest.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\IntegrationTest.ps1
 
 Describe "Clone-Object_IT" -Tag @("PowerShell", "IntegrationTest") {
 
@@ -12,7 +12,7 @@ Describe "Clone-Object_IT" -Tag @("PowerShell", "IntegrationTest") {
 
             $newSensor = $sensor | Clone-Object $device.Id $newName
 
-            $newSensor.Name | Should Be $newName
+            $newSensor.Name | Should -Be $newName
 
             $newSensor | Remove-Object -Force
         }
@@ -24,7 +24,7 @@ Describe "Clone-Object_IT" -Tag @("PowerShell", "IntegrationTest") {
 
             $newSensor = $sensor | Clone-Object $device.Id
 
-            $newSensor.Name | Should Be $sensor.Name
+            $newSensor.Name | Should -Be $sensor.Name
 
             $newSensor | Remove-Object -Force
         }
@@ -41,8 +41,8 @@ Describe "Clone-Object_IT" -Tag @("PowerShell", "IntegrationTest") {
 
             $newDevice = $device | Clone-Object $probe.Id $newName $newHost
 
-            $newDevice.Name | Should Be $newName
-            $newDevice.Host | Should Be $newHost
+            $newDevice.Name | Should -Be $newName
+            $newDevice.Host | Should -Be $newHost
 
             $newDevice | Remove-Object -Force
         }
@@ -56,8 +56,8 @@ Describe "Clone-Object_IT" -Tag @("PowerShell", "IntegrationTest") {
 
             $newDevice = $device | Clone-Object $probe.Id -Host $newHost
 
-            $newDevice.Name | Should Be "Clone of $($device.Name)"
-            $newDevice.Host | Should Be $newHost
+            $newDevice.Name | Should -Be "Clone of $($device.Name)"
+            $newDevice.Host | Should -Be $newHost
 
             $newDevice | Remove-Object -Force
         }
@@ -71,8 +71,8 @@ Describe "Clone-Object_IT" -Tag @("PowerShell", "IntegrationTest") {
 
             $newDevice = $device | Clone-Object $probe.Id $newName
 
-            $newDevice.Name | Should Be $newName
-            $newDevice.Host | Should Be $device.Host
+            $newDevice.Name | Should -Be $newName
+            $newDevice.Host | Should -Be $device.Host
 
             $newDevice | Remove-Object -Force
         }
@@ -88,7 +88,7 @@ Describe "Clone-Object_IT" -Tag @("PowerShell", "IntegrationTest") {
 
             $newGroup = $group | Clone-Object $probe.Id $newName
 
-            $newGroup.Name | Should Be $newName
+            $newGroup.Name | Should -Be $newName
 
             $newGroup | Remove-Object -Force
         }
@@ -100,7 +100,7 @@ Describe "Clone-Object_IT" -Tag @("PowerShell", "IntegrationTest") {
 
             $newGroup = $group | Clone-Object $probe.Id
 
-            $newGroup.Name | Should Be $group.Name
+            $newGroup.Name | Should -Be $group.Name
 
             $newGroup | Remove-Object -Force
         }
@@ -112,16 +112,16 @@ Describe "Clone-Object_IT" -Tag @("PowerShell", "IntegrationTest") {
 
             $sensorTriggers = $sensor | Get-Trigger -Inherited $false
 
-            $sensorTriggers | Should Be $null
+            $sensorTriggers | Should -Be $null
 
             $group = Get-Group -Id 0
 
             $triggers = $group | Get-Trigger
 
-            $triggers.Count | Should Be 1
+            $triggers.Count | Should -Be 1
 
             $newSensorTrigger = $triggers | Clone-Object $sensor.Id
-            $newSensorTrigger.OnNotificationAction.ToString() | Should Be $triggers.OnNotificationAction.ToString()
+            $newSensorTrigger.OnNotificationAction.ToString() | Should -Be $triggers.OnNotificationAction.ToString()
 
             $newSensorTrigger | Remove-NotificationTrigger -Force
         }
@@ -136,12 +136,12 @@ Describe "Clone-Object_IT" -Tag @("PowerShell", "IntegrationTest") {
             $sensor = Get-Sensor -Id $id
 
             $sensorsBefore = Get-Sensor $sensor.Name
-            $sensorsBefore.Count | Should Be 1
+            $sensorsBefore.Count | Should -Be 1
 
             $device | Clone-Object -SourceId $id
 
             $sensorsAfter = Get-Sensor $sensor.Name
-            $sensorsAfter.Count | Should Be 2
+            $sensorsAfter.Count | Should -Be 2
         }
 
         It "clones a source device to a probe" {
@@ -151,12 +151,12 @@ Describe "Clone-Object_IT" -Tag @("PowerShell", "IntegrationTest") {
 
             $device = Get-Device -Id $id
             $devicesBefore = Get-Device $device.Name
-            $devicesBefore.Count | Should Be 1
+            $devicesBefore.Count | Should -Be 1
 
             $probe | Clone-Object -SourceId $id
 
             $devicesAfter = Get-Device $device.Name
-            $devicesAfter.Count | Should Be 2
+            $devicesAfter.Count | Should -Be 2
         }
     }
 
@@ -166,9 +166,9 @@ Describe "Clone-Object_IT" -Tag @("PowerShell", "IntegrationTest") {
 
             try
             {
-                $newAction.Name | Should Be "testAction"
-                $newAction.Type | Should Be "Notification"
-                $newAction.ParentId | Should Be -3
+                $newAction.Name | Should -Be "testAction"
+                $newAction.Type | Should -Be "Notification"
+                $newAction.ParentId | Should -Be -3
             }
             finally
             {
@@ -181,9 +181,9 @@ Describe "Clone-Object_IT" -Tag @("PowerShell", "IntegrationTest") {
 
             try
             {
-                $newAction.Name | Should Be "testAction"
-                $newAction.Type | Should Be "Notification"
-                $newAction.ParentId | Should Be -3
+                $newAction.Name | Should -Be "testAction"
+                $newAction.Type | Should -Be "Notification"
+                $newAction.ParentId | Should -Be -3
             }
             finally
             {
@@ -192,7 +192,7 @@ Describe "Clone-Object_IT" -Tag @("PowerShell", "IntegrationTest") {
         }
 
         It "throws attempting to clone a special object" {
-            { Clone-Object -Id 1 } | Should Throw (ForeignMessage "You can only clone")
+            { Clone-Object -Id 1 } | Should -Throw (ForeignMessage "You can only clone")
         }
     }
 }

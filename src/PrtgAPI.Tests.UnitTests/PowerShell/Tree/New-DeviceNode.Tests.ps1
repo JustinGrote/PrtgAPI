@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
 
 Describe "New-DeviceNode" -Tag @("PowerShell", "UnitTest") {
     It "creates a new node from a Device" {
@@ -11,8 +11,8 @@ Describe "New-DeviceNode" -Tag @("PowerShell", "UnitTest") {
 
         $node = New-DeviceNode $device
 
-        $node.Type | Should Be Device
-        $node.Value | Should Be $device
+        $node.Type | Should -Be Device
+        $node.Value | Should -Be $device
     }
 
     It "pipes in an existing Device" {
@@ -25,8 +25,8 @@ Describe "New-DeviceNode" -Tag @("PowerShell", "UnitTest") {
 
         $node = $device | New-DeviceNode
 
-        $node.Type | Should Be Device
-        $node.Value | Should Be $device
+        $node.Type | Should -Be Device
+        $node.Value | Should -Be $device
     }
 
     It "filters by name" {
@@ -35,7 +35,7 @@ Describe "New-DeviceNode" -Tag @("PowerShell", "UnitTest") {
         )
 
         $node = New-DeviceNode *probe*
-        $node.Count | Should Be 2
+        $node.Count | Should -Be 2
     }
 
     It "creates a tree from a ScriptBlock with a value" {
@@ -52,12 +52,12 @@ Describe "New-DeviceNode" -Tag @("PowerShell", "UnitTest") {
             }
         }
 
-        $node.Type | Should Be Device
-        $node.Children.Count | Should Be 1
-        $node.Children[0].Type | Should Be Sensor
+        $node.Type | Should -Be Device
+        $node.Children.Count | Should -Be 1
+        $node.Children[0].Type | Should -Be Sensor
         
-        $node.Children[0].Children.Count | Should Be 1
-        $node.Children[0].Children[0].Value.ObjectId | Should Be 4000
+        $node.Children[0].Children.Count | Should -Be 1
+        $node.Children[0].Children[0].Value.ObjectId | Should -Be 4000
     }
 
     It "specifies two IDs as well as a ScriptBlock" {
@@ -66,9 +66,9 @@ Describe "New-DeviceNode" -Tag @("PowerShell", "UnitTest") {
             SensorNode -Id 4000
         }
 
-        $nodes.Count | Should Be 2
+        $nodes.Count | Should -Be 2
 
-        $nodes[0].Children[0].Value | Should Be $nodes[1].Children[0].Value
+        $nodes[0].Children[0].Value | Should -Be $nodes[1].Children[0].Value
     }
 
     It "specifies a ScriptBlock that invokes a single child cmdlet against two IDs" {
@@ -77,9 +77,9 @@ Describe "New-DeviceNode" -Tag @("PowerShell", "UnitTest") {
             SensorNode -Id 4000,4001
         }
 
-        $node.Children.Count | Should Be 2
-        $node.Children[0].Value.Id | Should Be 4000
-        $node.Children[1].Value.Id | Should Be 4001
+        $node.Children.Count | Should -Be 2
+        $node.Children[0].Value.Id | Should -Be 4000
+        $node.Children[1].Value.Id | Should -Be 4001
     }
 
     It "specifies a ScriptBlock that invokes multiple child cmdlets" {
@@ -97,9 +97,9 @@ Describe "New-DeviceNode" -Tag @("PowerShell", "UnitTest") {
             }
         }
 
-        $node.Children.Count | Should Be 2
-        $node.Children[0].Children[0].Value.ObjectId | Should Be 4000
-        $node.Children[1].Children[0].Value.ObjectId | Should Be 4001
+        $node.Children.Count | Should -Be 2
+        $node.Children[0].Children[0].Value.ObjectId | Should -Be 4000
+        $node.Children[1].Children[0].Value.ObjectId | Should -Be 4001
     }
 
     It "creates a tree from a ScriptBlock with an ID" {
@@ -110,9 +110,9 @@ Describe "New-DeviceNode" -Tag @("PowerShell", "UnitTest") {
             SensorNode -Id 4000
         }
 
-        $node.Type | Should Be Device
-        $node.Children.Count | Should Be 1
-        $node.Children[0].Value.Id | Should Be 4000
+        $node.Type | Should -Be Device
+        $node.Children.Count | Should -Be 1
+        $node.Children[0].Value.Id | Should -Be 4000
     }
 
     It "creates a tree from a ScriptBlock with a name" {
@@ -123,9 +123,9 @@ Describe "New-DeviceNode" -Tag @("PowerShell", "UnitTest") {
             TriggerNode -ObjectId 4000 -Type Change
         }
 
-        $node.Type | Should Be Sensor
-        $node.Children.Count | Should Be 1
-        $node.Children[0].Value.ObjectId | Should Be 4000
+        $node.Type | Should -Be Sensor
+        $node.Children.Count | Should -Be 1
+        $node.Children[0].Value.ObjectId | Should -Be 4000
     }
 
     It "specifies multiple IDs" {
@@ -134,7 +134,7 @@ Describe "New-DeviceNode" -Tag @("PowerShell", "UnitTest") {
         )
 
         $nodes = New-DeviceNode -Id 3000,3001
-        $nodes.Count | Should Be 2
+        $nodes.Count | Should -Be 2
     }
 
     It "pipes in multiple child nodes with value" {
@@ -147,10 +147,10 @@ Describe "New-DeviceNode" -Tag @("PowerShell", "UnitTest") {
 
         $device = New-SensorNode -Id 4000,4001 | New-DeviceNode $device
 
-        $device.Type | Should Be Device
-        $device.Value.Id | Should Be 3000
+        $device.Type | Should -Be Device
+        $device.Value.Id | Should -Be 3000
 
-        $device.Children.Count | Should Be 2
+        $device.Children.Count | Should -Be 2
     }
 
     It "pipes in multiple child nodes with manual" {
@@ -162,9 +162,9 @@ Describe "New-DeviceNode" -Tag @("PowerShell", "UnitTest") {
 
         $device = New-SensorNode -Id 4000,4001 | New-DeviceNode -Id 3000
 
-        $device.Type | Should Be Device
-        $device.Value.Id | Should Be 3000
+        $device.Type | Should -Be Device
+        $device.Value.Id | Should -Be 3000
 
-        $device.Children.Count | Should Be 2
+        $device.Children.Count | Should -Be 2
     }
 }

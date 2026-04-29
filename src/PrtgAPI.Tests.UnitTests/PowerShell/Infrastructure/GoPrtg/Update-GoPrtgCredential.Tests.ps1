@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\..\Support\PowerShell\GoPrtg.ps1
+. $PSScriptRoot\..\..\..\Support\PowerShell\GoPrtg.ps1
 
 Describe "Update-GoPrtgCredential" -Tag @("PowerShell", "UnitTest") {
 
@@ -32,15 +32,15 @@ Describe "Update-GoPrtgCredential" -Tag @("PowerShell", "UnitTest") {
 
         $content = gc $Profile -Raw
 
-        $content | Should BeLike $baseExpected
+        $content | Should -BeLike $baseExpected
 
         Update-GoPrtgCredential (New-Credential prtgadmin newpassword)
 
-        (Get-PrtgClient).PassHash | Should Be 87654321
+        (Get-PrtgClient).PassHash | Should -Be 87654321
 
         $newContent = gc $Profile -Raw
 
-        $content | Should Not Be $newContent
+        $content | Should -Not -Be $newContent
     }
 
     It "updates the credential from a specified PSCredential" {
@@ -50,11 +50,11 @@ Describe "Update-GoPrtgCredential" -Tag @("PowerShell", "UnitTest") {
 
         Update-GoPrtgCredential (New-Credential username newpassword)
 
-        (Get-PrtgClient).PassHash | Should Be 87654321
+        (Get-PrtgClient).PassHash | Should -Be 87654321
 
         $newContent = gc $Profile -Raw
 
-        $content | Should Not Be $newContent
+        $content | Should -Not -Be $newContent
     }
     
     It "updates the username and password when the username is changed" {
@@ -66,9 +66,9 @@ Describe "Update-GoPrtgCredential" -Tag @("PowerShell", "UnitTest") {
 
         $newExpected = $baseExpected.Replace("username", "myuser")
 
-        $content | Should BeLike $newExpected
+        $content | Should -BeLike $newExpected
 
-        (Get-PrtgClient).PassHash | Should Be 87654321
+        (Get-PrtgClient).PassHash | Should -Be 87654321
     }
 
     It "throws specifying an existing username for the current server" {
@@ -78,11 +78,11 @@ Describe "Update-GoPrtgCredential" -Tag @("PowerShell", "UnitTest") {
 
         Install-GoPrtgServer second
 
-        { Update-GoPrtgCredential (New-Credential username 12345678) } | Should Throw "Cannot update credential: a record with username 'username' for server 'prtg.example.com' already exists"
+        { Update-GoPrtgCredential (New-Credential username 12345678) } | Should -Throw "Cannot update credential: a record with username 'username' for server 'prtg.example.com' already exists"
     }
 
     It "throws when no GoPrtg servers exist" {
-        { Update-GoPrtgCredential } | Should Throw "No GoPrtg servers are installed. To install a GoPrtg server, run Install-GoPrtgServer."
+        { Update-GoPrtgCredential } | Should -Throw "No GoPrtg servers are installed. To install a GoPrtg server, run Install-GoPrtgServer."
     }
 
     It "throws updating a server that isn't registered with GoPrtg" {
@@ -92,13 +92,13 @@ Describe "Update-GoPrtgCredential" -Tag @("PowerShell", "UnitTest") {
 
         SetPrtgClient $newClient
 
-        { Update-GoPrtgCredential } | Should Throw "Server 'prtg.example2.com' is not a valid GoPrtg server. To install this server, run Install-GoPrtgServer [<alias>]"
+        { Update-GoPrtgCredential } | Should -Throw "Server 'prtg.example2.com' is not a valid GoPrtg server. To install this server, run Install-GoPrtgServer [<alias>]"
     }
 
     It "throws when both the header and footer have been removed" {
         InstallInProfileFunctionWithoutHeaderFooter
 
-        { Update-GoPrtgCredential (New-Credential username password) } | Should Throw "GoPrtg Servers start line '########################### Start GoPrtg Servers ###########################' and end line"
+        { Update-GoPrtgCredential (New-Credential username password) } | Should -Throw "GoPrtg Servers start line '########################### Start GoPrtg Servers ###########################' and end line"
     }
 
     # and maybe also all the tests where we're not even connected to a goprtg server, or dont even have a profile, or the profile is empty...same tests set-goprtgalias uses

@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
 
 function SetFactorySourceResponse($channelDefinition)
 {
@@ -25,8 +25,8 @@ Describe "Get-SensorFactorySource" -Tag @("PowerShell", "UnitTest") {
 
         $sourceSensors = $sensor | Get-SensorFactorySource
 
-        $sourceSensors.Count | Should Be 1
-        $sourceSensors.GetType().Name | Should Be "Sensor"
+        $sourceSensors.Count | Should -Be 1
+        $sourceSensors.GetType().Name | Should -Be "Sensor"
     }
 
     It "parses a factory with two channels" {
@@ -41,7 +41,7 @@ Describe "Get-SensorFactorySource" -Tag @("PowerShell", "UnitTest") {
 
         $sourceSensors = $sensor | Get-SensorFactorySource
 
-        $sourceSensors.Count | Should Be 2
+        $sourceSensors.Count | Should -Be 2
     }
 
     It "processes an empty channel definition" {
@@ -51,7 +51,7 @@ Describe "Get-SensorFactorySource" -Tag @("PowerShell", "UnitTest") {
 
         $sourceSensors = $sensor | Get-SensorFactorySource
 
-        $sourceSensors.Count | Should Be 0
+        $sourceSensors.Count | Should -Be 0
     }
 
     It "parses a factory containing a formula" {
@@ -64,7 +64,7 @@ Describe "Get-SensorFactorySource" -Tag @("PowerShell", "UnitTest") {
 
         $sourceSensors = $sensor | Get-SensorFactorySource
 
-        $sourceSensors.Count | Should Be 3
+        $sourceSensors.Count | Should -Be 3
     }
     
     It "parses a factory containing a horizontal line" {
@@ -81,7 +81,7 @@ Describe "Get-SensorFactorySource" -Tag @("PowerShell", "UnitTest") {
 
         $sourceSensors = $sensor | Get-SensorFactorySource
 
-        $sourceSensors.Count | Should Be 2
+        $sourceSensors.Count | Should -Be 2
     }
 
     It "retrieves channels from a sensor factory" {
@@ -96,8 +96,8 @@ Describe "Get-SensorFactorySource" -Tag @("PowerShell", "UnitTest") {
         $sensor = Get-Sensor
 
         $sourceChannels = $sensor | Get-SensorFactorySource -Channels
-        $sourceChannels.Count | Should Be 2
-        ($sourceChannels | select -First 1).GetType().Name | Should Be "Channel"
+        $sourceChannels.Count | Should -Be 2
+        ($sourceChannels | select -First 1).GetType().Name | Should -Be "Channel"
     }
 
     It "returns nothing when a channel definition is invalid" {
@@ -107,7 +107,7 @@ Describe "Get-SensorFactorySource" -Tag @("PowerShell", "UnitTest") {
 
         $response = $sensor | Get-SensorFactorySource
 
-        $response | Should Be $null
+        $response | Should -Be $null
     }
 
     It "throws when a sensor isn't a sensor factory" {
@@ -115,6 +115,6 @@ Describe "Get-SensorFactorySource" -Tag @("PowerShell", "UnitTest") {
 
         $sensor = Get-Sensor -Type ping
 
-        { $sensor | Get-SensorFactorySource } | Should Throw "Only Sensor Factory objects may be specified"
+        { $sensor | Get-SensorFactorySource } | Should -Throw "Only Sensor Factory objects may be specified"
     }
 }

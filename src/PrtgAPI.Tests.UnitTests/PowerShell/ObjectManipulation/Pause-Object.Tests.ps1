@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
 
 Describe "Pause-Object" -Tag @("PowerShell", "UnitTest") {
     
@@ -47,7 +47,7 @@ Describe "Pause-Object" -Tag @("PowerShell", "UnitTest") {
 
         $sensor = Run Sensor { Get-Sensor }
 
-        { $sensor | Pause-Object -Until (Get-Date) } | Should Throw "Duration evaluated to less than one minute"
+        { $sensor | Pause-Object -Until (Get-Date) } | Should -Throw "Duration evaluated to less than one minute"
     }
 
     It "executes with -WhatIf" {
@@ -90,7 +90,7 @@ Describe "Pause-Object" -Tag @("PowerShell", "UnitTest") {
 
         $newSensor = $sensor | Pause-Object -Forever -PassThru -Batch:$false
 
-        $newSensor | Should Be $sensor
+        $newSensor | Should -Be $sensor
     }
 
     It "passes through with -Batch:`$true" {
@@ -100,7 +100,7 @@ Describe "Pause-Object" -Tag @("PowerShell", "UnitTest") {
 
         $newSensor = $sensor | Pause-Object -Forever -PassThru -Batch:$true
 
-        $newSensor | Should Be $sensor
+        $newSensor | Should -Be $sensor
     }
 
     It "pauses for a duration with an ID" {

@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\IntegrationTest.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\IntegrationTest.ps1
 
 Describe "Restart-Probe_IT" -Tag @("PowerShell", "IntegrationTest") {
     It "waits for all probes to restart" {
@@ -8,7 +8,7 @@ Describe "Restart-Probe_IT" -Tag @("PowerShell", "IntegrationTest") {
 
         foreach($probe in $probes)
         {
-            $probe.ProbeStatus | Should Be Connected
+            $probe.ProbeStatus | Should -Be Connected
         }
     }
 
@@ -19,11 +19,11 @@ Describe "Restart-Probe_IT" -Tag @("PowerShell", "IntegrationTest") {
 
         $newProbe = Get-Probe -Id (Settings Probe)
 
-        $probe.ProbeStatus | Should Be Connected
+        $probe.ProbeStatus | Should -Be Connected
     }
 
     It "times out restarting a probe" {
-        { Restart-Probe -Timeout 1 } | Should Throw "Timed out waiting for 1 probe to restart"
+        { Restart-Probe -Timeout 1 } | Should -Throw "Timed out waiting for 1 probe to restart"
 
         # Wait for the server to come back online
         Restart-Probe -Wait

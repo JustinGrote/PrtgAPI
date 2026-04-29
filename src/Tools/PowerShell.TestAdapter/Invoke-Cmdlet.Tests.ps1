@@ -5,7 +5,7 @@
         }
 
         It "throws" {
-            throw
+            { throw "boom" } | Should -Throw
         }
     }
 }

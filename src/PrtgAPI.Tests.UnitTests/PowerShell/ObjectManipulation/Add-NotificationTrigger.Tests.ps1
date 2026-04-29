@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
 
 Describe "Add-NotificationTrigger" -Tag @("PowerShell", "UnitTest") {
 
@@ -8,7 +8,7 @@ Describe "Add-NotificationTrigger" -Tag @("PowerShell", "UnitTest") {
 
         $params = New-TriggerParameters 1001 State
 
-        { $params | Add-NotificationTrigger } | Should Throw "is not a valid trigger type"
+        { $params | Add-NotificationTrigger } | Should -Throw "is not a valid trigger type"
     }
 
     It "executes with -WhatIf" {
@@ -26,7 +26,7 @@ Describe "Add-NotificationTrigger" -Tag @("PowerShell", "UnitTest") {
 
         $trigger = $params | Add-NotificationTrigger -Resolve
 
-        $trigger.SubId | Should Be 2
+        $trigger.SubId | Should -Be 2
     }
 
     Context "New-Trigger" {
@@ -264,7 +264,7 @@ Describe "Add-NotificationTrigger" -Tag @("PowerShell", "UnitTest") {
         It "throws when an invalid channel ID is specified" {
             SetMultiTypeResponse
 
-            { $sensor | New-Trigger -Type Threshold -Channel 5 } | Should Throw "Failed to retrieve channel with ID '5': Channel does not exist."
+            { $sensor | New-Trigger -Type Threshold -Channel 5 } | Should -Throw "Failed to retrieve channel with ID '5': Channel does not exist."
         }
 
         It "parses a TriggerChannel object" {
@@ -272,7 +272,7 @@ Describe "Add-NotificationTrigger" -Tag @("PowerShell", "UnitTest") {
 
             $trigger = $sensor | Get-Trigger -Type Threshold
 
-            $trigger.Channel | Should Be "Primary"
+            $trigger.Channel | Should -Be "Primary"
 
             $response = SetAddressValidatorResponse @(
                 [Request]::TriggerTypes(40)
@@ -333,7 +333,7 @@ Describe "Add-NotificationTrigger" -Tag @("PowerShell", "UnitTest") {
             SetMultiTypeResponse
 
             $action = Get-NotificationAction -Count 1
-            $action.Id | Should Be 300
+            $action.Id | Should -Be 300
 
             SetAddressValidatorResponse @(
                 [Request]::TriggerTypes(2203)
@@ -384,7 +384,7 @@ Describe "Add-NotificationTrigger" -Tag @("PowerShell", "UnitTest") {
 
             $action = ($sensor | Get-Trigger | select -First 1).OffNotificationAction
 
-            $action | Should Be "None"
+            $action | Should -Be "None"
 
             SetAddressValidatorResponse @(
                 [Request]::TriggerTypes(2203)
@@ -410,13 +410,13 @@ Describe "Add-NotificationTrigger" -Tag @("PowerShell", "UnitTest") {
         It "throws when an invalid NotificationAction is specified" {
             SetMultiTypeResponse
 
-            { $sensor | New-Trigger -Type State -OnNotificationAction *banana* -Resolve:$false } | Should Throw "Could not find a notification action matching the wildcard expression '*banana*' for use with parameter 'OnNotificationAction'."
+            { $sensor | New-Trigger -Type State -OnNotificationAction *banana* -Resolve:$false } | Should -Throw "Could not find a notification action matching the wildcard expression '*banana*' for use with parameter 'OnNotificationAction'."
         }
 
         It "throws when an ambiguous NotificationAction wildcard is specified" {
             SetMultiTypeResponse
 
-            { $sensor | New-Trigger -Type State -OnNotificationAction *email* -Resolve:$false } | Should Throw "Notification Action wildcard '*email*' on parameter 'OnNotificationAction' is ambiguous"
+            { $sensor | New-Trigger -Type State -OnNotificationAction *email* -Resolve:$false } | Should -Throw "Notification Action wildcard '*email*' on parameter 'OnNotificationAction' is ambiguous"
         }
 
         It "throws when an invalid parameter is specified for a trigger type" {
@@ -424,13 +424,13 @@ Describe "Add-NotificationTrigger" -Tag @("PowerShell", "UnitTest") {
 
             $device = Run Device { Get-Device }
 
-            { $device | New-Trigger -Type State -Channel Primary -Resolve:$false } | Should Throw "Property 'Channel' is not a valid property for a trigger of type 'State'."
+            { $device | New-Trigger -Type State -Channel Primary -Resolve:$false } | Should -Throw "Property 'Channel' is not a valid property for a trigger of type 'State'."
         }
 
         It "throws when an invalid channel is specified for a sensor" {
             SetMultiTypeResponse
 
-            { $sensor | New-Trigger -Type Threshold -Channel "test" -Resolve:$false } | Should Throw "Channel wildcard 'test' does not exist on sensor 'Volume IO _Total' (ID: 2203). Specify one of the following channel names and try again: 'Percent Available Memory'"
+            { $sensor | New-Trigger -Type Threshold -Channel "test" -Resolve:$false } | Should -Throw "Channel wildcard 'test' does not exist on sensor 'Volume IO _Total' (ID: 2203). Specify one of the following channel names and try again: 'Percent Available Memory'"
         }
 
         It "throws when an invalid channel is specified for a container" {
@@ -442,7 +442,7 @@ Describe "Add-NotificationTrigger" -Tag @("PowerShell", "UnitTest") {
 
             $device = Get-Device -Count 1
 
-            { $device | New-Trigger -Type Threshold -Channel test } | Should Throw "Cannot convert value 'test' of type 'System.String' to type 'TriggerChannel'. Value type must be convertable to one of PrtgAPI.StandardTriggerChannel, PrtgAPI.Channel or System.Int32."
+            { $device | New-Trigger -Type Threshold -Channel test } | Should -Throw "Cannot convert value 'test' of type 'System.String' to type 'TriggerChannel'. Value type must be convertable to one of PrtgAPI.StandardTriggerChannel, PrtgAPI.Channel or System.Int32."
         }
 
         It "throws when a null channel is specified" {
@@ -450,7 +450,7 @@ Describe "Add-NotificationTrigger" -Tag @("PowerShell", "UnitTest") {
 
             $device = Get-Device -Count 1
 
-            { $device | New-Trigger -Type Threshold -Channel $null } | Should Throw "Cannot specify 'null' for parameter 'Channel'"
+            { $device | New-Trigger -Type Threshold -Channel $null } | Should -Throw "Cannot specify 'null' for parameter 'Channel'"
         }
 
         It "ignores null when assigned to a property that doesn't convert it" {
@@ -462,7 +462,7 @@ Describe "Add-NotificationTrigger" -Tag @("PowerShell", "UnitTest") {
 
             $device = Get-Device -Count 1
 
-            { $device | New-Trigger -Type State -State $null } | Should Throw "Value 'null' could not be assigned to property 'State' of type 'PrtgAPI.TriggerSensorState'"
+            { $device | New-Trigger -Type State -State $null } | Should -Throw "Value 'null' could not be assigned to property 'State' of type 'PrtgAPI.TriggerSensorState'"
         }
     }
 }

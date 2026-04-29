@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
 
 Describe "Get-SensorTotals" -Tag @("PowerShell", "UnitTest") {
 
@@ -9,6 +9,6 @@ Describe "Get-SensorTotals" -Tag @("PowerShell", "UnitTest") {
     It "can execute" {
         $totals = Get-SensorTotals
 
-        $totals.GetType().Name | Should Be "SensorTotals"
+        $totals.GetType().Name | Should -Be "SensorTotals"
     }
 }

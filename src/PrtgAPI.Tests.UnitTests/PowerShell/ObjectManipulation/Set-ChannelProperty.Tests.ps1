@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
 
 Describe "Set-ChannelProperty" -Tag @("PowerShell", "UnitTest") {
 
@@ -9,7 +9,7 @@ Describe "Set-ChannelProperty" -Tag @("PowerShell", "UnitTest") {
     It "sets a property with an invalid type" {
         $timeSpan = New-TimeSpan -Seconds 10
 
-        { $channel | Set-ChannelProperty LimitsEnabled $timeSpan } | Should Throw "Expected type: 'System.Boolean'. Actual type: 'System.TimeSpan'"
+        { $channel | Set-ChannelProperty LimitsEnabled $timeSpan } | Should -Throw "Expected type: 'System.Boolean'. Actual type: 'System.TimeSpan'"
     }
 
     It "sets a property with an empty string" {
@@ -24,25 +24,25 @@ Describe "Set-ChannelProperty" -Tag @("PowerShell", "UnitTest") {
     }
 
     It "sets a property with null on a type that disallows null" {
-        { $channel | Set-ChannelProperty ColorMode $null } | Should Throw "Null may only be assigned to properties of type 'System.String', 'System.Int32' and 'System.Double'."
+        { $channel | Set-ChannelProperty ColorMode $null } | Should -Throw "Null may only be assigned to properties of type 'System.String', 'System.Int32' and 'System.Double'."
     }
 
     It "sets a nullable type with its underlying type" {
         $val = $true
-        $val.GetType() | Should Be "bool"
+        $val.GetType() | Should -Be "bool"
 
         $channel | Set-ChannelProperty LimitsEnabled $val
     }
 
     It "requires Value be specified" {
-        { $channel | Set-ChannelProperty UpperErrorLimit } | Should Throw "Value parameter is mandatory"
+        { $channel | Set-ChannelProperty UpperErrorLimit } | Should -Throw "Value parameter is mandatory"
     }
 
     It "setting an invalid enum value lists all valid possibilities" {
 
         $expected = "'banana' is not a valid value for type 'PrtgAPI.AutoMode'. Please specify one of 'Automatic' or 'Manual'"
 
-        { $channel | Set-ChannelProperty ColorMode "banana" } | Should Throw $expected
+        { $channel | Set-ChannelProperty ColorMode "banana" } | Should -Throw $expected
     }
 
     It "passes through with -Batch:`$false" {
@@ -52,7 +52,7 @@ Describe "Set-ChannelProperty" -Tag @("PowerShell", "UnitTest") {
 
         $newChannel = $channel | Set-ChannelProperty LimitsEnabled $false -PassThru -Batch:$false
 
-        $newChannel | Should Be $channel
+        $newChannel | Should -Be $channel
     }
 
     It "passes through with -Batch:`$true" {
@@ -62,7 +62,7 @@ Describe "Set-ChannelProperty" -Tag @("PowerShell", "UnitTest") {
 
         $newChannel = $channel | Set-ChannelProperty LimitsEnabled $false -PassThru -Batch:$true
 
-        $newChannel | Should Be $channel
+        $newChannel | Should -Be $channel
     }
     
     It "clears channel limits by setting them to `$null" {
@@ -104,7 +104,7 @@ Describe "Set-ChannelProperty" -Tag @("PowerShell", "UnitTest") {
 
         It "executes with -Batch:`$true" {
 
-            $channel.Count | Should Be 2
+            $channel.Count | Should -Be 2
 
             SetAddressValidatorResponse @(
                 [Request]::Status()
@@ -116,7 +116,7 @@ Describe "Set-ChannelProperty" -Tag @("PowerShell", "UnitTest") {
 
         It "executes with -Batch:`$false" {
 
-            $channel.Count | Should Be 2
+            $channel.Count | Should -Be 2
 
             SetAddressValidatorResponse @(
                 [Request]::Status()
@@ -128,7 +128,7 @@ Describe "Set-ChannelProperty" -Tag @("PowerShell", "UnitTest") {
         }
 
         It "sets multiple properties with -Batch:`$true" {
-            $channel.Count | Should Be 2
+            $channel.Count | Should -Be 2
 
             SetAddressValidatorResponse @(
                 [Request]::EditSettings("id=4000,4001&limitmaxerror_1=100&limitmode_1=1&limitminerror_1=20&valuelookup_1=test%7Ctest&limitmaxerror_1_factor=1&limitminerror_1_factor=1&nosession=1")
@@ -139,7 +139,7 @@ Describe "Set-ChannelProperty" -Tag @("PowerShell", "UnitTest") {
 
         It "doesn't overwrite explicitly specified parameters with dependency values" {
 
-            $channel.Count | Should Be 2
+            $channel.Count | Should -Be 2
 
             SetAddressValidatorResponse @(
                 [Request]::Status()
@@ -151,7 +151,7 @@ Describe "Set-ChannelProperty" -Tag @("PowerShell", "UnitTest") {
 
         It "sets multiple properties with -Batch:`$false" {
 
-            $channel.Count | Should Be 2
+            $channel.Count | Should -Be 2
 
             SetAddressValidatorResponse @(
                 [Request]::Status()
@@ -164,12 +164,12 @@ Describe "Set-ChannelProperty" -Tag @("PowerShell", "UnitTest") {
 
         It "doesn't specify any dynamic parameters" {
 
-            { $channel | Set-ChannelProperty } | Should Throw "At least one dynamic property or -Property and -Value must be specified."
+            { $channel | Set-ChannelProperty } | Should -Throw "At least one dynamic property or -Property and -Value must be specified."
         }
 
         It "splats dynamic properties" {
 
-            $channel.Count | Should Be 2
+            $channel.Count | Should -Be 2
 
             $response = SetAddressValidatorResponse @(
                 [Request]::EditSettings("id=4000,4001&limitmaxerror_1=100&limitmode_1=1&valuelookup_1=test%7Ctest&limitminerror_1=20&limitmaxerror_1_factor=1&limitminerror_1_factor=1&nosession=1")
@@ -238,7 +238,7 @@ Describe "Set-ChannelProperty" -Tag @("PowerShell", "UnitTest") {
 
             SetVersion "18.1"
 
-            { Set-ChannelProperty -SensorId 1001 -ChannelId 2 ErrorLimitMessage "hello" } | Should Throw "Channel ID '2' does not exist on sensor ID '1001'"
+            { Set-ChannelProperty -SensorId 1001 -ChannelId 2 ErrorLimitMessage "hello" } | Should -Throw "Channel ID '2' does not exist on sensor ID '1001'"
         }
 
         It "still retrieves channels to deal with factors when setting a version specific property and a limit is included" {

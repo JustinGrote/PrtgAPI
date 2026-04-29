@@ -1,14 +1,35 @@
-﻿. $PSScriptRoot\Init.ps1
+. $PSScriptRoot\Init.ps1
 
 function Describe($name, $script) {
+    $canRun = $true
 
-    Pester\Describe $name {
-        BeforeAll {
-            Startup $name
+    try
+    {
+        . $PSScriptRoot\Init.ps1
+        InitializeModules "PrtgAPI.Tests.IntegrationTests" $PSScriptRoot
+    }
+    catch
+    {
+        $canRun = $false
+    }
 
-            LogTest "Running unsafe test '$name'"
+    Pester\Describe $name -Skip:(-not $canRun) {
+
+        if(-not $canRun)
+        {
+            return
         }
+
+        BeforeAll {
+            . $PSScriptRoot\Init.ps1
+            $currentName = $Pester.CurrentBlock.Name
+            Startup $currentName
+
+            LogTest "Running unsafe test '$currentName'"
+        }
+
         AfterAll {
+            . $PSScriptRoot\Init.ps1
             Shutdown
 
             ClearTestName
@@ -16,35 +37,32 @@ function Describe($name, $script) {
 
         $object = $null
 
-        function GetValue($property, $expected)
-        {
+        function GetValue($property, $expected) {
             LogTestDetail "Processing property $property"
 
-            $object | Assert-True -Message "Object was not initialized"
-            $expected | Should Not BeNullOrEmpty
+            $object | Assert-True -Message 'Object was not initialized'
+            $expected | Should -Not -BeNullOrEmpty
 
             $initialSettings = $object | Get-ObjectProperty
 
-            $initialSettings.$property | Should Be $expected
+            $initialSettings.$property | Should -Be $expected
         }
 
-        function GetDirect($property, $expected)
-        {
+        function GetDirect($property, $expected) {
             LogTestDetail "Processing property $property"
 
-            $object | Assert-True -Message "Object was not initialized"
-            $expected | Should Not BeNullOrEmpty
+            $object | Assert-True -Message 'Object was not initialized'
+            $expected | Should -Not -BeNullOrEmpty
 
             $initialValue = $object | Get-ObjectProperty $property
 
-            $initialValue | Should Be $expected
+            $initialValue | Should -Be $expected
         }
 
-        function SetValue($property, $value, $noRevert)
-        {
+        function SetValue($property, $value, $noRevert) {
             LogTestDetail "Processing property $property"
 
-            $object | Assert-True -Message "Object was not initialized"
+            $object | Assert-True -Message 'Object was not initialized'
 
             $initialSettings = $object | Get-ObjectProperty
             $initialValue = $initialSettings.$property
@@ -56,37 +74,32 @@ function Describe($name, $script) {
             $newValue = $newSettings.$property
             $originalValue = $initialSettings.$property
 
-            if($newValue -ne $null -and $newValue.GetType().IsArray)
-            {
+            if ($newValue -ne $null -and $newValue.GetType().IsArray) {
                 $newValue = [string]::Join("`n", $newValue)
 
-                if($null -ne $originalValue)
-                {
+                if ($null -ne $originalValue) {
                     $originalValue = [string]::Join("`n", $originalValue)
                 }
 
-                if($null -ne $value -and $value.GetType().IsArray)
-                {
+                if ($null -ne $value -and $value.GetType().IsArray) {
                     $value = [string]::Join("`n", $value)
                 }
             }
 
             $newValue | Assert-NotEqual $originalValue -Message "Expected initial and new value to be different, but they were both '<actual>'"
-            $newValue | Should Not BeNullOrEmpty
+            $newValue | Should -Not -BeNullOrEmpty
 
-            $newValue | Should Be $value
+            $newValue | Should -Be $value
 
-            if(!$noRevert)
-            {
+            if (!$noRevert) {
                 $object | Set-ObjectProperty $property $initialValue
             }
         }
 
-        function SetDirect($property, $value)
-        {
+        function SetDirect($property, $value) {
             LogTestDetail "Processing property $property"
 
-            $object | Assert-True -Message "Object was not initialized"
+            $object | Assert-True -Message 'Object was not initialized'
 
             $initialValue = $object | Get-ObjectProperty $property
 
@@ -95,19 +108,18 @@ function Describe($name, $script) {
             $newValue = $object | Get-ObjectProperty $property
 
             $newValue | Assert-NotEqual $originalValue -Message "Expected initial and new value to be different, but they were both '<actual>'"
-            $newValue | Should Not BeNullOrEmpty
+            $newValue | Should -Not -BeNullOrEmpty
 
-            $newValue | Should Be $value
+            $newValue | Should -Be $value
 
             $object | Set-ObjectProperty $property $initialValue
         }
 
-        function SetChild($property, $value, $dependentProperty, $dependentValue)
-        {
+        function SetChild($property, $value, $dependentProperty, $dependentValue) {
             LogTestDetail "Processing property $property"
 
-            $object | Assert-True -Message "    Object was not initialized"
-            $dependentProperty | Assert-True -Message "    Dependent property was not specified"
+            $object | Assert-True -Message '    Object was not initialized'
+            $dependentProperty | Assert-True -Message '    Dependent property was not specified'
 
             $initialSettings = $object | Get-ObjectProperty
             $initialValue = $initialSettings.$property
@@ -121,7 +133,7 @@ function Describe($name, $script) {
 
             $newValue | Assert-NotEqual $initialValue -Message "Expected initial and new value to be different, but they were both '<actual>'"
             $newDependent | Assert-NotEqual $initialDependent -Message "Expected initial and new dependent to be different, but they were both '<actual>'"
-            $newValue | Should Not BeNullOrEmpty
+            $newValue | Should -Not -BeNullOrEmpty
 
             $newValue | Assert-Equal $value
             $newDependent | Assert-Equal $dependentValue
@@ -129,13 +141,12 @@ function Describe($name, $script) {
             $object | Set-ObjectProperty $dependentProperty $initialDependent
         }
 
-        function SetGrandChild($property, $value, $middleProperty, $middleValue, $topProperty, $topValue)
-        {
+        function SetGrandChild($property, $value, $middleProperty, $middleValue, $topProperty, $topValue) {
             LogTestDetail "Processing property $property"
 
-            $object | Assert-True -Message "    Object was not initialized"
-            $middleProperty | Assert-True -Message "    Middle property was not specified"
-            $topProperty | Assert-True -Message "    Top property was not specified"
+            $object | Assert-True -Message '    Object was not initialized'
+            $middleProperty | Assert-True -Message '    Middle property was not specified'
+            $topProperty | Assert-True -Message '    Top property was not specified'
 
             $initialSettings = $object | Get-ObjectProperty
             $initialValue = $initialSettings.$property
@@ -152,7 +163,7 @@ function Describe($name, $script) {
             $newValue | Assert-NotEqual $initialValue -Message "Expected initial and new value to be different, but they were both '<actual>'"
             $newMiddle | Assert-NotEqual $initialMiddle -Message "Expected initial and new middle to be different, but they were both '<actual>'"
             $newTop | Assert-NotEqual $initialTop -Message "Expected initial and new top to be different, but they were both '<actual>'"
-            $newValue | Should Not BeNullOrEmpty
+            $newValue | Should -Not -BeNullOrEmpty
 
             $newValue | Assert-Equal $value
             $newMiddle | Assert-Equal $middleValue
@@ -162,12 +173,11 @@ function Describe($name, $script) {
             $object | Set-ObjectProperty $topProperty $initialTop
         }
 
-        function SetWriteChild($property, $value, $hasProperty, $dependentProperty, $dependentValue)
-        {
+        function SetWriteChild($property, $value, $hasProperty, $dependentProperty, $dependentValue) {
             LogTestDetail "Processing property $property"
 
-            $object | Assert-True -Message "    Object was not initialized"
-            $dependentProperty | Assert-True -Message "    Dependent property was not specified"
+            $object | Assert-True -Message '    Object was not initialized'
+            $dependentProperty | Assert-True -Message '    Dependent property was not specified'
 
             $initialSettings = $object | Get-ObjectProperty
             $initialSettings.$hasProperty | Assert-False -Message "Property $hasProperty was already true"
@@ -185,36 +195,28 @@ function Describe($name, $script) {
             $object | Set-ObjectProperty $dependentProperty $initialDependent
         }
 
-        function SetLabelLocation($query, $expected)
-        {
-            $object | Assert-True -Message "    Object was not initialized"
+        function SetLabelLocation($query, $expected) {
+            $object | Assert-True -Message '    Object was not initialized'
 
             $prop = $object | Get-ObjectProperty
-            $prop.Location | Should Not BeLike "*TestLabel*"
-            $object | Set-ObjectProperty -Location $query -LocationName "TestLabel"
+            $prop.Location | Should -Not -BeLike '*TestLabel*'
+            $object | Set-ObjectProperty -Location $query -LocationName 'TestLabel'
 
-            try
-            {
+            try {
                 $newProp = $object | Get-ObjectProperty
-                $newProp.Location | Should Be "TestLabel`n$expected"
-            }
-            finally
-            {
+                $newProp.Location | Should -Be "TestLabel`n$expected"
+            } finally {
                 $object | Set-ObjectProperty Location $prop.Location
             }
         }
 
-        function TestRequiredField($script, $message)
-        {
+        function TestRequiredField($script, $message) {
             $version = (Get-PrtgClient).Version
 
-            if($version -ge "21.1.65.1767")
-            {
+            if ($version -ge '21.1.65.1767') {
                 & $script
-            }
-            else
-            {
-                $script | Should Throw $message
+            } else {
+                $script | Should -Throw $message
             }
         }
 

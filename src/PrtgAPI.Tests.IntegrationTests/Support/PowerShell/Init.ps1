@@ -4,7 +4,7 @@ if(!(Get-Module -ListAvailable Assert))
 {
     [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
 
-    Install-Package Assert -ProviderName PowerShellGet -RequiredVersion 0.8.1 -ForceBootstrap -Force | Out-Null
+    Install-Module Assert -RequiredVersion 0.8.1 -Scope CurrentUser -Force -AllowClobber | Out-Null
 }
 
 function ServerManager

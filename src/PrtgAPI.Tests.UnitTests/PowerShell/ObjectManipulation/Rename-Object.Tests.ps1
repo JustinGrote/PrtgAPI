@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
 
 Describe "Rename-Object" -Tag @("PowerShell", "UnitTest") {
     
@@ -59,7 +59,7 @@ Describe "Rename-Object" -Tag @("PowerShell", "UnitTest") {
 
         $newSensor = $sensor | Rename-Object newName -PassThru -Batch:$false
 
-        $newSensor | Should Be $sensor
+        $newSensor | Should -Be $sensor
     }
 
     It "passes through with -Batch:`$true" {
@@ -69,7 +69,7 @@ Describe "Rename-Object" -Tag @("PowerShell", "UnitTest") {
 
         $newSensor = $sensor | Rename-Object newName -PassThru -Batch:$true
 
-        $newSensor | Should Be $sensor
+        $newSensor | Should -Be $sensor
     }
 
     It "specifies an ID" {

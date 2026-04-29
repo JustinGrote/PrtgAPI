@@ -5,7 +5,7 @@ Opens the PrtgAPI Wiki for getting help with the PrtgAPI Build Environment.
 .DESCRIPTION
 The Get-PrtgHelp cmdlet opens the PrtgAPI Wiki page containing detailed instructions on compiling PrtgAPI and using the PrtgAPI Build Environment.
 
-Note: due to limitations of the Unix platform, when running on Linux or macOS the Get-PrtgHelp cmdlet will instead display the URL that you should navigate to instead of automatically opening the URL in your default web browser.
+Note: due to limitations of the Unix platform, when running on Linux or macOS the Get-PrtgHelp cmdlet will instead display the URL that you Should -navigate to instead of automatically opening the URL in your default web browser.
 
 .EXAMPLE
 C:\> Get-PrtgHelp

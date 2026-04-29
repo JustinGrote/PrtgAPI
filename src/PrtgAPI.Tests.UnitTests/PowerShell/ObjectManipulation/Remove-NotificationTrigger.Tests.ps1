@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
 
 Describe "Remove-NotificationTrigger" -Tag @("PowerShell", "UnitTest") {
 
@@ -9,21 +9,21 @@ Describe "Remove-NotificationTrigger" -Tag @("PowerShell", "UnitTest") {
         $sensor.Id = 0
 
         $trigger = $sensor | Get-Trigger
-        $trigger.Inherited | Should Be $false
+        $trigger.Inherited | Should -Be $false
 
         $trigger | Remove-Trigger -Force
     }
 
     It "throws removing an inherited trigger" {
         $trigger = Get-Sensor | Get-Trigger
-        $trigger.Inherited | Should Be $true
+        $trigger.Inherited | Should -Be $true
 
-        { $trigger | Remove-Trigger -Force } | Should Throw "as it is inherited"
+        { $trigger | Remove-Trigger -Force } | Should -Throw "as it is inherited"
     }
 
     It "can execute with -WhatIf" {
         $trigger = Get-Sensor | Get-Trigger
-        $trigger.Inherited | Should Be $true
+        $trigger.Inherited | Should -Be $true
 
         $trigger | Remove-Trigger -Force -WhatIf
     }

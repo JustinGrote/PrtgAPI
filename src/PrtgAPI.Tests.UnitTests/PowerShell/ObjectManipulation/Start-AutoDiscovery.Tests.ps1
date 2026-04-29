@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
 
 Describe "Start-AutoDiscovery" -Tag @("PowerShell", "UnitTest") {
     SetActionResponse
@@ -43,7 +43,7 @@ Describe "Start-AutoDiscovery" -Tag @("PowerShell", "UnitTest") {
 
         $device = Get-Device -Count 1
 
-        { $device | Start-AutoDiscovery *banana* } | Should Throw "No device templates could be found that match the specified template names '*banana*'"
+        { $device | Start-AutoDiscovery *banana* } | Should -Throw "No device templates could be found that match the specified template names '*banana*'"
     }
 
     It "executes with -WhatIf" {
@@ -59,7 +59,7 @@ Describe "Start-AutoDiscovery" -Tag @("PowerShell", "UnitTest") {
 
         $newDevice = $device | Start-AutoDiscovery -PassThru
 
-        $newDevice | Should Be $device
+        $newDevice | Should -Be $device
     }
 
     It "specifies an ID" {

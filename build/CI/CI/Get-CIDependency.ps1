@@ -12,20 +12,9 @@ function Get-CIDependency
         @{ Name = "NuGet.CommandLine";        Chocolatey = $true;      MinimumVersion = "5.2.0";     CommandName = "nuget" }
         @{ Name = "NuGetProvider";            PackageProvider = $true; MinimumVersion = "2.8.5.201" }
         @{ Name = "PowerShellGet";            PowerShell = $true;      MinimumVersion = "2.0.0" }
-        @{ Name = "Pester";                   PowerShell = $true;      MinimumVersion = "3.4.5";     Version = "3.4.6"; SkipPublisherCheck = $true }
+        @{ Name = "Pester";                   PowerShell = $true;      MinimumVersion = "5.7.1";     Version = "5.7.1"; SkipPublisherCheck = $true }
         @{ Name = "PSScriptAnalyzer";         PowerShell = $true }
     )
-
-    if($PSEdition -eq "Core" -and !$IsWindows)
-    {
-        # We want to be able to test PrtgAPI.Build on Linux, however the advanced mocking
-        # required by these tests won't work in Pester 3, so when we're actually on Linux
-        # use Pester 4 instead. We go with 4.7.2 because 4.7.3 truncates "Should Be" output
-        # to 5 characters which is useless
-        $pester = $dependencies|where { $_["Name"] -eq "Pester" }
-        $pester.MinimumVersion = "4.7.0"
-        $pester.Version = "4.7.2"
-    }
 
     return $dependencies
 }

@@ -17,7 +17,7 @@ Types of tests to generate coverage for. If no type is specified, both C# and Po
 Build configuration to use when calculating coverage. If no configuration is specified, Debug will be used.
 
 .PARAMETER Legacy
-Specifies whether code coverage should be generated using .NET Core CLI tooling (where applicable) or legacy .NET Framework tooling.
+Specifies whether code coverage Should -be generated using .NET Core CLI tooling (where applicable) or legacy .NET Framework tooling.
 
 .PARAMETER TestOnly
 Run the test commands used by OpenCover without collecting coverage.

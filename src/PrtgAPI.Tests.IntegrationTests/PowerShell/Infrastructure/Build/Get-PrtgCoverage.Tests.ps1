@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\..\..\PrtgAPI.Tests.UnitTests\Support\PowerShell\BuildCore.ps1
+. $PSScriptRoot\..\..\..\..\PrtgAPI.Tests.UnitTests\Support\PowerShell\BuildCore.ps1
 
 $testCases = @(
     @{name = "Debug"}
@@ -18,7 +18,7 @@ Describe "Get-PrtgCoverage_IT" -Tag @("PowerShell", "Build_IT") {
         }
         else
         {
-            { Get-PrtgCoverage -Configuration Release -SkipReport } | Should Throw "Code coverage is only supported on Windows"
+            { Get-PrtgCoverage -Configuration Release -SkipReport } | Should -Throw "Code coverage is only supported on Windows"
         }
     }
 

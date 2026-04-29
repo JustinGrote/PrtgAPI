@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
 
 Describe "Resume-Object" -Tag @("PowerShell", "UnitTest") {
     SetActionResponse
@@ -49,7 +49,7 @@ Describe "Resume-Object" -Tag @("PowerShell", "UnitTest") {
 
         $newSensor = $sensor | Resume-Object -PassThru -Batch:$false
 
-        $newSensor | Should Be $sensor
+        $newSensor | Should -Be $sensor
     }
 
     It "passes through with -Batch:`$true" {
@@ -59,7 +59,7 @@ Describe "Resume-Object" -Tag @("PowerShell", "UnitTest") {
 
         $newSensor = $sensor | Resume-Object -PassThru -Batch:$true
 
-        $newSensor | Should Be $sensor
+        $newSensor | Should -Be $sensor
     }
 
     It "specifies an ID" {

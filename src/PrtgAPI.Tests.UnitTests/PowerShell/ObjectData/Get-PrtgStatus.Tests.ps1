@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
 
 Describe "Get-PrtgStatus" -Tag @("PowerShell", "UnitTest") {
 
@@ -9,6 +9,6 @@ Describe "Get-PrtgStatus" -Tag @("PowerShell", "UnitTest") {
     It "can execute" {
         $status = Get-PrtgStatus
 
-        $status.GetType().Name | Should Be ServerStatus
+        $status.GetType().Name | Should -Be ServerStatus
     }
 }

@@ -8,7 +8,7 @@ The Invoke-PrtgAnalyzer cmdlet analyzes best practice rules on the PrtgAPI repos
 For certain rule violations, Invoke-PrtgAnalyzer can automatically apply the recommended fixes for you by specifying the -Fix parameter. To view the changes that will be applied it is recommended to also apply the -WhatIf parameter, and to have a clean Git working directory so that you may undo all of the changes or apply them in a single commit as desired.
 
 .PARAMETER Name
-A wildcard expression used to limit the files that should be analyzed.
+A wildcard expression used to limit the files that Should -be analyzed.
 
 .PARAMETER Fix
 Automatically fix any rule violations where possible.

@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
 
 Describe "Show-PrtgTree" -Tag @("PowerShell", "UnitTest") {
 
@@ -25,7 +25,7 @@ Describe "Show-PrtgTree" -Tag @("PowerShell", "UnitTest") {
                 SensorNode -Id 4000,4001
             }
 
-            $tree.Children.Count | Should Be 2
+            $tree.Children.Count | Should -Be 2
 
             $tree.Children | Show-PrtgTree
         }
@@ -37,7 +37,7 @@ Describe "Show-PrtgTree" -Tag @("PowerShell", "UnitTest") {
             }
 
             $comparison = $tree.CompareTo($tree)
-            $comparison.Children.Count | Should Be 2
+            $comparison.Children.Count | Should -Be 2
 
             $comparison | Show-PrtgTree
         }
@@ -53,7 +53,7 @@ Describe "Show-PrtgTree" -Tag @("PowerShell", "UnitTest") {
 
             $comparison = $first.CompareTo($second)
 
-            $comparison.Reduce() | Should Not BeNullOrEmpty
+            $comparison.Reduce() | Should -Not -BeNullOrEmpty
 
             $comparison | Show-PrtgTree -Reduce
         }
@@ -65,7 +65,7 @@ Describe "Show-PrtgTree" -Tag @("PowerShell", "UnitTest") {
 
             $comparison = $tree.CompareTo($tree)
 
-            $comparison.Reduce() | Should BeNullOrEmpty
+            $comparison.Reduce() | Should -BeNullOrEmpty
 
             $comparison | Show-PrtgTree -Reduce
         }
@@ -73,7 +73,7 @@ Describe "Show-PrtgTree" -Tag @("PowerShell", "UnitTest") {
         It "throws attempting to reduce a PrtgNode" {
             $tree = DeviceNode -Id 3000
 
-            { $tree | Show-PrtgTree -Reduce } | Should Throw "tree does not support reduction"
+            { $tree | Show-PrtgTree -Reduce } | Should -Throw "tree does not support reduction"
         }
     }
 

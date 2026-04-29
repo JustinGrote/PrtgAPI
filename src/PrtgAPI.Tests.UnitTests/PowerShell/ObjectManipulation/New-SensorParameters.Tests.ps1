@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
 
 function SetValue($params, $property, $value)
 {
@@ -8,8 +8,8 @@ function SetValue($params, $property, $value)
 
     $new = $params.$property
 
-    $new | Should Not Be $initial
-    $new | Should Be $value
+    $new | Should -Not -Be $initial
+    $new | Should -Be $value
 }
 
 function ValidateParams($params, $address)
@@ -37,23 +37,23 @@ Describe "New-SensorParameters" -Tag @("PowerShell", "UnitTest") {
     It "can create parameters with a name" {
         $params = New-SensorParameters ExeXml "custom name"
 
-        $params.GetType().Name | Should Be "ExeXmlSensorParameters"
-        $params.Name | Should Be "custom name"
+        $params.GetType().Name | Should -Be "ExeXmlSensorParameters"
+        $params.Name | Should -Be "custom name"
     }
 
     It "can use a default name" {
         $params = New-SensorParameters ExeXml
 
-        $params.GetType().Name | Should Be "ExeXmlSensorParameters"
-        $params.Name | Should Be "XML Custom EXE/Script Sensor"
+        $params.GetType().Name | Should -Be "ExeXmlSensorParameters"
+        $params.Name | Should -Be "XML Custom EXE/Script Sensor"
     }
 
     It "can specify a mandatory value" {
         $params = New-SensorParameters ExeXml "custom name" "blah.ps1"
 
-        $params.GetType().Name | Should Be "ExeXmlSensorParameters"
-        $params.Name | Should Be "custom name"
-        $params.ExeFile | Should Be "blah.ps1"
+        $params.GetType().Name | Should -Be "ExeXmlSensorParameters"
+        $params.Name | Should -Be "custom name"
+        $params.ExeFile | Should -Be "blah.ps1"
     }
 
     It "has contexts for all sensor parameter types" {
@@ -90,7 +90,7 @@ Describe "New-SensorParameters" -Tag @("PowerShell", "UnitTest") {
 
             $params = New-SensorParameters $name
 
-            $params.SensorType | Should Be $name
+            $params.SensorType | Should -Be $name
         }
     }
 
@@ -103,10 +103,10 @@ Describe "New-SensorParameters" -Tag @("PowerShell", "UnitTest") {
         
             $params = New-SensorParameters $raw
 
-            $params.GetType().Name | Should Be "PSRawSensorParameters"
-            $params.Name | Should Be "custom name"
-            $params.SensorType | Should Be "custom type"
-            $params.DynamicType | Should Be $false
+            $params.GetType().Name | Should -Be "PSRawSensorParameters"
+            $params.Name | Should -Be "custom name"
+            $params.SensorType | Should -Be "custom type"
+            $params.DynamicType | Should -Be $false
         }
 
         It "creates parameters with a -DynamicType" {
@@ -117,38 +117,38 @@ Describe "New-SensorParameters" -Tag @("PowerShell", "UnitTest") {
         
             $params = New-SensorParameters $raw -DynamicType
 
-            $params.GetType().Name | Should Be "PSRawSensorParameters"
-            $params.Name | Should Be "custom name"
-            $params.SensorType | Should Be "custom type"
-            $params.DynamicType | Should Be $true
+            $params.GetType().Name | Should -Be "PSRawSensorParameters"
+            $params.Name | Should -Be "custom name"
+            $params.SensorType | Should -Be "custom type"
+            $params.DynamicType | Should -Be $true
         }
 
         It "throws when a raw name isn't specified" {
-            { New-SensorParameters @{"sensortype" = "custom type"} } | Should Throw "'name_' is mandatory"
+            { New-SensorParameters @{"sensortype" = "custom type"} } | Should -Throw "'name_' is mandatory"
         }
 
         It "throws when a raw name is null" {
-            { New-SensorParameters @{"name_" = $null; "sensortype" = "custom type"} } | Should Throw "An object name cannot be null."
+            { New-SensorParameters @{"name_" = $null; "sensortype" = "custom type"} } | Should -Throw "An object name cannot be null."
         }
 
         It "throws when a raw sensortype isn't specified" {
-            { New-SensorParameters @{"name_" = "custom name"} } | Should Throw "'sensortype' is mandatory"
+            { New-SensorParameters @{"name_" = "custom name"} } | Should -Throw "'sensortype' is mandatory"
         }
 
         It "throws when a raw sensortype is null" {
-            { New-SensorParameters @{"name_" = "custom name"; "sensortype" = $null} } | Should Throw "SensorType cannot be null or empty."
+            { New-SensorParameters @{"name_" = "custom name"; "sensortype" = $null} } | Should -Throw "SensorType cannot be null or empty."
         }
 
         It "throws when multiple CustomParameter objects exist for a non sensor target property" {
             $params = New-SensorParameters -Empty
             $params["name"] = "first"
-            $params["name"] | Should Be "first"
+            $params["name"] | Should -Be "first"
             $params.Parameters.Add((New-Object PrtgAPI.Parameters.CustomParameter "name","second"))
 
-            $params["name"] | Should BeNullOrEmpty
+            $params["name"] | Should -BeNullOrEmpty
 
             WithStrict {
-                { $params["name"] } | Should Throw "Property 'name' contains an invalid collection of elements"
+                { $params["name"] } | Should -Throw "Property 'name' contains an invalid collection of elements"
             }
         }
     }
@@ -172,35 +172,35 @@ Describe "New-SensorParameters" -Tag @("PowerShell", "UnitTest") {
         It "gets a CLR property via its raw name" {
             $params = New-SensorParameters -Empty
 
-            $params["name_"] | Should BeNullOrEmpty
+            $params["name_"] | Should -BeNullOrEmpty
         }
 
         It "gets a raw property via its CLR name" {
             $params = New-SensorParameters -Empty
 
-            $params.Name | Should BeNullOrEmpty
-            $params.PSExtended.name_ | Should BeNullOrEmpty
+            $params.Name | Should -BeNullOrEmpty
+            $params.PSExtended.name_ | Should -BeNullOrEmpty
         }
 
         It "gets a real parameter CLR property via its raw name" {
             $params = New-SensorParameters -Empty
 
-            $params["sensortype"] | Should BeNullOrEmpty
-            $params.PSExtended.sensortype | Should BeNullOrEmpty
+            $params["sensortype"] | Should -BeNullOrEmpty
+            $params.PSExtended.sensortype | Should -BeNullOrEmpty
         }
 
         It "gets a CLR property via its raw name and ignores case" {
             $params = New-SensorParameters -Empty
 
-            $params["NAME_"] | Should BeNullOrEmpty
-            $params.PSExtended.name_ | Should BeNullOrEmpty
+            $params["NAME_"] | Should -BeNullOrEmpty
+            $params.PSExtended.name_ | Should -BeNullOrEmpty
         }
 
         it "gets a real parameter CLR property via its raw name and ignores case" {
             $params = New-SensorParameters -Empty
 
-            $params["SENSORTYPE"] | Should BeNullOrEmpty
-            $params.PSExtended.sensortype | Should BeNullOrEmpty
+            $params["SENSORTYPE"] | Should -BeNullOrEmpty
+            $params.PSExtended.sensortype | Should -BeNullOrEmpty
         }
 
         It "throws getting when a parameter doesn't exist" {
@@ -209,7 +209,7 @@ Describe "New-SensorParameters" -Tag @("PowerShell", "UnitTest") {
             $val1 = $params["test_"]
 
             WithStrict {
-                { $val2 = $params["test_"] } | Should Throw "Parameter with name 'test_' does not exist"
+                { $val2 = $params["test_"] } | Should -Throw "Parameter with name 'test_' does not exist"
             }
         }
 
@@ -220,46 +220,46 @@ Describe "New-SensorParameters" -Tag @("PowerShell", "UnitTest") {
             $params = New-SensorParameters -Empty
 
             $params["name_"] = "My Sensor"
-            $params.Name | Should Be "My Sensor"
+            $params.Name | Should -Be "My Sensor"
 
-            $params.PSExtended.name_ | Should BeNullOrEmpty
+            $params.PSExtended.name_ | Should -BeNullOrEmpty
         }
 
         It "sets a raw property via its CLR name" {
             $params = New-SensorParameters -Empty
 
             $params.Name = "My Sensor"
-            $params.Name | Should Be "My Sensor"
-            $params["name_"] | Should Be "My Sensor"
+            $params.Name | Should -Be "My Sensor"
+            $params["name_"] | Should -Be "My Sensor"
 
-            $params.PSExtended.name_ | Should BeNullOrEmpty
+            $params.PSExtended.name_ | Should -BeNullOrEmpty
         }
 
         It "sets a real parameter CLR property via its raw name" {
             $params = New-SensorParameters -Empty
 
             $params["sensortype"] = "customtype"
-            $params.SensorType | Should Be "customtype"
+            $params.SensorType | Should -Be "customtype"
 
-            $params.PSExtended.sensortype | Should BeNullOrEmpty
+            $params.PSExtended.sensortype | Should -BeNullOrEmpty
         }
 
         It "sets a CLR property via its raw name and ignores case" {
             $params = New-SensorParameters -Empty
 
             $params["NAME_"] = "My Sensor"
-            $params.Name | Should Be "My Sensor"
+            $params.Name | Should -Be "My Sensor"
 
-            $params.PSExtended.name_ | Should BeNullOrEmpty
+            $params.PSExtended.name_ | Should -BeNullOrEmpty
         }
 
         it "sets a real parameter CLR property via its raw name and ignores case" {
             $params = New-SensorParameters -Empty
 
             $params["SENSORTYPE"] = "customtype"
-            $params.SensorType | Should Be "customtype"
+            $params.SensorType | Should -Be "customtype"
 
-            $params.PSExtended.sensortype | Should BeNullOrEmpty
+            $params.PSExtended.sensortype | Should -BeNullOrEmpty
         }
 
         It "sets an existing custom property via its raw name and ignores case" {
@@ -268,9 +268,9 @@ Describe "New-SensorParameters" -Tag @("PowerShell", "UnitTest") {
             $params["test_"] = "hello"
             $params["TEST_"] = "goodbye"
 
-            $params["test_"] | Should Be "goodbye"
+            $params["test_"] | Should -Be "goodbye"
 
-            $params.Parameters.Count | Should Be 1
+            $params.Parameters.Count | Should -Be 1
 
             $params.Name = "testName"
             $params.SensorType = "testType"
@@ -285,7 +285,7 @@ Describe "New-SensorParameters" -Tag @("PowerShell", "UnitTest") {
             $params["sensortype"] = "customtype"
 
             WithResponse "MultiTypeResponse" {
-                { $device | Add-Sensor $params -Resolve:$false } | Should Throw "Property 'Name' requires a value"
+                { $device | Add-Sensor $params -Resolve:$false } | Should -Throw "Property 'Name' requires a value"
             }
         }
 
@@ -294,7 +294,7 @@ Describe "New-SensorParameters" -Tag @("PowerShell", "UnitTest") {
             $params["name_"] = "My Sensor"
 
             WithResponse "MultiTypeResponse" {
-                { $device | Add-Sensor $params -Resolve:$false } | Should Throw "Property 'SensorType' requires a value"
+                { $device | Add-Sensor $params -Resolve:$false } | Should -Throw "Property 'SensorType' requires a value"
             }
         }
     }
@@ -324,9 +324,9 @@ Describe "New-SensorParameters" -Tag @("PowerShell", "UnitTest") {
 
             $expected = "XML Custom EXE/Script Sensor"
 
-            $params[$name] | Should Be $expected
-            $params.Name | Should Be $expected
-            $params.DynamicType | Should Be $false
+            $params[$name] | Should -Be $expected
+            $params.Name | Should -Be $expected
+            $params.DynamicType | Should -Be $false
         }
 
         It "gets a real parameter CLR property" {
@@ -334,15 +334,15 @@ Describe "New-SensorParameters" -Tag @("PowerShell", "UnitTest") {
 
             $expected = "exexml"
 
-            $params["sensortype"] | Should Be $expected
-            $params.SensorType | Should Be $expected
+            $params["sensortype"] | Should -Be $expected
+            $params.SensorType | Should -Be $expected
         }
 
         It "gets properties and ignores case" {
             $params = GetDynamicParams
 
-            $params["NAME"] | Should Be "XML Custom EXE/Script Sensor"
-            $params["SENSORTYPE"] | Should Be "exexml"
+            $params["NAME"] | Should -Be "XML Custom EXE/Script Sensor"
+            $params["SENSORTYPE"] | Should -Be "exexml"
         }
 
         It "throws getting when a parameter doesn't exist" {
@@ -351,7 +351,7 @@ Describe "New-SensorParameters" -Tag @("PowerShell", "UnitTest") {
             $val1 = $params["test_"]
 
             WithStrict {
-                { $val2 = $params["test_"] } | Should Throw "Parameter with name 'test_' does not exist"
+                { $val2 = $params["test_"] } | Should -Throw "Parameter with name 'test_' does not exist"
             }
         }
 
@@ -359,25 +359,25 @@ Describe "New-SensorParameters" -Tag @("PowerShell", "UnitTest") {
 
             $params = GetDynamicParams
 
-            { $params.newprop } | Should Throw "Parameter with name 'newprop' does not exist."
+            { $params.newprop } | Should -Throw "Parameter with name 'newprop' does not exist."
         }
 
         It "gets a parameter via a dynamic property ending in an underscore" {
             $params = GetDynamicParams
 
-            $params.environment_ | Should Be "0"
+            $params.environment_ | Should -Be "0"
         }
 
         It "gets a parameter via a dynamic property and ignores case" {
             $params = GetDynamicParams
 
-            $params.ENVIRONMENT | Should Be "0"
+            $params.ENVIRONMENT | Should -Be "0"
         }
 
         It "gets a sensor target" {
             $params = GetDynamicParams
 
-            $params.exefile.GetType().Name | Should Be "GenericSensorTarget"
+            $params.exefile.GetType().Name | Should -Be "GenericSensorTarget"
         }
 
         It "specifies -rt" {
@@ -385,7 +385,7 @@ Describe "New-SensorParameters" -Tag @("PowerShell", "UnitTest") {
                 $device | New-SensorParameters -rt exexml
             }
 
-            $params.SensorType | Should Be "exexml"
+            $params.SensorType | Should -Be "exexml"
         }
 
         #endregion
@@ -399,7 +399,7 @@ Describe "New-SensorParameters" -Tag @("PowerShell", "UnitTest") {
             $expected = "New Name"
 
             $params[$name] = $expected
-            $params.Name | Should Be $expected
+            $params.Name | Should -Be $expected
         }
 
         It "sets a real parameter CLR property" {
@@ -408,7 +408,7 @@ Describe "New-SensorParameters" -Tag @("PowerShell", "UnitTest") {
             $expected = "wmiservice"
 
             $params["sensortype"] = $expected
-            $params.SensorType | Should Be $expected
+            $params.SensorType | Should -Be $expected
         }
 
         It "sets properties and ignores case" {
@@ -417,24 +417,24 @@ Describe "New-SensorParameters" -Tag @("PowerShell", "UnitTest") {
             $params["NAME"] = "New Name"
             $params["SENSORTYPE"] = "wmiservice"
 
-            $params["name"] | Should Be "New Name"
-            $params["sensortype"] | Should Be "wmiservice"
+            $params["name"] | Should -Be "New Name"
+            $params["sensortype"] | Should -Be "wmiservice"
         }
 
         It "sets an existing custom property and ignores case" {
 
             $params = GetDynamicParams
 
-            $params["environment"] | Should Be "0"
+            $params["environment"] | Should -Be "0"
             $params["ENVIRONMENT"] = "1"
 
-            $params["environment"] | Should Be "1"
+            $params["environment"] | Should -Be "1"
         }
 
         It "throws setting when a parameter doesn't exist" {
             $params = GetDynamicParams
 
-            { $params["test_"] = 3 } | Should Throw "Parameter with name 'test_' does not exist. To add new parameters object must first be unlocked"
+            { $params["test_"] = 3 } | Should -Throw "Parameter with name 'test_' does not exist. To add new parameters object must first be unlocked"
         }
 
         It "adds a new parameter when parameters are unlocked" {
@@ -444,7 +444,7 @@ Describe "New-SensorParameters" -Tag @("PowerShell", "UnitTest") {
 
             $params["test_"] = "hello"
 
-            $params["test_"] | Should Be "hello"
+            $params["test_"] | Should -Be "hello"
 
             $paramsArr = @(
                 "name_=XML+Custom+EXE%2FScript+Sensor"
@@ -479,14 +479,14 @@ Describe "New-SensorParameters" -Tag @("PowerShell", "UnitTest") {
             $params["test_"] = "hello"
             $params["TEST_"] = "goodbye"
 
-            $params["test_"] | Should Be "goodbye"
+            $params["test_"] | Should -Be "goodbye"
         }
 
         It "throws setting a non-existant parameter via a dynamic property when parameters are locked" {
 
             $params = GetDynamicParams
 
-            { $params.test = "blah" } | Should Throw "Parameter with name 'test' does not exist. To add new parameters object must first be unlocked."
+            { $params.test = "blah" } | Should -Throw "Parameter with name 'test' does not exist. To add new parameters object must first be unlocked."
         }
 
         It "sets a non-existant parameter via a dynamic property when parameters are unlocked" {
@@ -496,8 +496,8 @@ Describe "New-SensorParameters" -Tag @("PowerShell", "UnitTest") {
             $params.Unlock()
 
             $params.test = "blah"
-            $params.test | Should Be "blah"
-            $params["test"] | Should Be "blah"
+            $params.test | Should -Be "blah"
+            $params["test"] | Should -Be "blah"
         }
 
         It "sets a parameter via a dynamic property and ignores case" {
@@ -505,8 +505,8 @@ Describe "New-SensorParameters" -Tag @("PowerShell", "UnitTest") {
 
             $params.ENVIRONMENT = "1"
 
-            $params["environment"] | Should Be "1"
-            $params.Environment | Should Be "1"
+            $params["environment"] | Should -Be "1"
+            $params.Environment | Should -Be "1"
         }
 
         It "sets a non-existant parameter via a dynamic property with an underscore but doesn't have an underscore in the final name" {
@@ -517,9 +517,9 @@ Describe "New-SensorParameters" -Tag @("PowerShell", "UnitTest") {
             $expected = "newval"
 
             $params.newprop_ = $expected
-            $params.newprop | Should Be $expected
-            $params["newprop"] | Should Be $expected
-            $params["newprop_"] | Should Be $expected
+            $params.newprop | Should -Be $expected
+            $params["newprop"] | Should -Be $expected
+            $params["newprop_"] | Should -Be $expected
         }
 
         It "sets a typed parameter without a trailing underscore" {
@@ -583,12 +583,12 @@ Describe "New-SensorParameters" -Tag @("PowerShell", "UnitTest") {
         It "sets a sensor target" {
             $params = GetDynamicParams
 
-            $params.exefile.GetType().Name | Should Be "GenericSensorTarget"
-            $params.exefile.ToString() | Should Be "Demo Batchfile - Returns static values in four channels.bat"
+            $params.exefile.GetType().Name | Should -Be "GenericSensorTarget"
+            $params.exefile.ToString() | Should -Be "Demo Batchfile - Returns static values in four channels.bat"
             
             $params.exefile = $params.Targets["exefile"][1]
-            $params.exefile.GetType().Name | Should Be "GenericSensorTarget"
-            $params.exefile | Should Be "testScript.bat"
+            $params.exefile.GetType().Name | Should -Be "GenericSensorTarget"
+            $params.exefile | Should -Be "testScript.bat"
         }
 
         It "sets multiple sensor targets" {
@@ -596,31 +596,31 @@ Describe "New-SensorParameters" -Tag @("PowerShell", "UnitTest") {
 
             $params.exefile = $params.Targets["exefile"]
             
-            $params.Targets["exefile"].Count | Should Be 2
+            $params.Targets["exefile"].Count | Should -Be 2
 
             $params.exefile = $params.Targets["exefile"]
-            $params.exefile.GetType().Name | Should Be "GenericSensorTarget[]"
-            $params.exefile[0].ToString() | Should Be "Demo Batchfile - Returns static values in four channels.bat"
-            $params.exefile[1].ToString() | Should Be "testScript.bat"
+            $params.exefile.GetType().Name | Should -Be "GenericSensorTarget[]"
+            $params.exefile[0].ToString() | Should -Be "Demo Batchfile - Returns static values in four channels.bat"
+            $params.exefile[1].ToString() | Should -Be "testScript.bat"
         }
 
         It "sets multiple objects that are not sensor targets" {
             $params = GetDynamicParams
 
             $params.environment = 3,4
-            $params.environment[0] | Should Be 3
-            $params.environment[1] | Should Be 4
+            $params.environment[0] | Should -Be 3
+            $params.environment[1] | Should -Be 4
         }
 
         It "sets multiple sensor targets retrieved from Where-Object" {
 
             $params = GetDynamicParams
 
-            $params.Targets["exefile"].Count | Should Be 2
+            $params.Targets["exefile"].Count | Should -Be 2
             $params.exefile = $params.Targets["exefile"]
-            $params.exefile.GetType().Name | Should Be "GenericSensorTarget[]"
+            $params.exefile.GetType().Name | Should -Be "GenericSensorTarget[]"
             $params.exefile = $params.Targets["exefile"] | where name -Like *
-            $params.exefile.GetType().Name | Should Be "object[]"
+            $params.exefile.GetType().Name | Should -Be "object[]"
 
             $paramsArr = @(
                 "name_=XML+Custom+EXE%2FScript+Sensor"
@@ -651,19 +651,19 @@ Describe "New-SensorParameters" -Tag @("PowerShell", "UnitTest") {
 
             $params = GetDynamicParams
 
-            { $params.newprop = "newval" } | Should Throw "Parameter with name 'newprop' does not exist. To add new parameters object must first be unlocked."
-            $params.IsLocked() | Should Be $true
+            { $params.newprop = "newval" } | Should -Throw "Parameter with name 'newprop' does not exist. To add new parameters object must first be unlocked."
+            $params.IsLocked() | Should -Be $true
 
             $params.Unlock()
 
             $params.newprop = "newval2"
-            $params.newprop | Should Be "newval2"
-            $params.IsLocked() | Should Be $false
+            $params.newprop | Should -Be "newval2"
+            $params.IsLocked() | Should -Be $false
 
             $params.Lock()
 
-            { $params.NEWPROP2 = "newval3" } | Should Throw "Parameter with name 'NEWPROP2' does not exist. To add new parameters object must first be unlocked."
-            $params.IsLocked() | Should Be $true
+            { $params.NEWPROP2 = "newval3" } | Should -Throw "Parameter with name 'NEWPROP2' does not exist. To add new parameters object must first be unlocked."
+            $params.IsLocked() | Should -Be $true
         }
 
         #endregion
@@ -673,7 +673,7 @@ Describe "New-SensorParameters" -Tag @("PowerShell", "UnitTest") {
                 $device | New-SensorParameters -RawType exexml -DynamicType
             }
 
-            $params.DynamicType | Should Be $true
+            $params.DynamicType | Should -Be $true
         }
         
         It "pipes parameters to Add-Sensor" {
@@ -740,13 +740,13 @@ Describe "New-SensorParameters" -Tag @("PowerShell", "UnitTest") {
                 $device | New-SensorParameters -RawType exexml
             }
 
-            $normalParams.exefile.ToString() | Should Be "Demo Batchfile - Returns static values in four channels.bat"
+            $normalParams.exefile.ToString() | Should -Be "Demo Batchfile - Returns static values in four channels.bat"
 
             $filterParams = WithResponse "MultiTypeResponse" {
                 $device | New-SensorParameters -RawType exexml -Target *test*
             }
 
-            $filterParams.exefile.ToString() | Should Be "testScript.bat"
+            $filterParams.exefile.ToString() | Should -Be "testScript.bat"
         }
 
         It "specifies a timeout" {
@@ -756,7 +756,7 @@ Describe "New-SensorParameters" -Tag @("PowerShell", "UnitTest") {
                 $device | New-SensorParameters -RawType exexml -Timeout 3
             }
 
-            $normalParams.exefile.ToString() | Should Be "Demo Batchfile - Returns static values in four channels.bat"
+            $normalParams.exefile.ToString() | Should -Be "Demo Batchfile - Returns static values in four channels.bat"
         }
     }
 
@@ -789,7 +789,7 @@ Describe "New-SensorParameters" -Tag @("PowerShell", "UnitTest") {
             SetResponseAndClient "WmiServiceTargetResponse"
             
             $services = $device | Get-SensorTarget WmiService
-            $services.Count | Should BeGreaterThan 1
+            $services.Count | Should -BeGreaterThan 1
 
             $params = New-SensorParameters WmiService
 
@@ -807,11 +807,11 @@ Describe "New-SensorParameters" -Tag @("PowerShell", "UnitTest") {
             SetResponseAndClient "WmiServiceTargetResponse"
             
             $services = $device | Get-SensorTarget WmiService *prtgcore*
-            $services.Count | Should Be 1
+            $services.Count | Should -Be 1
 
             $params = New-SensorParameters WmiService $services
 
-            $params.Services.Count | Should Be 1
+            $params.Services.Count | Should -Be 1
         }
     }
 
@@ -859,7 +859,7 @@ Describe "New-SensorParameters" -Tag @("PowerShell", "UnitTest") {
 
             $target = $device | Get-SensorType snmplibrary | select -ExpandProperty QueryTargets|select -First 1
 
-            $target | Should Be "APC UPS.oidlib"
+            $target | Should -Be "APC UPS.oidlib"
 
             $device | New-SensorParameters -RawType snmplibrary -qt $target
         }
@@ -882,7 +882,7 @@ Describe "New-SensorParameters" -Tag @("PowerShell", "UnitTest") {
                 [Request]::SensorTypes(40) # Get initial target from wildcard
             )
 
-            { $device | New-SensorParameters -RawType snmplibrary -qt *potato* } | Should Throw "Could not find a query target matching the wildcard expression '*potato*'. Please specify one of the following parameters: 'APC UPS.oidlib',"
+            { $device | New-SensorParameters -RawType snmplibrary -qt *potato* } | Should -Throw "Could not find a query target matching the wildcard expression '*potato*'. Please specify one of the following parameters: 'APC UPS.oidlib',"
         }
 
         It "throws when a sensor query target wildcard is ambiguous" {
@@ -890,7 +890,7 @@ Describe "New-SensorParameters" -Tag @("PowerShell", "UnitTest") {
                 [Request]::SensorTypes(40) # Get initial target from wildcard
             )
 
-            { $device | New-SensorParameters -RawType snmplibrary -qt *apc* } | Should Throw "Query target wildcard '*apc*' is ambiguous between the following parameters: 'APC UPS.oidlib', 'APCSensorstationlib.oidlib'. Please specify a more specific identifier."
+            { $device | New-SensorParameters -RawType snmplibrary -qt *apc* } | Should -Throw "Query target wildcard '*apc*' is ambiguous between the following parameters: 'APC UPS.oidlib', 'APCSensorstationlib.oidlib'. Please specify a more specific identifier."
         }
 
         It "throws when a sensor query target is invalid" {
@@ -898,7 +898,7 @@ Describe "New-SensorParameters" -Tag @("PowerShell", "UnitTest") {
                 [Request]::SensorTypes(40) # Get initial target from wildcard
             )
 
-            { $device | New-SensorParameters -RawType snmplibrary -qt potato } | Should Throw "Query target 'potato' is not a valid target for sensor type 'snmplibrary' on device ID 40. Please specify one of the following targets: 'APC UPS.oidlib',"
+            { $device | New-SensorParameters -RawType snmplibrary -qt potato } | Should -Throw "Query target 'potato' is not a valid target for sensor type 'snmplibrary' on device ID 40. Please specify one of the following targets: 'APC UPS.oidlib',"
         }
 
         It "throws when target is not required" {
@@ -906,7 +906,7 @@ Describe "New-SensorParameters" -Tag @("PowerShell", "UnitTest") {
                 [Request]::SensorTypes(40)
             )
 
-            { $device | New-SensorParameters -RawType ptfadsreplfailurexml -qt potato } | Should Throw "Cannot specify query target 'potato' on sensor type 'ptfadsreplfailurexml': type does not support query targets."
+            { $device | New-SensorParameters -RawType ptfadsreplfailurexml -qt potato } | Should -Throw "Cannot specify query target 'potato' on sensor type 'ptfadsreplfailurexml': type does not support query targets."
         }
 
         It "throws when target is missing" {
@@ -914,7 +914,7 @@ Describe "New-SensorParameters" -Tag @("PowerShell", "UnitTest") {
                 [Request]::SensorTypes(40)
             )
 
-            { $device | New-SensorParameters -RawType snmplibrary } | Should Throw "Failed to process query for sensor type 'snmplibrary': a sensor query target is required, however none was specified. Please specify one of the following targets: 'APC UPS.oidlib',"
+            { $device | New-SensorParameters -RawType snmplibrary } | Should -Throw "Failed to process query for sensor type 'snmplibrary': a sensor query target is required, however none was specified. Please specify one of the following targets: 'APC UPS.oidlib',"
         }
 
         It "parses a set of sensor query target parameters" {
@@ -941,7 +941,7 @@ Describe "New-SensorParameters" -Tag @("PowerShell", "UnitTest") {
                 [Request]::SensorTypes(40)
             )
 
-            { $device | New-SensorParameters -RawType ptfadsreplfailurexml -qt *ups* } | Should Throw "Cannot specify query target '*ups*' on sensor type 'ptfadsreplfailurexml': type does not support query targets."
+            { $device | New-SensorParameters -RawType ptfadsreplfailurexml -qt *ups* } | Should -Throw "Cannot specify query target '*ups*' on sensor type 'ptfadsreplfailurexml': type does not support query targets."
         }
 
         It "throws when a sensor query target parameter is missing" {
@@ -950,7 +950,7 @@ Describe "New-SensorParameters" -Tag @("PowerShell", "UnitTest") {
                 [Request]::BeginAddSensorQuery(40, "ptfadsreplfailurexml")
             )
 
-            { $device | New-SensorParameters -RawType ptfadsreplfailurexml } | Should Throw "Failed to process request for sensor type 'oracletablespace': sensor query target parameters are required, however none were specified. Please retry the request specifying the parameters 'database_',"
+            { $device | New-SensorParameters -RawType ptfadsreplfailurexml } | Should -Throw "Failed to process request for sensor type 'oracletablespace': sensor query target parameters are required, however none were specified. Please retry the request specifying the parameters 'database_',"
         }
     }
 }

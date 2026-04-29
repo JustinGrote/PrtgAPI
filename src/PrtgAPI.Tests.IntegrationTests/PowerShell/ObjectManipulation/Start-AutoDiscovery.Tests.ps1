@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\IntegrationTest.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\IntegrationTest.ps1
 
 function WaitForAutoDiscovery($device)
 {
@@ -26,7 +26,7 @@ Describe "Start-AutoDiscovery_IT" -Tag @("PowerShell", "IntegrationTest") {
         $probe = Get-Probe -Id (Settings Probe)
 
         $device = $probe | Add-Device "autoDiscoverTest" "localhost"
-        $device.Condition | Should Not BeLike "Auto-Discovery*"
+        $device.Condition | Should -Not -BeLike "Auto-Discovery*"
 
         $device | Start-AutoDiscovery
         
@@ -39,11 +39,11 @@ Describe "Start-AutoDiscovery_IT" -Tag @("PowerShell", "IntegrationTest") {
                 $newDevice = WaitForAutoDiscovery $newDevice
             }
 
-            $newDevice.Condition | Should BeLike "Auto-Discovery*"
+            $newDevice.Condition | Should -BeLike "Auto-Discovery*"
         }
 
         Unsafe {
-            $newDevice | Should Not BeNullOrEmpty
+            $newDevice | Should -Not -BeNullOrEmpty
             $newDevice | Remove-Object -Force
         }
     }
@@ -54,7 +54,7 @@ Describe "Start-AutoDiscovery_IT" -Tag @("PowerShell", "IntegrationTest") {
         $probe = Get-Probe -Id (Settings Probe)
 
         $device = $probe | Add-Device "autoDiscoverTemplateTest" "localhost"
-        $device.Condition | Should Not BeLike "Auto-Discovery*"
+        $device.Condition | Should -Not -BeLike "Auto-Discovery*"
 
         $device | Start-AutoDiscovery $templates
         $newDevice = Get-Device -Id $device.Id
@@ -66,11 +66,11 @@ Describe "Start-AutoDiscovery_IT" -Tag @("PowerShell", "IntegrationTest") {
                 $newDevice = WaitForAutoDiscovery $newDevice
             }
 
-            $newDevice.Condition | Should BeLike "Auto-Discovery*"
+            $newDevice.Condition | Should -BeLike "Auto-Discovery*"
         }
 
         Unsafe {
-            $newDevice | Should Not BeNullOrEmpty
+            $newDevice | Should -Not -BeNullOrEmpty
             $newDevice | Remove-Object -Force
         }
     }
@@ -80,7 +80,7 @@ Describe "Start-AutoDiscovery_IT" -Tag @("PowerShell", "IntegrationTest") {
         $probe = Get-Probe -Id (Settings Probe)
 
         $device = $probe | Add-Device "autoDiscoverTemplateNameTest" "localhost"
-        $device.Condition | Should Not BeLike "Auto-Discovery*"
+        $device.Condition | Should -Not -BeLike "Auto-Discovery*"
 
         $device | Start-AutoDiscovery *wmi*
 
@@ -93,11 +93,11 @@ Describe "Start-AutoDiscovery_IT" -Tag @("PowerShell", "IntegrationTest") {
                 $newDevice = WaitForAutoDiscovery $newDevice
             }
         
-            $newDevice.Condition | Should BeLike "Auto-Discovery*"
+            $newDevice.Condition | Should -BeLike "Auto-Discovery*"
         }
 
         Unsafe {
-            $newDevice | Should Not BeNullOrEmpty
+            $newDevice | Should -Not -BeNullOrEmpty
             $newDevice | Remove-Object -Force
         }
     }

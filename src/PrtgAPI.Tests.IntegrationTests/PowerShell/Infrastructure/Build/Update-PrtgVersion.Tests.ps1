@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\..\..\PrtgAPI.Tests.UnitTests\Support\PowerShell\BuildCore.ps1
+. $PSScriptRoot\..\..\..\..\PrtgAPI.Tests.UnitTests\Support\PowerShell\BuildCore.ps1
 
 Describe "Update-PrtgVersion_IT" -Tag @("PowerShell", "Build_IT") {
     It "updates version on core" -Skip:(SkipBuildTest) {
@@ -12,7 +12,7 @@ Describe "Update-PrtgVersion_IT" -Tag @("PowerShell", "Build_IT") {
 
             $newStr = "$($originalVersion.Major).$($originalVersion.Minor).$($originalVersion.Build + 1).$($originalVersion.Revision)"
 
-            $newVersion | Should Be $newStr
+            $newVersion | Should -Be $newStr
         }
         finally
         {
@@ -31,7 +31,7 @@ Describe "Update-PrtgVersion_IT" -Tag @("PowerShell", "Build_IT") {
 
             $newStr = "$($originalVersion.Major).$($originalVersion.Minor).$($originalVersion.Build + 1).$($originalVersion.Revision)"
 
-            $newVersion | Should Be $newStr
+            $newVersion | Should -Be $newStr
         }
         finally
         {

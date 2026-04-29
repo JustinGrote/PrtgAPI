@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\..\Support\PowerShell\Build.ps1
+. $PSScriptRoot\..\..\..\Support\PowerShell\Build.ps1
 
 function global:Mock-Command($name)
 {
@@ -168,8 +168,8 @@ Describe "Install-PrtgDependency" -Tag @("PowerShell", "Build") {
 
                 if($Name -eq "NuGet")
                 {
-                    $MinimumVersion | Should Be "2.8.5.201" | Out-Null
-                    $Force | Should Be $true | Out-Null
+                    $MinimumVersion | Should -Be "2.8.5.201" | Out-Null
+                    $Force | Should -Be $true | Out-Null
                 }
                 else
                 {
@@ -192,7 +192,7 @@ Describe "Install-PrtgDependency" -Tag @("PowerShell", "Build") {
             Mock "Install-PackageEx" {
                 param($Name)
 
-                $Name | Should Be "PowerShellGet"
+                $Name | Should -Be "PowerShellGet"
             } -Verifiable
         }
 
@@ -208,18 +208,11 @@ Describe "Install-PrtgDependency" -Tag @("PowerShell", "Build") {
             } -Verifiable
 
             Mock "Install-PackageEx" {
-                $Name | Should Be "Pester"
+                $Name | Should -Be "Pester"
 
-                if($PSEdition -eq "Core" -and !$IsWindows)
-                {
-                    $Version | Should Be "4.7.2"
-                }
-                else
-                {
-                    $Version | Should Be "3.4.6"
-                }
+                $Version | Should -Be "5.7.1"
 
-                $MinimumVersion | Should BeNullOrEmpty
+                $MinimumVersion | Should -BeNullOrEmpty
             } -Verifiable
         }
 
@@ -237,7 +230,7 @@ Describe "Install-PrtgDependency" -Tag @("PowerShell", "Build") {
             Mock "Install-PackageEx" {
                 param($Name)
 
-                $Name | Should Be "PSScriptAnalyzer"
+                $Name | Should -Be "PSScriptAnalyzer"
             } -Verifiable
         }
 
@@ -257,7 +250,7 @@ Describe "Install-PrtgDependency" -Tag @("PowerShell", "Build") {
 
             Mock "Invoke-WebRequest" {
 
-                $Uri | Should BeLike "*NDP461*"
+                $Uri | Should -BeLike "*NDP461*"
             }
 
             Mock Test-CIIsWindows {
@@ -286,19 +279,14 @@ Describe "Install-PrtgDependency" -Tag @("PowerShell", "Build") {
             Mock "Get-Module" {
                 $obj = [PSCustomObject]@{
                     Name = "Pester"
-                    Version = [Version]"3.4.5"
-                }
-
-                if($PSEdition -eq "Core" -and !$IsWindows)
-                {
-                    $obj.Version = "4.7.0"
+                    Version = [Version]"5.7.1"
                 }
 
                 return $obj
             } -Verifiable
 
             Mock "Install-PackageEx" {
-                throw "Should not have attempted to install package"
+                throw "Should -Not -have attempted to install package"
             }
         }
 
@@ -337,7 +325,7 @@ Describe "Install-PrtgDependency" -Tag @("PowerShell", "Build") {
 
         try
         {
-            $global:actual | Should Be $expected
+            $global:actual | Should -Be $expected
         }
         finally
         {

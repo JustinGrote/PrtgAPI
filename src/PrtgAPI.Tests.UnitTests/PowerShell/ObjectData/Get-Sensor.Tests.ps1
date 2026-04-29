@@ -1,10 +1,10 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\UnitTest.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\UnitTest.ps1
 
 Describe "Get-Sensor" -Tag @("PowerShell", "UnitTest") {
     
     It "can deserialize" {
         $sensors = Get-Sensor
-        $sensors.Count | Should Be 1
+        $sensors.Count | Should -Be 1
     }
 
     It "can filter valid wildcards" {
@@ -15,7 +15,7 @@ Describe "Get-Sensor" -Tag @("PowerShell", "UnitTest") {
 
         WithItems ($obj1, $obj2) {
             $sensors = Get-Sensor -Tags *banana*
-            $sensors.Count | Should Be 1
+            $sensors.Count | Should -Be 1
         }
     }
 
@@ -27,7 +27,7 @@ Describe "Get-Sensor" -Tag @("PowerShell", "UnitTest") {
 
         WithItems ($obj1, $obj2) {
             $sensors = Get-Sensor -Tags *ba*a*
-            $sensors.Count | Should Be 1
+            $sensors.Count | Should -Be 1
         }
     }
 
@@ -39,7 +39,7 @@ Describe "Get-Sensor" -Tag @("PowerShell", "UnitTest") {
 
         WithItems ($obj1, $obj2) {
             $sensors = Get-Sensor -Tags *apple*
-            $sensors.Count | Should Be 0
+            $sensors.Count | Should -Be 0
         }
     }
 
@@ -69,7 +69,7 @@ Describe "Get-Sensor" -Tag @("PowerShell", "UnitTest") {
 
             $sensors = Get-Group Servers | Get-Sensor *
 
-            $sensors.Count | Should Be 4
+            $sensors.Count | Should -Be 4
         }
 
         It "retrieves sensors from a group with a duplicated name" {
@@ -77,7 +77,7 @@ Describe "Get-Sensor" -Tag @("PowerShell", "UnitTest") {
 
             $sensors = Get-Group Servers | Get-Sensor *
 
-            $sensors.Count | Should Be 4
+            $sensors.Count | Should -Be 4
         }
 
         It "retrieves sensors from a uniquely named group containing child groups" {
@@ -85,7 +85,7 @@ Describe "Get-Sensor" -Tag @("PowerShell", "UnitTest") {
 
             $sensors = Get-Group Servers | Get-Sensor *
 
-            $sensors.Count | Should Be 6
+            $sensors.Count | Should -Be 6
         }
 
         It "retrieves sensors from a group with a duplicated name containing child groups" {
@@ -93,7 +93,7 @@ Describe "Get-Sensor" -Tag @("PowerShell", "UnitTest") {
 
             $sensors = Get-Group Servers | Get-Sensor *
 
-            $sensors.Count | Should Be 8
+            $sensors.Count | Should -Be 8
         }
 
         It "retrieves sensors from all groups with a unique name with -Recurse:`$false" {
@@ -101,7 +101,7 @@ Describe "Get-Sensor" -Tag @("PowerShell", "UnitTest") {
 
             $sensors = Get-Group Servers | Get-Sensor * -Recurse:$false
 
-            $sensors.Count | Should Be 4
+            $sensors.Count | Should -Be 4
         }
 
         It "retrieves sensors from all groups with a duplicated name with -Recurse:`$false" {
@@ -109,7 +109,7 @@ Describe "Get-Sensor" -Tag @("PowerShell", "UnitTest") {
 
             $sensors = Get-Group Servers | Get-Sensor * -Recurse:$false
 
-            $sensors.Count | Should Be 4
+            $sensors.Count | Should -Be 4
         }
 
         It "retrieves sensors from a group hierarchy with no devices in the parent group" {
@@ -117,7 +117,7 @@ Describe "Get-Sensor" -Tag @("PowerShell", "UnitTest") {
 
             $sensors = Get-Group Servers | Get-Sensor *
 
-            $sensors.Count | Should Be 6
+            $sensors.Count | Should -Be 6
         }
 
         It "retrieves sensors from a child group with a name filter" {
@@ -126,7 +126,7 @@ Describe "Get-Sensor" -Tag @("PowerShell", "UnitTest") {
 
             $sensors = Get-Group Servers | Get-Sensor Ping
 
-            $sensors.Count | Should Be 1
+            $sensors.Count | Should -Be 1
         }
 
         It "retrieves sensors from a grandchild group with a name filter" {
@@ -135,7 +135,7 @@ Describe "Get-Sensor" -Tag @("PowerShell", "UnitTest") {
 
             $sensors = Get-Group Servers | Get-Sensor Uptime
 
-            $sensors.Count | Should Be 1
+            $sensors.Count | Should -Be 1
         }
 
         It "retrieves sensors from a great-grandchild group with a name filter" {
@@ -143,7 +143,7 @@ Describe "Get-Sensor" -Tag @("PowerShell", "UnitTest") {
 
             $sensors = Get-Group Servers | Get-Sensor Uptime
 
-            $sensors.Count | Should Be 1
+            $sensors.Count | Should -Be 1
         }
     }
     
@@ -154,7 +154,7 @@ Describe "Get-Sensor" -Tag @("PowerShell", "UnitTest") {
 
             $sensors = Get-Sensor -Count 2
 
-            $sensors.Count | Should Be 2
+            $sensors.Count | Should -Be 2
         }
 
         It "specifies a count and a filter without piping from groups" {
@@ -163,7 +163,7 @@ Describe "Get-Sensor" -Tag @("PowerShell", "UnitTest") {
 
             $sensors = Get-Sensor ping -Count 2
 
-            $sensors.Count | Should Be 2
+            $sensors.Count | Should -Be 2
         }
 
         It "specifies a count greater than the number that are available without piping from groups" {
@@ -172,7 +172,7 @@ Describe "Get-Sensor" -Tag @("PowerShell", "UnitTest") {
 
             $sensors = Get-Sensor -Count 2
 
-            $sensors.Count | Should Be 1
+            $sensors.Count | Should -Be 1
         }
 
         It "specifies a count when piping from groups" {
@@ -181,7 +181,7 @@ Describe "Get-Sensor" -Tag @("PowerShell", "UnitTest") {
 
             $sensors = Get-Group -Count 1 | Get-Sensor -Count 2
 
-            $sensors.Count | Should Be 2
+            $sensors.Count | Should -Be 2
         }
 
         It "specifies a count and a filter when piping from groups" {
@@ -190,7 +190,7 @@ Describe "Get-Sensor" -Tag @("PowerShell", "UnitTest") {
 
             $sensors = Get-Group -Count 1 | Get-Sensor ping -Count 2
 
-            $sensors.Count | Should Be 2
+            $sensors.Count | Should -Be 2
         }
 
         It "requests a full page after repeatedly failing to retrieve all required items" {
@@ -199,7 +199,7 @@ Describe "Get-Sensor" -Tag @("PowerShell", "UnitTest") {
 
             $sensors = Get-Sensor ping -Count 2
 
-            $sensors.Count | Should Be 1
+            $sensors.Count | Should -Be 1
         }
 
         It "tries to request a full page but there is only 1 record left after repeatedly failing to retrieve all required items" {
@@ -207,7 +207,7 @@ Describe "Get-Sensor" -Tag @("PowerShell", "UnitTest") {
 
             $sensors = Get-Sensor ping -Count 2
 
-            $sensors.Count | Should Be 1
+            $sensors.Count | Should -Be 1
         }
 
         It "tries to request a full page but there are no records left after repeatedly failing to retrieve all required items" {
@@ -215,7 +215,7 @@ Describe "Get-Sensor" -Tag @("PowerShell", "UnitTest") {
 
             $sensors = Get-Sensor ping -Count 2
 
-            $sensors.Count | Should Be 1
+            $sensors.Count | Should -Be 1
         }
 
         It "tries to request a full page but there are negative records left after repeatedly failing to retrieve all required items" {
@@ -223,7 +223,7 @@ Describe "Get-Sensor" -Tag @("PowerShell", "UnitTest") {
 
             $sensors = Get-Sensor ping -Count 2
 
-            $sensors.Count | Should Be 1
+            $sensors.Count | Should -Be 1
         }
 
         It "doesn't care after repeatedly failing to retrieve all required items when piping from groups" {
@@ -232,7 +232,7 @@ Describe "Get-Sensor" -Tag @("PowerShell", "UnitTest") {
 
             $sensors = Get-Group -Count 1 | Get-Sensor ping -Count 2
 
-            $sensors.Count | Should Be 1
+            $sensors.Count | Should -Be 1
         }
 
         It "specifies a count and a filter when piping from a duplicate group" {
@@ -241,7 +241,7 @@ Describe "Get-Sensor" -Tag @("PowerShell", "UnitTest") {
 
             $sensors = Get-Group -Count 1 | Get-Sensor ping -Count 2
 
-            $sensors.Count | Should Be 1
+            $sensors.Count | Should -Be 1
         }
 
         It "doesn't care after repeatedly failing to retrieve all required items from a duplicate group" {
@@ -249,7 +249,7 @@ Describe "Get-Sensor" -Tag @("PowerShell", "UnitTest") {
 
             $sensors = Get-Group -Count 1 | Get-Sensor ping -Count 2
 
-            $sensors.Count | Should Be 1
+            $sensors.Count | Should -Be 1
         }
 
         It "specifies a count when piping from groups with -Recurse:`$false" {
@@ -257,7 +257,7 @@ Describe "Get-Sensor" -Tag @("PowerShell", "UnitTest") {
 
             $sensors = Get-Group -Count 1 | Get-Sensor -Count 2 -Recurse:$false
 
-            $sensors.Count | Should Be 1
+            $sensors.Count | Should -Be 1
         }
 
         It "specifies a count and a filter when piping from groups with -Recurse:`$false" {
@@ -265,7 +265,7 @@ Describe "Get-Sensor" -Tag @("PowerShell", "UnitTest") {
 
             $sensors = Get-Group -Count 1 | Get-Sensor ping -Count 2 -Recurse:$false
 
-            $sensors.Count | Should Be 2
+            $sensors.Count | Should -Be 2
         }
     }
     
@@ -313,7 +313,7 @@ Describe "Get-Sensor" -Tag @("PowerShell", "UnitTest") {
         SetMultiTypeResponse
 
         $groups = Get-Group
-        $groups.Count | Should Be 2
+        $groups.Count | Should -Be 2
 
         $response = SetAddressValidatorResponse @(
             [Request]::Groups("filter_name=Windows+Infrastructure0", [Request]::DefaultObjectFlags)
@@ -335,12 +335,12 @@ Describe "Get-Sensor" -Tag @("PowerShell", "UnitTest") {
         SetAddressValidatorResponse "filter_device=@sub(c)"
 
         $sensors = Get-Sensor -Device c*
-        $sensors.Count | Should Be 0
+        $sensors.Count | Should -Be 0
 
         SetAddressValidatorResponse "filter_device=@sub(d)"
 
         $sensors = Get-Sensor -Device d*
-        $sensors.Count | Should Be 2
+        $sensors.Count | Should -Be 2
     }
 
     It "filters by group name" {
@@ -348,24 +348,24 @@ Describe "Get-Sensor" -Tag @("PowerShell", "UnitTest") {
         SetAddressValidatorResponse "filter_group=@sub(e)"
 
         $sensors = Get-Sensor -Group e*
-        $sensors.Count | Should Be 0
+        $sensors.Count | Should -Be 0
 
         SetAddressValidatorResponse "filter_group=@sub(s)"
 
         $sensors = Get-Sensor -Group s*
-        $sensors.Count | Should Be 2
+        $sensors.Count | Should -Be 2
     }
 
     It "filters by probe name" {
         SetAddressValidatorResponse "filter_probe=@sub(h)"
 
         $sensors = Get-Sensor -Probe h*
-        $sensors.Count | Should Be 0
+        $sensors.Count | Should -Be 0
 
         SetAddressValidatorResponse "filter_probe=@sub(c)"
 
         $sensors = Get-Sensor -Probe c*
-        $sensors.Count | Should Be 2
+        $sensors.Count | Should -Be 2
     }
     
     Context "Dynamic" {
@@ -376,7 +376,7 @@ Describe "Get-Sensor" -Tag @("PowerShell", "UnitTest") {
         }
 
         It "throws using a dynamic parameter not supported by this type" {
-            { Get-Sensor -Host dc-1 } | Should Throw "A parameter cannot be found that matches parameter name 'Host'"
+            { Get-Sensor -Host dc-1 } | Should -Throw "A parameter cannot be found that matches parameter name 'Host'"
         }
 
         It "uses dynamic parameters in conjunction with regular parameters" {
@@ -392,9 +392,9 @@ Describe "Get-Sensor" -Tag @("PowerShell", "UnitTest") {
 
             $sensor = @(Get-Sensor -Count 3 -Message "*1")
 
-            $sensor.Count | Should Be 1
+            $sensor.Count | Should -Be 1
 
-            $sensor.Name | Should Be "Volume IO _Total1"
+            $sensor.Name | Should -Be "Volume IO _Total1"
         }
 
         $date1 = (New-Object DateTime @(2000, 10, 2, 12, 10, 5, [DateTimeKind]::Utc))
@@ -451,16 +451,16 @@ Describe "Get-Sensor" -Tag @("PowerShell", "UnitTest") {
         }
 
         It "throws using unsupported filters in dynamic parameters" {
-            { Get-Sensor -Favorite $false } | Should Throw "Cannot filter where property 'Favorite' equals '0'."
+            { Get-Sensor -Favorite $false } | Should -Throw "Cannot filter where property 'Favorite' equals '0'."
         }
     }
 
     It "throws filtering by Status 0" {
-        { Get-Sensor -Status 0 } | Should Throw "is not a member of type 'PrtgAPI.Status'"
+        { Get-Sensor -Status 0 } | Should -Throw "is not a member of type 'PrtgAPI.Status'"
     }
 
     It "throws specifying an illegal string filter" {
-        { flt name notequals ping | Get-Sensor } | Should Throw "Cannot filter where property 'Name' notequals 'ping'"
+        { flt name notequals ping | Get-Sensor } | Should -Throw "Cannot filter where property 'Name' notequals 'ping'"
     }
 
     It "doesn't throw specifying -Illegal with an illegal string filter" {
@@ -480,8 +480,8 @@ Describe "Get-Sensor" -Tag @("PowerShell", "UnitTest") {
 
         $sensors = Get-Sensor -Type sensorfactory
 
-        $sensors.Count | Should Be 1
-        $sensors.Type.StringValue | Should Be "aggregation"
+        $sensors.Count | Should -Be 1
+        $sensors.Type.StringValue | Should -Be "aggregation"
     }
 
     It "filters by a supported sensor type" {
@@ -493,7 +493,7 @@ Describe "Get-Sensor" -Tag @("PowerShell", "UnitTest") {
 
         $sensors = Get-Sensor -Type factory
 
-        $sensors.Count | Should Be 1
-        $sensors.Type.StringValue | Should Be "aggregation"
+        $sensors.Count | Should -Be 1
+        $sensors.Type.StringValue | Should -Be "aggregation"
     }
 }

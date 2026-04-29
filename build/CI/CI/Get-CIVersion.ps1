@@ -139,22 +139,22 @@ function Validate-VersionTable($versionTable)
 
     if($package -ne $three)
     {
-        Write-Error "Expected property 'Package' to be '$three' but was '$package' instead.`nPackage version should match the first three digits of File version." -Category InvalidData
+        Write-Error "Expected property 'Package' to be '$three' but was '$package' instead.`nPackage version Should -match the first three digits of File version." -Category InvalidData
     }
 
     if($assembly -ne $two)
     {
-        Write-Error "Expected property 'Assembly' to be '$Two' but was '$assembly' instead.`nAssembly version should match the first two digits of File version and consist of four components." -Category InvalidData
+        Write-Error "Expected property 'Assembly' to be '$Two' but was '$assembly' instead.`nAssembly version Should -match the first two digits of File version and consist of four components." -Category InvalidData
     }
 
     if($module -ne $three)
     {
-        Write-Error "Expected property 'Module' to be '$three' but was '$module' instead.`nModule version should match the first three digits of File version." -Category InvalidData
+        Write-Error "Expected property 'Module' to be '$three' but was '$module' instead.`nModule version Should -match the first three digits of File version." -Category InvalidData
     }
 
     if($versionTable.ModuleTag -ne $vThree)
     {
-        Write-Error "Expected property 'ModuleTag' to be '$vThree' but was '$($versionTable.ModuleTag)' instead.`nModuleTag should start with 'v' followed by the first three digits of File version." -Category InvalidData
+        Write-Error "Expected property 'ModuleTag' to be '$vThree' but was '$($versionTable.ModuleTag)' instead.`nModuleTag Should -start with 'v' followed by the first three digits of File version." -Category InvalidData
     }
 
     if($versionTable.PreviousTag)
@@ -164,7 +164,7 @@ function Validate-VersionTable($versionTable)
 
         if($moduleTag -lt $previousTag)
         {
-            Write-Error "Module tag '$($versionTable.ModuleTag)' should be greater than or equal to previous release tag '$($versionTable.PreviousTag)'."
+            Write-Error "Module tag '$($versionTable.ModuleTag)' Should -be greater than or equal to previous release tag '$($versionTable.PreviousTag)'."
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
 
 Describe "New-GroupNode" -Tag @("PowerShell", "UnitTest") {
     It "creates a new node from a Group" {
@@ -11,8 +11,8 @@ Describe "New-GroupNode" -Tag @("PowerShell", "UnitTest") {
 
         $node = New-GroupNode $group
 
-        $node.Type | Should Be Group
-        $node.Value | Should Be $group
+        $node.Type | Should -Be Group
+        $node.Value | Should -Be $group
     }
 
     It "pipes in an existing Group" {
@@ -25,8 +25,8 @@ Describe "New-GroupNode" -Tag @("PowerShell", "UnitTest") {
 
         $node = $group | New-GroupNode
 
-        $node.Type | Should Be Group
-        $node.Value | Should Be $group
+        $node.Type | Should -Be Group
+        $node.Value | Should -Be $group
     }
 
     It "filters by name" {
@@ -35,7 +35,7 @@ Describe "New-GroupNode" -Tag @("PowerShell", "UnitTest") {
         )
 
         $node = New-GroupNode *windows*
-        $node.Count | Should Be 2
+        $node.Count | Should -Be 2
     }
 
     It "creates a tree from a ScriptBlock with a value" {
@@ -49,9 +49,9 @@ Describe "New-GroupNode" -Tag @("PowerShell", "UnitTest") {
             New-TriggerNode -ObjectId 2000 -Type Change
         }
 
-        $node.Type | Should Be Group
-        $node.Children.Count | Should Be 1
-        $node.Children[0].Value.ObjectId | Should Be 2000
+        $node.Type | Should -Be Group
+        $node.Children.Count | Should -Be 1
+        $node.Children[0].Value.ObjectId | Should -Be 2000
     }
 
     It "creates a tree from a ScriptBlock with an ID" {
@@ -63,9 +63,9 @@ Describe "New-GroupNode" -Tag @("PowerShell", "UnitTest") {
             TriggerNode -ObjectId 2000 -Type Change
         }
 
-        $node.Type | Should Be Group
-        $node.Children.Count | Should Be 1
-        $node.Children[0].Value.ObjectId | Should Be 2000
+        $node.Type | Should -Be Group
+        $node.Children.Count | Should -Be 1
+        $node.Children[0].Value.ObjectId | Should -Be 2000
     }
 
     It "creates a tree from a ScriptBlock with a name" {
@@ -77,9 +77,9 @@ Describe "New-GroupNode" -Tag @("PowerShell", "UnitTest") {
             TriggerNode -ObjectId 2000 -Type Change
         }
 
-        $node.Type | Should Be Group
-        $node.Children.Count | Should Be 1
-        $node.Children[0].Value.ObjectId | Should Be 2000
+        $node.Type | Should -Be Group
+        $node.Children.Count | Should -Be 1
+        $node.Children[0].Value.ObjectId | Should -Be 2000
     }
 
     It "specifies multiple IDs" {
@@ -88,7 +88,7 @@ Describe "New-GroupNode" -Tag @("PowerShell", "UnitTest") {
         )
 
         $nodes = New-GroupNode -Id 2000,2001
-        $nodes.Count | Should Be 2
+        $nodes.Count | Should -Be 2
     }
 
     It "pipes in multiple child nodes with value" {
@@ -102,10 +102,10 @@ Describe "New-GroupNode" -Tag @("PowerShell", "UnitTest") {
         $group = Get-Group -Count 1
 
         $node = $trigger1,$trigger2 | New-GroupNode $group
-        $node.Type | Should Be Group
-        $node.Children.Count | Should Be 2
-        $node.Children[0].Value | Should Be $trigger1.Value
-        $node.Children[1].Value | Should Be $trigger2.Value
+        $node.Type | Should -Be Group
+        $node.Children.Count | Should -Be 2
+        $node.Children[0].Value | Should -Be $trigger1.Value
+        $node.Children[1].Value | Should -Be $trigger2.Value
     }
 
     It "pipes in multiple child nodes with manual" {
@@ -117,13 +117,13 @@ Describe "New-GroupNode" -Tag @("PowerShell", "UnitTest") {
         $trigger2 = New-TriggerNode -ObjectId 3000 -Type Speed
 
         $node = $trigger1,$trigger2 | New-GroupNode -Id 2000
-        $node.Type | Should Be Group
-        $node.Children.Count | Should Be 2
-        $node.Children[0].Value | Should Be $trigger1.Value
-        $node.Children[1].Value | Should Be $trigger2.Value
+        $node.Type | Should -Be Group
+        $node.Children.Count | Should -Be 2
+        $node.Children[0].Value | Should -Be $trigger1.Value
+        $node.Children[1].Value | Should -Be $trigger2.Value
     }
 
     It "throws attempting to create a sensor under a group" {
-        { New-SensorNode -Id 4000 | New-GroupNode -Id 2000 } | Should Throw "Node 'Volume IO _Total0 (ID: 4000)' of type 'Sensor' cannot be a child of a node of type 'Group'."
+        { New-SensorNode -Id 4000 | New-GroupNode -Id 2000 } | Should -Throw "Node 'Volume IO _Total0 (ID: 4000)' of type 'Sensor' cannot be a child of a node of type 'Group'."
     }
 }

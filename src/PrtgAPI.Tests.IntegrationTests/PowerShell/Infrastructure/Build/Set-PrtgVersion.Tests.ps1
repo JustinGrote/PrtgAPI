@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\..\..\PrtgAPI.Tests.UnitTests\Support\PowerShell\BuildCore.ps1
+. $PSScriptRoot\..\..\..\..\PrtgAPI.Tests.UnitTests\Support\PowerShell\BuildCore.ps1
 
 $ErrorActionPreference = "Stop"
 
@@ -12,7 +12,7 @@ Describe "Set-PrtgVersion_IT" -Tag @("PowerShell", "Build_IT") {
 
             $newVersion = Get-PrtgVersion
 
-            $newVersion.Package | Should Be "1.2.3"
+            $newVersion.Package | Should -Be "1.2.3"
         }
         finally
         {
@@ -29,7 +29,7 @@ Describe "Set-PrtgVersion_IT" -Tag @("PowerShell", "Build_IT") {
 
             $newVersion = Get-PrtgVersion -Legacy
 
-            $newVersion.Package | Should Be "1.2.3"
+            $newVersion.Package | Should -Be "1.2.3"
         }
         finally
         {
@@ -47,8 +47,8 @@ Describe "Set-PrtgVersion_IT" -Tag @("PowerShell", "Build_IT") {
 
                 $result = Get-PrtgVersion
 
-                $result.File | Should Not Be "0.2.4"
-                $result.Info | Should Be "0.2.4"
+                $result.File | Should -Not -Be "0.2.4"
+                $result.Info | Should -Be "0.2.4"
             }
             finally
             {
@@ -66,8 +66,8 @@ Describe "Set-PrtgVersion_IT" -Tag @("PowerShell", "Build_IT") {
                 $result = Get-PrtgVersion
 
                 # Modify the existing File Version and Info Version
-                $result.File | Should Be "1.2.4.1"
-                $result.Info | Should Be "1.2.4.1"
+                $result.File | Should -Be "1.2.4.1"
+                $result.Info | Should -Be "1.2.4.1"
             }
             finally
             {
@@ -84,7 +84,7 @@ Describe "Set-PrtgVersion_IT" -Tag @("PowerShell", "Build_IT") {
 
                 $result = Get-PrtgVersion
 
-                $result.Info | Should Be "1.2.4-preview.1"
+                $result.Info | Should -Be "1.2.4-preview.1"
             }
             finally
             {
@@ -102,8 +102,8 @@ Describe "Set-PrtgVersion_IT" -Tag @("PowerShell", "Build_IT") {
                 $result = Get-PrtgVersion -Legacy
 
                 # Modify the existing File Version and Info Version
-                $result.File | Should Be "1.2.4.1"
-                $result.Info | Should Be "1.2.4.1"
+                $result.File | Should -Be "1.2.4.1"
+                $result.Info | Should -Be "1.2.4.1"
             }
             finally
             {
@@ -120,7 +120,7 @@ Describe "Set-PrtgVersion_IT" -Tag @("PowerShell", "Build_IT") {
 
                 $result = Get-PrtgVersion -Legacy
 
-                $result.Info | Should Be "1.2.4-preview.1"
+                $result.Info | Should -Be "1.2.4-preview.1"
             }
             finally
             {

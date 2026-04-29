@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\IntegrationTest.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\IntegrationTest.ps1
 
 Describe "Add-Device_IT" -Tag @("PowerShell", "IntegrationTest") {
     It "adds a new device" {
@@ -13,9 +13,9 @@ Describe "Add-Device_IT" -Tag @("PowerShell", "IntegrationTest") {
         $probe | Add-Device $params
 
         $device = @(Get-Device $name)
-        $device.Count | Should Be 1
-        $device.Name | Should Be $name
-        $device.Host | Should Be $hostName
+        $device.Count | Should -Be 1
+        $device.Name | Should -Be $name
+        $device.Host | Should -Be $hostName
 
         $device | Remove-Object -Force
     }
@@ -31,11 +31,11 @@ Describe "Add-Device_IT" -Tag @("PowerShell", "IntegrationTest") {
 
         $newDevices = Get-Device
 
-        $newDevices.Count | Should BeGreaterThan $originalDevices.Count
+        $newDevices.Count | Should -BeGreaterThan $originalDevices.Count
 
         $diffDevice = $newDevices | where name -EQ $name
 
-        $diffDevice.Id | Should Be $newDevice.Id
+        $diffDevice.Id | Should -Be $newDevice.Id
 
         $newDevice | Remove-Object -Force
     }
@@ -47,7 +47,7 @@ Describe "Add-Device_IT" -Tag @("PowerShell", "IntegrationTest") {
 
         if(IsEnglish)
         {
-            $device.Condition | Should BeLike "Auto-Discovery*"
+            $device.Condition | Should -BeLike "Auto-Discovery*"
         }
 
         Unsafe {
@@ -62,11 +62,11 @@ Describe "Add-Device_IT" -Tag @("PowerShell", "IntegrationTest") {
 
         if(IsEnglish)
         {
-            $device.Condition | Should BeLike "Auto-Discovery*"
+            $device.Condition | Should -BeLike "Auto-Discovery*"
         }
 
         Unsafe {
-            $device | Should Not BeNullOrEmpty
+            $device | Should -Not -BeNullOrEmpty
             $device | Remove-Object -Force
         }
     }

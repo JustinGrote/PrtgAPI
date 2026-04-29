@@ -1,17 +1,17 @@
-﻿. $PSScriptRoot\..\..\..\Support\PowerShell\ObjectProperty.ps1
+. $PSScriptRoot\..\..\..\Support\PowerShell\ObjectProperty.ps1
 
 function TestScanningInterval($expectedString, $value)
 {
     $sensor = Get-Sensor -Id (Settings UpSensor)
 
     $initialInterval = $($sensor | Get-ObjectProperty).Interval
-    $initialInterval | Should Not Be $expectedString
+    $initialInterval | Should -Not -Be $expectedString
 
     $sensor | Set-ObjectProperty interval $value
 
     $newInterval = $($sensor | Get-ObjectProperty).Interval
 
-    $newInterval | Should Be $expectedString
+    $newInterval | Should -Be $expectedString
 }
 
 Describe "Set-ObjectProperty_IT" -Tag @("PowerShell", "IntegrationTest") {
@@ -103,7 +103,7 @@ Describe "Set-ObjectProperty_IT" -Tag @("PowerShell", "IntegrationTest") {
             #SetGrandChild MaintenanceStart
             #SetGrandChild MaintenanceEnd
             #SetChild DependencyType Object #todo: will this not work if i havent also specified the object to use at the same time?
-            #should we maybe create a dependency attribute between the two? and would the same be true vice versa? (so when you set it to master,
+            #Should -we maybe create a dependency attribute between the two? and would the same be true vice versa? (so when you set it to master,
             #the dependencyvalue goes away? check how its meant to work with fiddler)
             #SetChild Dependency (Settings DownSensor)
             #SetChild DependencyDelay 3
@@ -158,48 +158,48 @@ Describe "Set-ObjectProperty_IT" -Tag @("PowerShell", "IntegrationTest") {
 
         $action = Get-NotificationAction -Id (Settings NotificationAction)
 
-        $action.Active | Should Be $true
+        $action.Active | Should -Be $true
 
         $action | Set-ObjectProperty Active $false
 
         $newAction = Get-NotificationAction -Id (Settings NotificationAction)
 
-        $newAction.Active | Should Be $false
+        $newAction.Active | Should -Be $false
 
         $newAction | Set-ObjectProperty Active $true
 
         $finalAction = Get-NotificationAction -Id (Settings NotificationAction)
 
-        $finalAction.Active | Should Be $true
+        $finalAction.Active | Should -Be $true
     }
 
     It "sets a schedule property" {
         $schedule = Get-PrtgSchedule -Id (Settings Schedule)
         $newName = "New Schedule"
 
-        $schedule.Name | Should Not Be $newName        
+        $schedule.Name | Should -Not -Be $newName        
 
         $schedule | Set-ObjectProperty Name $newName
         $newSchedule = Get-PrtgSchedule -Id (Settings Schedule)
-        $newSchedule.Name | Should Be $newName
+        $newSchedule.Name | Should -Be $newName
 
         $newSchedule | Set-ObjectProperty Name $schedule.Name
 
         $finalSchedule = Get-PrtgSchedule -Id (Settings Schedule)
-        $finalSchedule.Name | Should Be $schedule.Name
+        $finalSchedule.Name | Should -Be $schedule.Name
     }
 
     It "sets a raw property" {
         $sensor = Get-Sensor -Id (Settings UpSensor)
 
         $initialTimeout = ($sensor | Get-ObjectProperty).Timeout
-        $initialTimeout | Should Not Be 7
+        $initialTimeout | Should -Not -Be 7
 
         $sensor | Set-ObjectProperty -RawProperty "timeout_" -RawValue "7" -Force
 
         $newTimeout = ($sensor | Get-ObjectProperty).Timeout
 
-        $newTimeout | Should Be 7
+        $newTimeout | Should -Be 7
     }
 
     It "sets a scanning interval from an enum"       { TestScanningInterval "01:00:00" OneHour }
@@ -217,7 +217,7 @@ Describe "Set-ObjectProperty_IT" -Tag @("PowerShell", "IntegrationTest") {
 
         $newInterval = $($sensor | Get-ObjectProperty).Interval
 
-        $initialInterval | Should Be $newInterval
+        $initialInterval | Should -Be $newInterval
     }
 
     It "sets a custom scanning interval"             { TestScanningInterval "00:00:10" (Settings CustomInterval) }
@@ -229,7 +229,7 @@ Describe "Set-ObjectProperty_IT" -Tag @("PowerShell", "IntegrationTest") {
 
         $message = "Sensor Name: Required field, not defined. The object has not been changed"
 
-        { $sensor | Set-ObjectProperty Name $null } | Should Throw (ForeignMessage $message)
+        { $sensor | Set-ObjectProperty Name $null } | Should -Throw (ForeignMessage $message)
     }
 
     if((Get-PrtgClient).Version -lt [Version]"19.4.54")
@@ -238,13 +238,13 @@ Describe "Set-ObjectProperty_IT" -Tag @("PowerShell", "IntegrationTest") {
             $sensor = Get-Sensor -Id (Settings UpSensor)
 
             $initialInterval = $($sensor | Get-ObjectProperty).Interval
-            $initialInterval | Should Not Be "00:00:55"
+            $initialInterval | Should -Not -Be "00:00:55"
 
             $sensor | Set-ObjectProperty interval "00:00:55"
 
             $newInterval = $($sensor | Get-ObjectProperty).Interval
 
-            $newInterval | Should Be "00:01:00"
+            $newInterval | Should -Be "00:01:00"
         }
     }
 
@@ -268,17 +268,17 @@ Describe "Set-ObjectProperty_IT" -Tag @("PowerShell", "IntegrationTest") {
         $initialAuthMode | Assert-NotEqual $newAuthMode -Message "Initial authmode and new authmode were both <actual>"
         $initialUserName | Assert-NotEqual $newUserName -Message "Initial username and new username were both <actual>"
 
-        $newInherit | Should Be $false
-        $newAuthMode | Should Be SQL
-        $newUserName | Should Be "grandChildTest"
+        $newInherit | Should -Be $false
+        $newAuthMode | Should -Be SQL
+        $newUserName | Should -Be "grandChildTest"
     }
 
     It "can set the properties of multiple in a single request" {
         $upSensor = Get-Sensor -Id (Settings UpSensor)
-        $upSensor.Interval | Should Not Be "00:10:00"
+        $upSensor.Interval | Should -Not -Be "00:10:00"
 
         $device = Get-Device -Id (Settings Device)
-        $device.Interval | Should Not Be "00:10:00"
+        $device.Interval | Should -Not -Be "00:10:00"
 
         $objects = $upSensor,$device
 
@@ -288,10 +288,10 @@ Describe "Set-ObjectProperty_IT" -Tag @("PowerShell", "IntegrationTest") {
         Sleep 10
 
         $newUpSensor = Get-Sensor -Id (Settings UpSensor)
-        $newUpSensor.Interval | Should Be "00:10:00"
+        $newUpSensor.Interval | Should -Be "00:10:00"
 
         $newDevice = Get-Device -Id (Settings Device)
-        $newDevice.Interval | Should Be "00:10:00"
+        $newDevice.Interval | Should -Be "00:10:00"
     }
 
     It "sets multiple with dynamic parameters" {
@@ -299,15 +299,15 @@ Describe "Set-ObjectProperty_IT" -Tag @("PowerShell", "IntegrationTest") {
 
         $props = $device | Get-ObjectProperty
 
-        $props.VMwareUserName | Should Be $null
-        $props.HasVMwarePassword | Should Be $false
+        $props.VMwareUserName | Should -Be $null
+        $props.HasVMwarePassword | Should -Be $false
 
         $device | Set-ObjectProperty -VMwareUserName root -VMwarePassword test
 
         $newProps = $device | Get-ObjectProperty
 
-        $newProps.VMwareUserName | Should Be "root"
-        $newProps.HasVMwarePassword | Should Be $true
+        $newProps.VMwareUserName | Should -Be "root"
+        $newProps.HasVMwarePassword | Should -Be $true
     }
     
     function SetDirect($property, $value)
@@ -319,8 +319,8 @@ Describe "Set-ObjectProperty_IT" -Tag @("PowerShell", "IntegrationTest") {
 
         $newValue = $object | Get-ObjectProperty $property
 
-        $newValue | Should Not Be $initialValue
-        $newValue | Should Be $value
+        $newValue | Should -Not -Be $initialValue
+        $newValue | Should -Be $value
 
         $object | Set-ObjectProperty $property $initialValue
     }
@@ -336,13 +336,13 @@ Describe "Set-ObjectProperty_IT" -Tag @("PowerShell", "IntegrationTest") {
         $object | Set-ObjectProperty Interval 00:01:00
 
         $properties = $object | Get-ObjectProperty
-        $properties.InheritInterval | Should Be $false
-        $properties.Interval | Should Be "00:01:00"
+        $properties.InheritInterval | Should -Be $false
+        $properties.Interval | Should -Be "00:01:00"
 
         $object | Set-ObjectProperty -Interval 00:00:30 -InheritInterval $true
 
         $newProperties = $object | Get-ObjectProperty
-        $newProperties.InheritInterval | Should Be $true
-        $newProperties.Interval | Should Be "00:00:30"
+        $newProperties.InheritInterval | Should -Be $true
+        $newProperties.Interval | Should -Be "00:00:30"
     }
 }

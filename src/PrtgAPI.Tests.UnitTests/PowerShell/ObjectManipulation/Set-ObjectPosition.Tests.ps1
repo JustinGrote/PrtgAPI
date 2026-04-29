@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
 
 Describe "Set-ObjectPosition" -Tag @("PowerShell", "UnitTest") {
     SetActionResponse
@@ -24,7 +24,7 @@ Describe "Set-ObjectPosition" -Tag @("PowerShell", "UnitTest") {
 
         $sensor = Get-Sensor -Count 1
 
-        { $sensor | Set-ObjectPosition banana } | Should Throw "Cannot convert value 'banana' to an absolute or directional position"
+        { $sensor | Set-ObjectPosition banana } | Should -Throw "Cannot convert value 'banana' to an absolute or directional position"
     }
 
     It "can execute with -WhatIf" {
@@ -40,7 +40,7 @@ Describe "Set-ObjectPosition" -Tag @("PowerShell", "UnitTest") {
 
         $newDevice = $device | Set-ObjectPosition 1 -PassThru
 
-        $newDevice | Should Be $device
+        $newDevice | Should -Be $device
     }
 
     It "specifies an ID" {
@@ -56,6 +56,6 @@ Describe "Set-ObjectPosition" -Tag @("PowerShell", "UnitTest") {
     It "throws when a specified ID is not a valid object type" {
         SetMultiTypeResponse
 
-        { Set-ObjectPosition -Id 6000 Up } | Should Throw "Object must be a sensor, device, group or probe."
+        { Set-ObjectPosition -Id 6000 Up } | Should -Throw "Object must be a sensor, device, group or probe."
     }
 }

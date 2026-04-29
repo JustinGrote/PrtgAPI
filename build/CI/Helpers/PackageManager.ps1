@@ -34,7 +34,7 @@ function PackageManager
 }
 
 # Package management cmdlets do not play nice with Pester's mocking system. Get-PackageSource
-# doesn't know what parameter set it should belong to, and both PowerShell and NuGet package
+# doesn't know what parameter set it Should -belong to, and both PowerShell and NuGet package
 # management cmdlets add a significant delay when both adding and calling their mocks. As a solution,
 # we wrap our invocations to these cmdlets and mock our wrappers instead
 

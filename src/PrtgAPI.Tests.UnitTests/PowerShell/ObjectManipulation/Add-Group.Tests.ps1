@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
 
 Describe "Add-Group" -Tag @("PowerShell", "UnitTest") {
     It "adds a group using default parameters" {
@@ -28,6 +28,6 @@ Describe "Add-Group" -Tag @("PowerShell", "UnitTest") {
 
         $group = $probe | Add-Group $params -Resolve
 
-        $group.Id | Should Be 1002
+        $group.Id | Should -Be 1002
     }
 }

@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
 
 Describe "New-SensorFactoryDefinition" -Tag @("PowerShell", "UnitTest") {
 
@@ -72,7 +72,7 @@ Describe "New-SensorFactoryDefinition" -Tag @("PowerShell", "UnitTest") {
         (
             $sensors | New-SensorFactoryDefinition {$_.Device} 1
 
-        ) -Join "`n" | Should Be $expected
+        ) -Join "`n" | Should -Be $expected
     }
 
     It "uses just a name" {
@@ -85,7 +85,7 @@ Describe "New-SensorFactoryDefinition" -Tag @("PowerShell", "UnitTest") {
         (
             $sensors | New-SensorFactoryDefinition {$_.Device}
 
-        ) -Join "`n" | Should Be $expected
+        ) -Join "`n" | Should -Be $expected
     }
 
     It "creates a sensor factory with a custom unit" {
@@ -98,7 +98,7 @@ Describe "New-SensorFactoryDefinition" -Tag @("PowerShell", "UnitTest") {
         (
             $sensors | New-SensorFactoryDefinition { "$($_.Device) [bananas]" } 0
 
-        ) -join "`n" | Should Be $expected
+        ) -join "`n" | Should -Be $expected
     }
 
     It "specifies a custom start index" {
@@ -111,39 +111,39 @@ Describe "New-SensorFactoryDefinition" -Tag @("PowerShell", "UnitTest") {
         (
             $sensors | New-SensorFactoryDefinition { $_.Device } 2 -StartId 2
 
-        ) -join "`n" | Should Be $expected
+        ) -join "`n" | Should -Be $expected
     }
 
     It "specifies a name expression that returns null" {
-        { $sensors | fdef { $null } } | Should Throw "'' is not a valid channel name"
+        { $sensors | fdef { $null } } | Should -Throw "'' is not a valid channel name"
     }
 
     It "specifies an empty name expression" {
-        { $sensors | fdef { } } | Should Throw "'' is not a valid channel name"
+        { $sensors | fdef { } } | Should -Throw "'' is not a valid channel name"
     }
 
     It "specifies an empty name" {
-        { $sensors | fdef "" } | Should Throw "'' is not a valid channel name"
+        { $sensors | fdef "" } | Should -Throw "'' is not a valid channel name"
     }
 
     It "specifies a whitespace name" {
-        { $sensors | fdef " " } | Should Throw "' ' is not a valid channel name"
+        { $sensors | fdef " " } | Should -Throw "' ' is not a valid channel name"
     }
 
     It "specifies a newline name" {
-        { $sensors | fdef "`n" } | Should Throw "'`n' is not a valid channel name"
+        { $sensors | fdef "`n" } | Should -Throw "'`n' is not a valid channel name"
     }
 
     It "specifies a name expression that returns empty" {
-        { $sensors | fdef { "" } } | Should Throw "'' is not a valid channel name"
+        { $sensors | fdef { "" } } | Should -Throw "'' is not a valid channel name"
     }
 
     It "specifies a name expression that returns whitespace" {
-        { $sensors | fdef { " " } } | Should Throw "' ' is not a valid channel name"
+        { $sensors | fdef { " " } } | Should -Throw "' ' is not a valid channel name"
     }
 
     It "specifies a name expression that returns newline" {
-        { $sensors | fdef { "`n" } } | Should Throw "'`n' is not a valid channel name"
+        { $sensors | fdef { "`n" } } | Should -Throw "'`n' is not a valid channel name"
     }
 
     It "specifies a name using an alias" {
@@ -156,7 +156,7 @@ Describe "New-SensorFactoryDefinition" -Tag @("PowerShell", "UnitTest") {
         (
             $sensors | New-SensorFactoryDefinition -ChannelName {$_.Device}
 
-        ) -Join "`n" | Should Be $expected
+        ) -Join "`n" | Should -Be $expected
     }
 
     Context "Expression" {
@@ -171,7 +171,7 @@ Describe "New-SensorFactoryDefinition" -Tag @("PowerShell", "UnitTest") {
             (
                 $sensors | New-SensorFactoryDefinition {$_.Device} -Expr {"100 - $expr"} 2
 
-            ) -join "`n" | Should Be $expected
+            ) -join "`n" | Should -Be $expected
         }
 
         It "uses a name, expression (with the current item) and ID" {
@@ -184,7 +184,7 @@ Describe "New-SensorFactoryDefinition" -Tag @("PowerShell", "UnitTest") {
             (
                 $sensors | New-SensorFactoryDefinition {$_.Device} -Expr {"channel($($_.Id),100)"} 1
 
-            ) -join "`n" | Should Be $expected
+            ) -join "`n" | Should -Be $expected
         }
 
         It "uses a string name with an expression" {
@@ -197,15 +197,15 @@ Describe "New-SensorFactoryDefinition" -Tag @("PowerShell", "UnitTest") {
             (
                 $sensors | New-SensorFactoryDefinition "test" -Expr { "channel($($_.Id),100)" } 1
 
-            ) -join "`n" | Should Be $expected
+            ) -join "`n" | Should -Be $expected
         }
 
         It "specifies an expression that returns null" {
-            { $sensors | fdef { $_.Device } -Expression { $null } } | Should Throw "'' is not a valid channel expression"
+            { $sensors | fdef { $_.Device } -Expression { $null } } | Should -Throw "'' is not a valid channel expression"
         }
 
         It "specifies an empty expression" {
-            { $sensors | fdef { $_.Device } -Expression { } } | Should Throw "'' is not a valid channel expression"
+            { $sensors | fdef { $_.Device } -Expression { } } | Should -Throw "'' is not a valid channel expression"
         }
     }
 
@@ -219,7 +219,7 @@ Describe "New-SensorFactoryDefinition" -Tag @("PowerShell", "UnitTest") {
             (
                 $sensors | New-SensorFactoryDefinition {"Sum"} -Aggregator {"$acc + $expr"} 4
 
-            ) -join "`n" | Should Be $expected
+            ) -join "`n" | Should -Be $expected
         }
 
         It "aggregates (with the current item) with a name, expression and ID" {
@@ -229,7 +229,7 @@ Describe "New-SensorFactoryDefinition" -Tag @("PowerShell", "UnitTest") {
             (
                 $sensors | New-SensorFactoryDefinition {"Sum"} -Expression {"100 - channel($($_.Id),5)"} -Aggregator {"$acc + channel($($_.Id),20)"} 10
 
-            ) -join "`n" | Should Be $expected
+            ) -join "`n" | Should -Be $expected
         }
 
         It "aggregates a definition by calculating the max value" {
@@ -246,7 +246,7 @@ Describe "New-SensorFactoryDefinition" -Tag @("PowerShell", "UnitTest") {
             (
                 $s | New-SensorFactoryDefinition {"Max Value"} -Aggregator {"max($expr,$acc)"} 3
 
-            ) -join "`n" | Should Be $expected
+            ) -join "`n" | Should -Be $expected
         }
 
         It "creates an aggregation and a list of all channels" {
@@ -269,7 +269,7 @@ Describe "New-SensorFactoryDefinition" -Tag @("PowerShell", "UnitTest") {
             $aggr = $s | New-SensorFactoryDefinition {"Max Value"} -Aggregator {"max($expr,$acc)"} 3
             $channels = $s | New-SensorFactoryDefinition {$_.Device} 3 -StartId 2
 
-            ($aggr + $channels) -join "`n" | Should Be $expected
+            ($aggr + $channels) -join "`n" | Should -Be $expected
         }
 
         It "calculates an average by executing a finalizer" {
@@ -280,7 +280,7 @@ Describe "New-SensorFactoryDefinition" -Tag @("PowerShell", "UnitTest") {
             (
                 $sensors | New-SensorFactoryDefinition {"Average"} -Aggregator {"$acc + $expr"} -Finalizer {"($acc)/$($sensors.Count)"} 0
 
-            ) -join "`n" | Should Be $expected
+            ) -join "`n" | Should -Be $expected
         }
 
         It "creates an aggregation using a string name" {
@@ -291,33 +291,33 @@ Describe "New-SensorFactoryDefinition" -Tag @("PowerShell", "UnitTest") {
             (
                 $sensors | New-SensorFactoryDefinition "Average" -Aggregator {"$acc + $expr"} -Finalizer {"($acc)/$($sensors.Count)"} 0
 
-            ) -join "`n" | Should Be $expected
+            ) -join "`n" | Should -Be $expected
         }
 
         It "specifies an aggregation that returns null" {
-            { $sensors | fdef "Average" -Aggregator { $null } } | Should Throw "'' is not a valid channel expression"
+            { $sensors | fdef "Average" -Aggregator { $null } } | Should -Throw "'' is not a valid channel expression"
         }
 
         It "specifies an empty aggregator" {
-            { $sensors | fdef "Average" -Aggregator { } } | Should Throw "'' is not a valid channel expression"
+            { $sensors | fdef "Average" -Aggregator { } } | Should -Throw "'' is not a valid channel expression"
         }
 
         It "specifies a finalizer that returns null" {
-            { $sensors | fdef "Average" -Aggregator { "$acc + $expr" } -Finalizer { $null } } | Should Throw "'' is not a valid channel expression"
+            { $sensors | fdef "Average" -Aggregator { "$acc + $expr" } -Finalizer { $null } } | Should -Throw "'' is not a valid channel expression"
         }
 
         It "specifies an empty finalizer" {
-            { $sensors | fdef "Average" -Aggregator { "$acc + $expr" } -Finalizer { } } | Should Throw "'' is not a valid channel expression"
+            { $sensors | fdef "Average" -Aggregator { "$acc + $expr" } -Finalizer { } } | Should -Throw "'' is not a valid channel expression"
         }
 
         It "specifies a <name> expression" -TestCases $aggregateModeCases {
             param($name, $expected)
 
-            ( $sensors | fdef "Aggregated" -Aggregator $name ) -join "`n" | Should Be $expected
+            ( $sensors | fdef "Aggregated" -Aggregator $name ) -join "`n" | Should -Be $expected
         }
 
         It "throws specifying a finalizer when a known summary mode has been specified" {
-            { $sensors | fdef "Aggregated" -Aggregator Sum -Finalizer { "$acc / $($sensors.Count)" } } | Should Throw "Cannot specify -Finalizer when -Aggregator is not a ScriptBlock."
+            { $sensors | fdef "Aggregated" -Aggregator Sum -Finalizer { "$acc / $($sensors.Count)" } } | Should -Throw "Cannot specify -Finalizer when -Aggregator is not a ScriptBlock."
         }
     }
 
@@ -331,7 +331,7 @@ Describe "New-SensorFactoryDefinition" -Tag @("PowerShell", "UnitTest") {
             (
                 New-SensorFactoryDefinition "Line at 40.2" -Value 40.2
 
-            ) -join "`n" | Should Be $expected
+            ) -join "`n" | Should -Be $expected
         }
 
         It "specifies a static value with script block name" {
@@ -342,7 +342,7 @@ Describe "New-SensorFactoryDefinition" -Tag @("PowerShell", "UnitTest") {
             (
                 New-SensorFactoryDefinition {"Line at 40.2"} -Value 40.2
 
-            ) -join "`n" | Should Be $expected
+            ) -join "`n" | Should -Be $expected
         }
 
         It "specifies a static value and a start ID" {
@@ -353,19 +353,19 @@ Describe "New-SensorFactoryDefinition" -Tag @("PowerShell", "UnitTest") {
             (
                 New-SensorFactoryDefinition "Line at 40.2 [msec]" -Value 40.2 -StartId 2
 
-            ) -join "`n" | Should Be $expected
+            ) -join "`n" | Should -Be $expected
         }
 
         It "specifies a null value" {
-            { fdef "Line at 40.2 [msec]" -Value $null } | Should Throw "Cannot bind argument to parameter 'Value' because it is null"
+            { fdef "Line at 40.2 [msec]" -Value $null } | Should -Throw "Cannot bind argument to parameter 'Value' because it is null"
         }
 
         It "specifies an empty value" {
-            { fdef "Line at 40.2 [msec]" -Value "" } | Should Throw "Cannot bind argument to parameter 'Value' because it is an empty string"
+            { fdef "Line at 40.2 [msec]" -Value "" } | Should -Throw "Cannot bind argument to parameter 'Value' because it is an empty string"
         }
 
         It "specifies a whitespace value" {
-            { fdef "Line at 40.2 [msec]" -Value " " } | Should Throw "' ' is not a valid channel expression"
+            { fdef "Line at 40.2 [msec]" -Value " " } | Should -Throw "' ' is not a valid channel expression"
         }
     }
 
@@ -374,7 +374,7 @@ Describe "New-SensorFactoryDefinition" -Tag @("PowerShell", "UnitTest") {
         It "specifies a <name> expression" -TestCases $summaryModeCases {
             param($name, $expected)
             
-            ( $sensors | fdef { $_.Device } -SummaryName "Summary" -SummaryExpression $name ) -join "`n" | Should Be $expected
+            ( $sensors | fdef { $_.Device } -SummaryName "Summary" -SummaryExpression $name ) -join "`n" | Should -Be $expected
         }
 
         It "utilizes aliases" {
@@ -387,7 +387,7 @@ Describe "New-SensorFactoryDefinition" -Tag @("PowerShell", "UnitTest") {
 
             (
                 $sensors | fdef { $_.Device } -sn "Summary" -se { "$acc + $expr" } -sf { "($acc)/$($sensors.Count)" }
-            ) -join "`n" | Should Be $expected
+            ) -join "`n" | Should -Be $expected
         }
 
         It "specifies a custom summary expression" {
@@ -400,7 +400,7 @@ Describe "New-SensorFactoryDefinition" -Tag @("PowerShell", "UnitTest") {
 
             (
                 $sensors | fdef { $_.Device } -SummaryName "Summary" -SummaryExpression { "$acc + $expr" }
-            ) -join "`n" | Should Be $expected
+            ) -join "`n" | Should -Be $expected
         }
 
         It "specifies a custom summary expression with a finalizer" {
@@ -413,27 +413,27 @@ Describe "New-SensorFactoryDefinition" -Tag @("PowerShell", "UnitTest") {
 
             (
                 $sensors | fdef { $_.Device } -SummaryName "Summary" -SummaryExpression { "$acc + $expr" } -SummaryFinalizer { "($acc)/$($sensors.Count)" }
-            ) -join "`n" | Should Be $expected
+            ) -join "`n" | Should -Be $expected
         }
 
         It "throws specifying a finalizer when a known summary mode has been specified" {
-            { $sensors | fdef { $_.Device } -SummaryName "Summary" -SummaryExpression Sum -SummaryFinalizer { "$acc / $($sensors.Count)" } } | Should Throw "Cannot specify -SummaryFinalizer when -SummaryExpression is not a ScriptBlock."
+            { $sensors | fdef { $_.Device } -SummaryName "Summary" -SummaryExpression Sum -SummaryFinalizer { "$acc / $($sensors.Count)" } } | Should -Throw "Cannot specify -SummaryFinalizer when -SummaryExpression is not a ScriptBlock."
         }
 
         It "specifies a summary expression that returns null" {
-            { $sensors | fdef { $_.Device } -SummaryName "Summary" -SummaryExpression { $null } } | Should Throw "'' is not a valid channel expression"
+            { $sensors | fdef { $_.Device } -SummaryName "Summary" -SummaryExpression { $null } } | Should -Throw "'' is not a valid channel expression"
         }
 
         It "specifies an empty summary expression" {
-            { $sensors | fdef { $_.Device } -SummaryName "Summary" -SummaryExpression { } } | Should Throw "'' is not a valid channel expression"
+            { $sensors | fdef { $_.Device } -SummaryName "Summary" -SummaryExpression { } } | Should -Throw "'' is not a valid channel expression"
         }
 
         It "specifies a summary finalizer that returns null" {
-            { $sensors | fdef { $_.Device } -SummaryName "Summary" -SummaryExpression { "$acc + $expr" } -SummaryFinalizer { $null } } | Should Throw "'' is not a valid channel expression"
+            { $sensors | fdef { $_.Device } -SummaryName "Summary" -SummaryExpression { "$acc + $expr" } -SummaryFinalizer { $null } } | Should -Throw "'' is not a valid channel expression"
         }
 
         It "specifies an empty summary finalizer" {
-            { $sensors | fdef { $_.Device } -SummaryName "Summary" -SummaryExpression { "$acc + $expr" } -SummaryFinalizer { } } | Should Throw "'' is not a valid channel expression"
+            { $sensors | fdef { $_.Device } -SummaryName "Summary" -SummaryExpression { "$acc + $expr" } -SummaryFinalizer { } } | Should -Throw "'' is not a valid channel expression"
         }
     }
     
@@ -441,7 +441,7 @@ Describe "New-SensorFactoryDefinition" -Tag @("PowerShell", "UnitTest") {
 
         function Validate($expected, $table)
         {
-            ($sensors | New-SensorFactoryDefinition $table) -Join "`n" | Should Be $expected
+            ($sensors | New-SensorFactoryDefinition $table) -Join "`n" | Should -Be $expected
         }
 
         It "specifies Default" {
@@ -582,7 +582,7 @@ Describe "New-SensorFactoryDefinition" -Tag @("PowerShell", "UnitTest") {
                 Name = { $_.Device }
             }
 
-            ($sensors | New-SensorFactoryDefinition $table -StartId 2) -Join "`n" | Should Be $expected
+            ($sensors | New-SensorFactoryDefinition $table -StartId 2) -Join "`n" | Should -Be $expected
         }
 
         It "specifies a custom start ID to the cmdlet and the first hashtable" {
@@ -596,7 +596,7 @@ Describe "New-SensorFactoryDefinition" -Tag @("PowerShell", "UnitTest") {
                 start = 3
             }
 
-            ($sensors | New-SensorFactoryDefinition $table -StartId 2) -Join "`n" | Should Be $expected
+            ($sensors | New-SensorFactoryDefinition $table -StartId 2) -Join "`n" | Should -Be $expected
         }
 
         It "specifies a custom start ID to the cmdlet and the second hashtable" {
@@ -612,7 +612,7 @@ Describe "New-SensorFactoryDefinition" -Tag @("PowerShell", "UnitTest") {
             $table1 = @{name={$_.Device + " First"}}
             $table2 = @{name={$_.Device + " Second"}; start = 6; channelid = 1}
 
-            ($sensors | New-SensorFactoryDefinition $table1,$table2 -StartId 2) -Join "`n" | Should Be $expected
+            ($sensors | New-SensorFactoryDefinition $table1,$table2 -StartId 2) -Join "`n" | Should -Be $expected
         }
 
         It "returns the same results when splatting a hashtable" {
@@ -630,29 +630,29 @@ Describe "New-SensorFactoryDefinition" -Tag @("PowerShell", "UnitTest") {
                 se = "Sum"
             }
 
-            ($sensors | New-SensorFactoryDefinition $table) -Join "`n" | Should Be $expected
-            ($sensors | New-SensorFactoryDefinition @table) -Join "`n" | Should Be $expected
+            ($sensors | New-SensorFactoryDefinition $table) -Join "`n" | Should -Be $expected
+            ($sensors | New-SensorFactoryDefinition @table) -Join "`n" | Should -Be $expected
 
         }
 
         It "throws when sensors aren't piped to a parameter set that requires them" {
 
-            { New-SensorFactoryDefinition @{name={$_.Device}} } | Should Throw "Cannot process hashtable '@{name={`$_.Device}}' on parameter set 'DefaultSet': parameter 'Sensor' is mandatory."
+            { New-SensorFactoryDefinition @{name={$_.Device}} } | Should -Throw "Cannot process hashtable '@{name={`$_.Device}}' on parameter set 'DefaultSet': parameter 'Sensor' is mandatory."
         }
 
         It "throws when an ambiguous parameter set is specified" {
 
-            { New-SensorFactoryDefinition @{name={$_.Device}; Agg={"$acc + $expr"}; sn = "Sum"} } | Should Throw "Parameter set cannot be resolved using the specified named parameters."
+            { New-SensorFactoryDefinition @{name={$_.Device}; Agg={"$acc + $expr"}; sn = "Sum"} } | Should -Throw "Parameter set cannot be resolved using the specified named parameters."
         }
 
         It "throws when an unknown parameter is specified" {
             
-            { New-SensorFactoryDefinition @{name={$_.Device}; potato=1} } | Should Throw "A parameter cannot be found that matches parameter name 'potato'."
+            { New-SensorFactoryDefinition @{name={$_.Device}; potato=1} } | Should -Throw "A parameter cannot be found that matches parameter name 'potato'."
         }
 
         It "throws when a mandatory parameter is unspecified" {
 
-            { $sensors | New-SensorFactoryDefinition @{name={$_.Device}; sn="Sum"} } | Should Throw "on parameter set 'SummarySet': parameter 'SummaryExpression' is mandatory."
+            { $sensors | New-SensorFactoryDefinition @{name={$_.Device}; sn="Sum"} } | Should -Throw "on parameter set 'SummarySet': parameter 'SummaryExpression' is mandatory."
         }
     }
 }

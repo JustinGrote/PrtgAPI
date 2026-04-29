@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
 
 Describe "Refresh-SystemInfo" -Tag @("PowerShell", "UnitTest") {
 
@@ -40,7 +40,7 @@ Describe "Refresh-SystemInfo" -Tag @("PowerShell", "UnitTest") {
 
         $newDevice = $device | Refresh-SystemInfo -PassThru
 
-        $newDevice | Should Be $device
+        $newDevice | Should -Be $device
     }
 
     It "processes only specified types" {

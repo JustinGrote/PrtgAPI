@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
 
 Describe "Sort-PrtgObject" -Tag @("PowerShell", "UnitTest") {
     SetActionResponse
@@ -24,7 +24,7 @@ Describe "Sort-PrtgObject" -Tag @("PowerShell", "UnitTest") {
 
         $newDevice = $device | Sort-PrtgObject -PassThru
 
-        $newDevice | Should Be $device
+        $newDevice | Should -Be $device
     }
 
     It "specifies an ID" {

@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
 
 Describe "New-SensorNode" -Tag @("PowerShell", "UnitTest") {
     It "creates a new node from a Sensor" {
@@ -11,8 +11,8 @@ Describe "New-SensorNode" -Tag @("PowerShell", "UnitTest") {
 
         $node = New-SensorNode $sensor
 
-        $node.Type | Should Be Sensor
-        $node.Value | Should Be $sensor
+        $node.Type | Should -Be Sensor
+        $node.Value | Should -Be $sensor
     }
 
     It "pipes in an existing Sensor" {
@@ -25,8 +25,8 @@ Describe "New-SensorNode" -Tag @("PowerShell", "UnitTest") {
 
         $node = $sensor | New-SensorNode
 
-        $node.Type | Should Be Sensor
-        $node.Value | Should Be $sensor
+        $node.Type | Should -Be Sensor
+        $node.Value | Should -Be $sensor
     }
 
     It "filters by name" {
@@ -35,7 +35,7 @@ Describe "New-SensorNode" -Tag @("PowerShell", "UnitTest") {
         )
 
         $node = New-SensorNode *volume*
-        $node.Count | Should Be 2
+        $node.Count | Should -Be 2
     }
 
     It "creates a tree from a ScriptBlock with a value" {
@@ -49,9 +49,9 @@ Describe "New-SensorNode" -Tag @("PowerShell", "UnitTest") {
             New-TriggerNode -ObjectId 4000 -Type Change
         }
 
-        $node.Type | Should Be Sensor
-        $node.Children.Count | Should Be 1
-        $node.Children[0].Value.ObjectId | Should Be 4000
+        $node.Type | Should -Be Sensor
+        $node.Children.Count | Should -Be 1
+        $node.Children[0].Value.ObjectId | Should -Be 4000
     }
 
     It "creates a tree from a ScriptBlock with an ID" {
@@ -63,9 +63,9 @@ Describe "New-SensorNode" -Tag @("PowerShell", "UnitTest") {
             TriggerNode -ObjectId 4000 -Type Change
         }
 
-        $node.Type | Should Be Sensor
-        $node.Children.Count | Should Be 1
-        $node.Children[0].Value.ObjectId | Should Be 4000
+        $node.Type | Should -Be Sensor
+        $node.Children.Count | Should -Be 1
+        $node.Children[0].Value.ObjectId | Should -Be 4000
     }
 
     It "creates a tree from a ScriptBlock with a name" {
@@ -77,9 +77,9 @@ Describe "New-SensorNode" -Tag @("PowerShell", "UnitTest") {
             TriggerNode -ObjectId 4000 -Type Change
         }
 
-        $node.Type | Should Be Sensor
-        $node.Children.Count | Should Be 1
-        $node.Children[0].Value.ObjectId | Should Be 4000
+        $node.Type | Should -Be Sensor
+        $node.Children.Count | Should -Be 1
+        $node.Children[0].Value.ObjectId | Should -Be 4000
     }
 
     It "specifies multiple IDs" {
@@ -88,7 +88,7 @@ Describe "New-SensorNode" -Tag @("PowerShell", "UnitTest") {
         )
 
         $nodes = New-SensorNode -Id 4000,4001
-        $nodes.Count | Should Be 2
+        $nodes.Count | Should -Be 2
     }
 
     It "pipes in multiple child nodes with value" {
@@ -102,10 +102,10 @@ Describe "New-SensorNode" -Tag @("PowerShell", "UnitTest") {
         $sensor = Get-Sensor -Count 1
 
         $node = $trigger1,$trigger2 | New-SensorNode $sensor
-        $node.Type | Should Be Sensor
-        $node.Children.Count | Should Be 2
-        $node.Children[0].Value | Should Be $trigger1.Value
-        $node.Children[1].Value | Should Be $trigger2.Value
+        $node.Type | Should -Be Sensor
+        $node.Children.Count | Should -Be 2
+        $node.Children[0].Value | Should -Be $trigger1.Value
+        $node.Children[1].Value | Should -Be $trigger2.Value
     }
 
     It "pipes in multiple child nodes with manual" {
@@ -117,21 +117,21 @@ Describe "New-SensorNode" -Tag @("PowerShell", "UnitTest") {
         $trigger2 = New-TriggerNode -ObjectId 3000 -Type Speed
 
         $node = $trigger1,$trigger2 | New-SensorNode -Id 4000
-        $node.Type | Should Be Sensor
-        $node.Children.Count | Should Be 2
-        $node.Children[0].Value | Should Be $trigger1.Value
-        $node.Children[1].Value | Should Be $trigger2.Value
+        $node.Type | Should -Be Sensor
+        $node.Children.Count | Should -Be 2
+        $node.Children[0].Value | Should -Be $trigger1.Value
+        $node.Children[1].Value | Should -Be $trigger2.Value
     }
 
     It "throws when a value of an invalid type is returned from a ScriptBlock" {
         SetMultiTypeResponse
         
-        { New-SensorNode -Id 4000 { "a" } } | Should Throw "Expected -ScriptBlock to return one or more values of type 'PrtgNode', however response contained an invalid value of type 'System.String'."
+        { New-SensorNode -Id 4000 { "a" } } | Should -Throw "Expected -ScriptBlock to return one or more values of type 'PrtgNode', however response contained an invalid value of type 'System.String'."
     }
 
     It "displays an error when an ID could not be resolved" {
         SetMultiTypeResponse
 
-        { New-SensorNode -Id 1001,4000 -ErrorAction Stop } | Should Throw "Could not resolve a Sensor with ID 1001."
+        { New-SensorNode -Id 1001,4000 -ErrorAction Stop } | Should -Throw "Could not resolve a Sensor with ID 1001."
     }
 }

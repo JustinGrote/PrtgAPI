@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
 
 Describe "Connect-PrtgServer" -Tag @("PowerShell", "UnitTest") {
 
@@ -8,7 +8,7 @@ Describe "Connect-PrtgServer" -Tag @("PowerShell", "UnitTest") {
         try
         {
             Connect-PrtgServer http://127.0.0.1 (New-Credential username password)
-            throw "Connection should not have succeeded"
+            throw "Connection Should -Not -have succeeded"
         }
         catch
         {
@@ -31,7 +31,7 @@ Describe "Connect-PrtgServer" -Tag @("PowerShell", "UnitTest") {
         try
         {
             Connect-PrtgServer http://127.0.0.1 (New-Credential username)
-            throw "Connection should not have succeeded"
+            throw "Connection Should -Not -have succeeded"
         }
         catch
         {
@@ -47,7 +47,7 @@ Describe "Connect-PrtgServer" -Tag @("PowerShell", "UnitTest") {
 
         Connect-PrtgServer prtg.example.com (New-Credential prtgadmin 12345678) -PassHash
 
-        { Connect-PrtgServer prtg.example2.com (New-Credential username password) } | Should Throw "Already connected to server"
+        { Connect-PrtgServer prtg.example2.com (New-Credential username password) } | Should -Throw "Already connected to server"
     }
 
     It "connects to another server by specifying -Force" {
@@ -57,7 +57,7 @@ Describe "Connect-PrtgServer" -Tag @("PowerShell", "UnitTest") {
     It "requires a connection to use a cmdlet" {
         Disconnect-PrtgServer
 
-        { Get-Sensor } | Should Throw "You are not connected to a PRTG Server"
+        { Get-Sensor } | Should -Throw "You are not connected to a PRTG Server"
     }
 
     It "specifies a retry count and delay" {
@@ -67,8 +67,8 @@ Describe "Connect-PrtgServer" -Tag @("PowerShell", "UnitTest") {
 
         $client = Get-PrtgClient
 
-        $client.RetryCount | Should Be 20
-        $client.RetryDelay | Should Be 400
+        $client.RetryCount | Should -Be 20
+        $client.RetryDelay | Should -Be 400
 
         Disconnect-PrtgServer
     }
@@ -82,13 +82,13 @@ Describe "Connect-PrtgServer" -Tag @("PowerShell", "UnitTest") {
 
         $realClient = Get-PrtgClient
 
-        $client | Should Be $realClient
+        $client | Should -Be $realClient
     }
 
     It "specifies a log level" {
 
         $client = Connect-PrtgServer prtg.example.com (New-Credential username 12345678) -Passhash -PassThru -Force -LogLevel Trace,Response
 
-        $client.LogLevel | Should Be "Trace, Response"
+        $client.LogLevel | Should -Be "Trace, Response"
     }
 }

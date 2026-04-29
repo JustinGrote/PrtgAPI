@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\IntegrationTest.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\IntegrationTest.ps1
 
 Describe "Add-Sensor_IT" -Tag @("PowerShell", "IntegrationTest") {
 
@@ -41,10 +41,10 @@ Describe "Add-Sensor_IT" -Tag @("PowerShell", "IntegrationTest") {
 
             $newSensors = $device | Get-Sensor
 
-            $newSensors.Count | Should BeGreaterThan $sensors.Count
+            $newSensors.Count | Should -BeGreaterThan $sensors.Count
 
             $newSensor = $newSensors | where name -EQ $values.Name
-            $newSensor.Count | Should Be 1
+            $newSensor.Count | Should -Be 1
 
             try
             {
@@ -56,7 +56,7 @@ Describe "Add-Sensor_IT" -Tag @("PowerShell", "IntegrationTest") {
                 }
 
                 CheckValue "Name"
-                $properties.Tags -join " " | Should Be  $values.Tags
+                $properties.Tags -join " " | Should -Be  $values.Tags
                 CheckValue "Priority"
                 CheckValue "ExeFile"
                 CheckValue "ExeParameters"
@@ -69,7 +69,7 @@ Describe "Add-Sensor_IT" -Tag @("PowerShell", "IntegrationTest") {
                 CheckValue "Interval"
                 CheckValue "IntervalErrorMode"
 
-                $newSensor.NotificationTypes.InheritTriggers | Should Be $false
+                $newSensor.NotificationTypes.InheritTriggers | Should -Be $false
             }
             finally
             {
@@ -105,29 +105,29 @@ Describe "Add-Sensor_IT" -Tag @("PowerShell", "IntegrationTest") {
 
             $newSensors = $device | Get-Sensor
 
-            $newSensors.Count | Should BeGreaterThan $sensors.Count
+            $newSensors.Count | Should -BeGreaterThan $sensors.Count
 
             $newSensor = $newSensors | where name -EQ $table."name_"
-            $newSensor.Count | Should Be 1
+            $newSensor.Count | Should -Be 1
 
             try
             {
                 $properties = $newSensor | Get-ObjectProperty
 
-                $properties.Name | Should Be "my raw sensor"
-                $properties.Tags | Should Be "xmlexesensor"
-                $properties.Priority | Should Be "Four"
-                $properties.ExeFile | Should Be "test.ps1"
-                $properties.ExeParameters | Should Be "arg1 arg2 arg3"
-                $properties.SetExeEnvironmentVariables | Should Be $true
-                $properties.UseWindowsAuthentication | Should Be $true
-                $properties.Mutex | Should Be "testMutex"
-                $properties.Timeout | Should Be 70
-                $properties.DebugMode | Should Be "WriteToDisk"
-                $properties.InheritInterval | Should Be $false
-                $properties.Interval | Should Be "00:00:30"
-                $properties.IntervalErrorMode | Should Be "TwoWarningsThenDown"
-                $newSensor.NotificationTypes.InheritTriggers | Should Be $false
+                $properties.Name | Should -Be "my raw sensor"
+                $properties.Tags | Should -Be "xmlexesensor"
+                $properties.Priority | Should -Be "Four"
+                $properties.ExeFile | Should -Be "test.ps1"
+                $properties.ExeParameters | Should -Be "arg1 arg2 arg3"
+                $properties.SetExeEnvironmentVariables | Should -Be $true
+                $properties.UseWindowsAuthentication | Should -Be $true
+                $properties.Mutex | Should -Be "testMutex"
+                $properties.Timeout | Should -Be 70
+                $properties.DebugMode | Should -Be "WriteToDisk"
+                $properties.InheritInterval | Should -Be $false
+                $properties.Interval | Should -Be "00:00:30"
+                $properties.IntervalErrorMode | Should -Be "TwoWarningsThenDown"
+                $newSensor.NotificationTypes.InheritTriggers | Should -Be $false
             }
             finally
             {
@@ -147,11 +147,11 @@ Describe "Add-Sensor_IT" -Tag @("PowerShell", "IntegrationTest") {
             {
                 $newSensors = Get-Sensor
 
-                $newSensors.Count | Should BeGreaterThan $originalSensors.Count
+                $newSensors.Count | Should -BeGreaterThan $originalSensors.Count
 
                 $diffSensor = $newSensors|where name -EQ $params.Name
 
-                $diffSensor.Id | Should Be $newSensor.Id
+                $diffSensor.Id | Should -Be $newSensor.Id
             }
             finally
             {
@@ -168,18 +168,18 @@ Describe "Add-Sensor_IT" -Tag @("PowerShell", "IntegrationTest") {
             $params = New-SensorParameters WmiService
 
             $services = $device | Get-SensorTarget WmiService *prtg*
-            $services.Count | Should Be 2
+            $services.Count | Should -Be 2
 
             $params.Services = $services
 
             $sensors = $device | Add-Sensor $params
 
-            $sensors.Count | Should Be 2
+            $sensors.Count | Should -Be 2
 
             try
             {
-                $sensors | where Name -like "*: PRTG Core Server Service" | Should Not BeNullOrEmpty
-                $sensors | where Name -like "*: PRTG Probe Service" | Should Not BeNullOrEmpty
+                $sensors | where Name -like "*: PRTG Core Server Service" | Should -Not -BeNullOrEmpty
+                $sensors | where Name -like "*: PRTG Probe Service" | Should -Not -BeNullOrEmpty
             }
             finally
             {
@@ -196,14 +196,14 @@ Describe "Add-Sensor_IT" -Tag @("PowerShell", "IntegrationTest") {
 
             $newSensor = $device | Add-Sensor $params
 
-            $newSensor.Count | Should Be 1
+            $newSensor.Count | Should -Be 1
 
             try
             {
                 $properties = $newSensor | Get-ObjectProperty
 
-                $properties.Name | Should Be "HTTPS"
-                $properties.Url | Should Be "https://"
+                $properties.Name | Should -Be "HTTPS"
+                $properties.Url | Should -Be "https://"
             }
             finally
             {
@@ -221,15 +221,15 @@ Describe "Add-Sensor_IT" -Tag @("PowerShell", "IntegrationTest") {
 
             $newSensor = $device | Add-Sensor $params
 
-            $newSensor.Count | Should Be 1
+            $newSensor.Count | Should -Be 1
 
             try
             {
                 $properties = $newSensor | Get-ObjectProperty
 
-                $properties.Name | Should Be "Custom Factory"
-                $properties.ChannelDefinition[0] | Should Be "#1:Total CPU"
-                $properties.ChannelDefinition[1] | Should Be "#1:Total CPU","channel($(Settings UpSensor), 0)"
+                $properties.Name | Should -Be "Custom Factory"
+                $properties.ChannelDefinition[0] | Should -Be "#1:Total CPU"
+                $properties.ChannelDefinition[1] | Should -Be "#1:Total CPU","channel($(Settings UpSensor), 0)"
             }
             finally
             {
@@ -246,12 +246,12 @@ Describe "Add-Sensor_IT" -Tag @("PowerShell", "IntegrationTest") {
     It "adds sensor parameters piped from Get-SensorTarget" {
         $sensors = Get-Device -Id (Settings Device) | Get-SensorTarget WmiService *prtg* -Parameters | Add-Sensor
 
-        $sensors.Count | Should Be 2
+        $sensors.Count | Should -Be 2
 
         try
         {
-            $sensors | where Name -like "*: PRTG Core Server Service" | Should Not BeNullOrEmpty
-            $sensors | where Name -like "*: PRTG Probe Service" | Should Not BeNullOrEmpty
+            $sensors | where Name -like "*: PRTG Core Server Service" | Should -Not -BeNullOrEmpty
+            $sensors | where Name -like "*: PRTG Probe Service" | Should -Not -BeNullOrEmpty
         }
         finally
         {
@@ -272,21 +272,21 @@ Describe "Add-Sensor_IT" -Tag @("PowerShell", "IntegrationTest") {
         $params["interval_"] = "300|5 minutes"
         $params["timeout_"] = 70
 
-        $params["exefile_"] | Should Be $target
+        $params["exefile_"] | Should -Be $target
 
         $newSensor = $device | Add-Sensor $params
 
-        $newSensor.Count | Should Be 1
+        $newSensor.Count | Should -Be 1
 
         try
         {
             $properties = $newSensor | Get-ObjectProperty
 
-            $newSensor.Type | Should Be "Sensor (exexml)"
-            $properties.Name | Should Be "empty sensor"
-            $properties.ExeFile.ToString() | Should Be "testScript.bat"
-            $properties.Interval.ToString() | Should Be ([TimeSpan]"00:05:00").ToString()
-            $properties.Timeout | Should Be 70
+            $newSensor.Type | Should -Be "Sensor (exexml)"
+            $properties.Name | Should -Be "empty sensor"
+            $properties.ExeFile.ToString() | Should -Be "testScript.bat"
+            $properties.Interval.ToString() | Should -Be ([TimeSpan]"00:05:00").ToString()
+            $properties.Timeout | Should -Be 70
         }
         finally
         {
@@ -299,8 +299,8 @@ Describe "Add-Sensor_IT" -Tag @("PowerShell", "IntegrationTest") {
 
         try
         {
-            $sensor.Name | Should Be "HTTP"
-            $sensor.Type | Should Be "Sensor (http)"
+            $sensor.Name | Should -Be "HTTP"
+            $sensor.Type | Should -Be "Sensor (http)"
         }
         finally
         {
@@ -314,13 +314,13 @@ Describe "Add-Sensor_IT" -Tag @("PowerShell", "IntegrationTest") {
 
         $params = $device | New-SensorParameters -RawType wmiservice
         $params.service__check = $params.Targets.service__check | where name -Like *prtg*
-        $params.service__check.Count | Should Be 2
+        $params.service__check.Count | Should -Be 2
 
         $sensors = $params | Add-Sensor
 
         try
         {
-            $sensors.Count | Should Be 2
+            $sensors.Count | Should -Be 2
         }
         finally
         {
@@ -350,7 +350,7 @@ Describe "Add-Sensor_IT" -Tag @("PowerShell", "IntegrationTest") {
 
         try
         {
-            $sensor.Name | Should Be "(003) Data and Voice VLAN Traffic"
+            $sensor.Name | Should -Be "(003) Data and Voice VLAN Traffic"
         }
         finally
         {
@@ -378,7 +378,7 @@ Describe "Add-Sensor_IT" -Tag @("PowerShell", "IntegrationTest") {
 
         try
         {
-            $sensor.Name | Should Be "(003) Data and Voice VLAN Traffic"
+            $sensor.Name | Should -Be "(003) Data and Voice VLAN Traffic"
         }
         finally
         {
@@ -403,7 +403,7 @@ Describe "Add-Sensor_IT" -Tag @("PowerShell", "IntegrationTest") {
 
         try
         {
-            $sensor.Type.StringValue | Should Be "snmpcustomtable"
+            $sensor.Type.StringValue | Should -Be "snmpcustomtable"
         }
         finally
         {
@@ -416,13 +416,13 @@ Describe "Add-Sensor_IT" -Tag @("PowerShell", "IntegrationTest") {
 
         $targets = $device | Get-SensorTarget WmiService
 
-        $targets.Count | Should BeGreaterThan 100
+        $targets.Count | Should -BeGreaterThan 100
 
         $services = $device | New-Sensor -WmiService *
 
         try
         {
-            $services.Count | Should Be $targets.Count
+            $services.Count | Should -Be $targets.Count
         }
         finally
         {
@@ -439,13 +439,13 @@ Describe "Add-Sensor_IT" -Tag @("PowerShell", "IntegrationTest") {
 
         $params = New-SensorParameters $table
 
-        { Get-Device -Id (Settings Device) | Add-Sensor $params } | Should Throw (ForeignMessage "Failed to add sensor for sensor type 'exexml1': type was not valid")
+        { Get-Device -Id (Settings Device) | Add-Sensor $params } | Should -Throw (ForeignMessage "Failed to add sensor for sensor type 'exexml1': type was not valid")
     }
 
     It "throws attempting to create dynamic parameters as a read only user" {
 
         ReadOnlyClient {
-            { Get-Device -Id (Settings Device) | New-SensorParameters -RawType exexml } | Should Throw (ForeignMessage "a read-only user account is not allowed to access this web page")
+            { Get-Device -Id (Settings Device) | New-SensorParameters -RawType exexml } | Should -Throw (ForeignMessage "a read-only user account is not allowed to access this web page")
         }
     }
 
@@ -465,7 +465,7 @@ Describe "Add-Sensor_IT" -Tag @("PowerShell", "IntegrationTest") {
 
         try
         {
-            $sensor.Type.StringValue | Should Be "snmpcustomtable"
+            $sensor.Type.StringValue | Should -Be "snmpcustomtable"
         }
         finally
         {
@@ -488,7 +488,7 @@ Describe "Add-Sensor_IT" -Tag @("PowerShell", "IntegrationTest") {
 
         try
         {
-            $sensor.Name | Should Be "SYSAUX"
+            $sensor.Name | Should -Be "SYSAUX"
         }
         finally
         {

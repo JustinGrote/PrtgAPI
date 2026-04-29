@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
 
 Describe "Approve-Probe" -Tag @("PowerShell", "UnitTest") {
 
@@ -67,11 +67,11 @@ Describe "Approve-Probe" -Tag @("PowerShell", "UnitTest") {
             
             SetMultiTypeResponse
 
-            { Approve-Probe -Id 9001 } | Should Throw "object does not appear to be a probe"
+            { Approve-Probe -Id 9001 } | Should -Throw "object does not appear to be a probe"
         }
 
         It "throws specifying an object that is not a probe non-English" {
-            { Approve-Probe -Id 9002 } | Should Throw "object does not appear to be a probe"
+            { Approve-Probe -Id 9002 } | Should -Throw "object does not appear to be a probe"
         }
     }
 
@@ -82,6 +82,6 @@ Describe "Approve-Probe" -Tag @("PowerShell", "UnitTest") {
 
         $output = [string]::Join("`n",(&{try { Approve-Probe -Id 1002 3>&1 | %{$_.Message} } catch [exception] { }}))
 
-        $output | Should Be "Skipping probe ID '1002' as it is already approved."
+        $output | Should -Be "Skipping probe ID '1002' as it is already approved."
     }
 }

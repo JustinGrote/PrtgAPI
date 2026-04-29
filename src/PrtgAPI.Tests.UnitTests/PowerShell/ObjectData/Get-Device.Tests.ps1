@@ -1,15 +1,15 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\UnitTest.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\UnitTest.ps1
 
 Describe "Get-Device" -Tag @("PowerShell", "UnitTest") {
 
     It "can deserialize" {
         $devices = Get-Device
-        $devices.Count | Should Be 1
+        $devices.Count | Should -Be 1
     }
 
     It "can filter by status" {
         $items = (GetItem),(GetItem),(GetItem),(GetItem)
-        $items.Count | Should Be 4
+        $items.Count | Should -Be 4
 
         $items[0].StatusRaw = "5" # Down
         $items[1].StatusRaw = "3" # Up
@@ -19,7 +19,7 @@ Describe "Get-Device" -Tag @("PowerShell", "UnitTest") {
         WithItems $items {
             $devices = Get-Device -Status Up,Paused
 
-            $devices.Count | Should Be 3
+            $devices.Count | Should -Be 3
         }
     }
 
@@ -27,24 +27,24 @@ Describe "Get-Device" -Tag @("PowerShell", "UnitTest") {
         SetAddressValidatorResponse "filter_group=@sub(2)"
 
         $devices = Get-Device -Group 2*
-        $devices.Count | Should Be 0
+        $devices.Count | Should -Be 0
 
         SetAddressValidatorResponse "filter_group=@sub(1)"
 
         $devices = Get-Device -Group 1*
-        $devices.Count | Should Be 2
+        $devices.Count | Should -Be 2
     }
 
     It "filters by probe name" {
         SetAddressValidatorResponse "filter_probe=@sub(2)"
 
         $devices = Get-Device -Probe 2*
-        $devices.Count | Should Be 0
+        $devices.Count | Should -Be 0
 
         SetAddressValidatorResponse "filter_probe=@sub(1)"
 
         $devices = Get-Device -Probe 1*
-        $devices.Count | Should Be 2
+        $devices.Count | Should -Be 2
     }
 
     Context "Group Recursion" {
@@ -53,7 +53,7 @@ Describe "Get-Device" -Tag @("PowerShell", "UnitTest") {
 
             $devices = Get-Group Servers | Get-Device *
 
-            $devices.Count | Should Be 2
+            $devices.Count | Should -Be 2
         }
 
         It "retrieves devices from a group with a duplicated name" {
@@ -61,7 +61,7 @@ Describe "Get-Device" -Tag @("PowerShell", "UnitTest") {
 
             $devices = Get-Group Servers | Get-Device *
 
-            $devices.Count | Should Be 2
+            $devices.Count | Should -Be 2
         }
 
         It "retrieves devices from a uniquely named group containing child groups" {
@@ -69,7 +69,7 @@ Describe "Get-Device" -Tag @("PowerShell", "UnitTest") {
 
             $devices = Get-Group Servers | Get-Device *
 
-            $devices.Count | Should Be 3
+            $devices.Count | Should -Be 3
         }
 
         It "retrieves devices from a group with a duplicated name containing child groups" {
@@ -77,7 +77,7 @@ Describe "Get-Device" -Tag @("PowerShell", "UnitTest") {
 
             $devices = Get-Group Servers | Get-Device *
 
-            $devices.Count | Should Be 3
+            $devices.Count | Should -Be 3
         }
 
         It "retrieves devices from all groups with a duplicated name with -Recurse:`$false" {
@@ -85,7 +85,7 @@ Describe "Get-Device" -Tag @("PowerShell", "UnitTest") {
 
             $devices = Get-Group Servers | Get-Device * -Recurse:$false
 
-            $devices.Count | Should Be 2
+            $devices.Count | Should -Be 2
         }
 
         It "retrieves devices from a group hierarchy with no devices in the parent group" {
@@ -93,7 +93,7 @@ Describe "Get-Device" -Tag @("PowerShell", "UnitTest") {
 
             $devices = Get-Group Servers | Get-Device *
 
-            $devices.Count | Should Be 4
+            $devices.Count | Should -Be 4
         }
 
         It "retrieves devices from a child group with a name filter" {
@@ -102,7 +102,7 @@ Describe "Get-Device" -Tag @("PowerShell", "UnitTest") {
 
             $devices = Get-Group Servers | Get-Device dc*
 
-            $devices.Count | Should Be 2
+            $devices.Count | Should -Be 2
         }
 
         It "retrieves devices from a grandchild group with a name filter" {
@@ -110,7 +110,7 @@ Describe "Get-Device" -Tag @("PowerShell", "UnitTest") {
 
             $devices = Get-Group Servers | Get-Device old-arch-1
 
-            $devices.Count | Should Be 1
+            $devices.Count | Should -Be 1
         }
 
         It "retrieves devices from a great-grandchild group with a name filter" {
@@ -118,7 +118,7 @@ Describe "Get-Device" -Tag @("PowerShell", "UnitTest") {
 
             $devices = Get-Group Servers | Get-Device old-arch-2
 
-            $devices.Count | Should Be 1
+            $devices.Count | Should -Be 1
         }
     }
 
@@ -130,7 +130,7 @@ Describe "Get-Device" -Tag @("PowerShell", "UnitTest") {
         }
 
         It "throws using a dynamic parameter not supported by this type" {
-            { Get-Device -LastValue 3 } | Should Throw "A parameter cannot be found that matches parameter name 'LastValue'"
+            { Get-Device -LastValue 3 } | Should -Throw "A parameter cannot be found that matches parameter name 'LastValue'"
         }
 
         It "uses dynamic parameters in conjunction with regular parameters" {
@@ -146,9 +146,9 @@ Describe "Get-Device" -Tag @("PowerShell", "UnitTest") {
 
             $device = @(Get-Device -Count 3 -Message "*1")
 
-            $device.Count | Should Be 1
+            $device.Count | Should -Be 1
 
-            $device.Name | Should Be "Probe Device1"
+            $device.Name | Should -Be "Probe Device1"
         }
 
         It "uses a bool with a dynamic parameter" {
@@ -159,7 +159,7 @@ Describe "Get-Device" -Tag @("PowerShell", "UnitTest") {
         }
 
         It "throws using unsupported filters in dynamic parameters" {
-            { Get-Device -Favorite $false } | Should Throw "Cannot filter where property 'Favorite' equals '0'."
+            { Get-Device -Favorite $false } | Should -Throw "Cannot filter where property 'Favorite' equals '0'."
         }
     }
 }

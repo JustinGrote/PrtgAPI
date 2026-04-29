@@ -1,22 +1,22 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\IntegrationTest.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\IntegrationTest.ps1
 
 Describe "Resume-Object_IT" -Tag @("PowerShell", "IntegrationTest") {
     It "resumes a paused object" {
         $sensor = Get-Sensor -Id (Settings PausedSensor)
-        $sensor.Status | Should Be PausedByUser
+        $sensor.Status | Should -Be PausedByUser
 
         $sensor | Resume-Object
 
         LogTestDetail "Sleeping for 60 seconds while objects resume"
         $finalSensor = WaitForStatus $sensor Up 60
 
-        $finalSensor.Status | Should Be Up
+        $finalSensor.Status | Should -Be Up
     }
 
     It "resumes a simulated error" {
         $sensor = Get-Sensor -Id (Settings UpSensor)
 
-        $sensor.Status | Should Be Up
+        $sensor.Status | Should -Be Up
 
         LogTestDetail "Simulating error status"
         $sensor | Simulate-ErrorStatus
@@ -40,11 +40,11 @@ Describe "Resume-Object_IT" -Tag @("PowerShell", "IntegrationTest") {
             }
         }
 
-        $redSensor.Status | Should Be Down
+        $redSensor.Status | Should -Be Down
 
         if(IsEnglish)
         {
-            $redSensor.Message | Should BeLike "*simulated error*"
+            $redSensor.Message | Should -BeLike "*simulated error*"
         }
 
         LogTestDetail "Resuming object"
@@ -54,7 +54,7 @@ Describe "Resume-Object_IT" -Tag @("PowerShell", "IntegrationTest") {
 
         $finalSensor = WaitForStatus $redSensor Up 60
 
-        $finalSensor.Status | Should Be Up
+        $finalSensor.Status | Should -Be Up
     }
 
     It "can resume multiple in a single request" {
@@ -80,8 +80,8 @@ Describe "Resume-Object_IT" -Tag @("PowerShell", "IntegrationTest") {
 
         $sensors = WaitForStatus $list Up 60
 
-        $sensors.Count | Should Be 2
-        $sensors[0].Status | Should Be Up
-        $sensors[1].Status | Should Be Up
+        $sensors.Count | Should -Be 2
+        $sensors[0].Status | Should -Be Up
+        $sensors[1].Status | Should -Be Up
     }
 }

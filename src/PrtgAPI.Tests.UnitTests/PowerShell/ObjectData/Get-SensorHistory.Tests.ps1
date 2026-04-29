@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
 
 function CreateData
 {
@@ -74,7 +74,7 @@ function ValidateChannels($file, $labels, $properties)
 {
     $lines = gc $file.FullName
     $matchingLines = ($lines -match ".+Custom\d.+") | foreach { $_.Trim() }
-    $matchingLines.Count | Should Be 8
+    $matchingLines.Count | Should -Be 8
 
     foreach($line in $matchingLines)
     {
@@ -152,7 +152,7 @@ Describe "Get-SensorHistory" -Tag @("PowerShell", "UnitTest") {
 
         $sensor | Get-SensorHistory
 
-        (gci $path).Count | Should BeGreaterThan 0
+        (gci $path).Count | Should -BeGreaterThan 0
     }
 
     It "specifies a custum timespan and average" {
@@ -170,7 +170,7 @@ Describe "Get-SensorHistory" -Tag @("PowerShell", "UnitTest") {
 
             $history = $sensor | Get-SensorHistory
 
-            $history.BackupState | Should Be "Success"
+            $history.BackupState | Should -Be "Success"
         }
         finally
         {
@@ -182,13 +182,13 @@ Describe "Get-SensorHistory" -Tag @("PowerShell", "UnitTest") {
 
         $items = 1..501 | foreach { CreateData }
 
-        $items.Count | Should Be 501
+        $items.Count | Should -Be 501
 
         SetResponseAndClientWithArguments "SensorHistoryResponse" $items
 
         $history = $sensor | Get-SensorHistory
 
-        $history.Count | Should Be 501
+        $history.Count | Should -Be 501
     }
 
     It "streams when an end date is specified" {
@@ -207,7 +207,7 @@ Describe "Get-SensorHistory" -Tag @("PowerShell", "UnitTest") {
 
         $items = $sensor | Get-SensorHistory -StartDate $start -EndDate $end
 
-        $items.Count | Should Be 2
+        $items.Count | Should -Be 2
     }
 
     It "ignores display values that have multiple spaces" {
@@ -221,10 +221,10 @@ Describe "Get-SensorHistory" -Tag @("PowerShell", "UnitTest") {
         $timeSpanLabel = GetTableColumnHeader $history "PercentAvailableMemory1"
         $regularLabel = GetTableColumnHeader $history "AvailableMemory"
 
-        $timeSpanLabel | Should Be "PercentAvailableMemory1"
-        $regularLabel | Should Be "AvailableMemory(MByte)"
+        $timeSpanLabel | Should -Be "PercentAvailableMemory1"
+        $regularLabel | Should -Be "AvailableMemory(MByte)"
 
-        $history.PercentAvailableMemory1 | Should Be "9 a 5 b"
+        $history.PercentAvailableMemory1 | Should -Be "9 a 5 b"
     }
 
     It "converts display values that look like TimeSpans" {
@@ -237,10 +237,10 @@ Describe "Get-SensorHistory" -Tag @("PowerShell", "UnitTest") {
         $timeSpanLabel = GetTableColumnHeader $history "PercentAvailableMemory2"
         $regularLabel = GetTableColumnHeader $history "AvailableMemory"
 
-        $timeSpanLabel | Should Be "PercentAvailableMemory2"
-        $regularLabel | Should Be "AvailableMemory(MByte)"
+        $timeSpanLabel | Should -Be "PercentAvailableMemory2"
+        $regularLabel | Should -Be "AvailableMemory(MByte)"
 
-        $history."PercentAvailableMemory2" | Should Be "09:05:00"
+        $history."PercentAvailableMemory2" | Should -Be "09:05:00"
     }
 
     It "ignores display values that look like TimeSpans but also contain unknown units" {
@@ -253,10 +253,10 @@ Describe "Get-SensorHistory" -Tag @("PowerShell", "UnitTest") {
         $timeSpanLabel = GetTableColumnHeader $history "PercentAvailableMemory3"
         $regularLabel = GetTableColumnHeader $history "AvailableMemory"
 
-        $timeSpanLabel | Should Be "PercentAvailableMemory3"
-        $regularLabel | Should Be "AvailableMemory(MByte)"
+        $timeSpanLabel | Should -Be "PercentAvailableMemory3"
+        $regularLabel | Should -Be "AvailableMemory(MByte)"
 
-        $history.PercentAvailableMemory3 | Should Be "9 d 5 h 3 t"
+        $history.PercentAvailableMemory3 | Should -Be "9 d 5 h 3 t"
     }
 
     It "displays raw values" {
@@ -268,20 +268,20 @@ Describe "Get-SensorHistory" -Tag @("PowerShell", "UnitTest") {
         $normal = $sensor | Get-SensorHistory
 
         $normalUnitLabel = GetTableColumnHeader $normal "AvailableMemory"
-        $normalUnitLabel | Should Be "AvailableMemory(MByte)"
+        $normalUnitLabel | Should -Be "AvailableMemory(MByte)"
 
-        $normal.PercentAvailableMemory4 | Should Be "09:05:00"
-        $normal.PSObject.TypeNames[0] | Should Match "PrtgAPI.DynamicFormatPSObject\d+"
+        $normal.PercentAvailableMemory4 | Should -Be "09:05:00"
+        $normal.PSObject.TypeNames[0] | Should -Match "PrtgAPI.DynamicFormatPSObject\d+"
 
         $raw = $sensor | Get-SensorHistory -Raw
 
         $rawUnitLabel = GetTableColumnHeader $raw "AvailableMemory"
-        $rawUnitLabel | Should Be "AvailableMemory"
+        $rawUnitLabel | Should -Be "AvailableMemory"
 
-        $raw.PercentAvailableMemory4 | Should Be 32700
-        $raw.PSObject.TypeNames[0] | Should Match "PrtgAPI.DynamicFormatPSObject\d+"
+        $raw.PercentAvailableMemory4 | Should -Be 32700
+        $raw.PSObject.TypeNames[0] | Should -Match "PrtgAPI.DynamicFormatPSObject\d+"
 
-        $normal.PSObject.TypeNames[0] | Should Not Be $raw.PSObject.TypeNames[0]
+        $normal.PSObject.TypeNames[0] | Should -Not -Be $raw.PSObject.TypeNames[0]
     }
 
     It "doesn't convert display values into TimeSpans when the display and raw value aren't roughly equivalent" {
@@ -291,7 +291,7 @@ Describe "Get-SensorHistory" -Tag @("PowerShell", "UnitTest") {
 
         $history = $sensor | Get-SensorHistory
 
-        $history.PercentAvailableMemory5 | Should Be "9 h 5 m"
+        $history.PercentAvailableMemory5 | Should -Be "9 h 5 m"
     }
 
     Context "Count" {
@@ -309,7 +309,7 @@ Describe "Get-SensorHistory" -Tag @("PowerShell", "UnitTest") {
 
             $items = $sensor | Get-SensorHistory -Count 4 -StartDate $start
 
-            $items.Count | Should Be 4
+            $items.Count | Should -Be 4
         }
 
         It "retrieves the specified number of records when an end date and a count is specified" {
@@ -328,7 +328,7 @@ Describe "Get-SensorHistory" -Tag @("PowerShell", "UnitTest") {
 
             $items = @($sensor | Get-SensorHistory -StartDate $start -EndDate $end -Count 1)
 
-            $items.Count | Should Be 1
+            $items.Count | Should -Be 1
         }
         
         It "adjusts the missing end date when a large count is specified" {
@@ -337,7 +337,7 @@ Describe "Get-SensorHistory" -Tag @("PowerShell", "UnitTest") {
             $end = $start.AddHours(-3)
 
             $s = Run Sensor { Get-Sensor }
-            $s.Interval | Should Be "00:01:00"
+            $s.Interval | Should -Be "00:01:00"
 
             $response = SetAddressValidatorResponse @(
                 [Request]::Channels(2203)
@@ -356,7 +356,7 @@ Describe "Get-SensorHistory" -Tag @("PowerShell", "UnitTest") {
             $end = $start.AddHours(-1)
             
             $s = Run Sensor { Get-Sensor }
-            $s.Interval | Should Be "00:01:00"
+            $s.Interval | Should -Be "00:01:00"
 
             $response = SetAddressValidatorResponse @(
                 [Request]::Channels(2203)
@@ -384,7 +384,7 @@ Describe "Get-SensorHistory" -Tag @("PowerShell", "UnitTest") {
 
             $s = Run Sensor { Get-Sensor }
             $s.Interval = "01:00:00:00"
-            $s.Interval | Should Be "1.00:00:00"
+            $s.Interval | Should -Be "1.00:00:00"
 
             $s | Get-SensorHistory -Count 20 -StartDate $start
         }
@@ -420,7 +420,7 @@ Describe "Get-SensorHistory" -Tag @("PowerShell", "UnitTest") {
             $response.CountOverride = GetCustomCountDictionary @{ Channels = 0 }
 
             $s = Run Sensor { Get-Sensor }
-            $s.Interval | Should Be "00:01:00"
+            $s.Interval | Should -Be "00:01:00"
 
             $s | Get-SensorHistory -Count 80 -Average 300 -StartDate $start
         }
@@ -458,7 +458,7 @@ Describe "Get-SensorHistory" -Tag @("PowerShell", "UnitTest") {
 
         $items = @($sensor | Get-SensorHistory -StartDate $start -EndDate $end -Count 1000)
 
-        $items.Count | Should Be 1000
+        $items.Count | Should -Be 1000
     }
 
     It "replaces impure formats" {
@@ -478,7 +478,7 @@ Describe "Get-SensorHistory" -Tag @("PowerShell", "UnitTest") {
 
         # Validate that the format was created
         $post = gci $dir | Sort-Object LastWriteTime
-        $post.Count | Should Be ($pre.Count + 1)
+        $post.Count | Should -Be ($pre.Count + 1)
 
         $new = $post | Select -Last 1
 
@@ -503,19 +503,19 @@ Describe "Get-SensorHistory" -Tag @("PowerShell", "UnitTest") {
 
         $dir = gci $formats
 
-        $dir.Count | Should BeGreaterThan 0
+        $dir.Count | Should -BeGreaterThan 0
 
         $dir | Remove-Item -Force
 
         $dir = gci $formats
 
-        $dir.Count | Should Be 0
+        $dir.Count | Should -Be 0
 
         Get-SensorHistory -Id 1001
 
         $dir = gci $formats
 
-        $dir.Count | Should BeGreaterThan 1
+        $dir.Count | Should -BeGreaterThan 1
     }
 
     It "specifies a scaling multiplication" {
@@ -525,7 +525,7 @@ Describe "Get-SensorHistory" -Tag @("PowerShell", "UnitTest") {
 
             $result = Get-SensorHistory -Id 1001
 
-            $result[0].AvailableMemory | Should Be 86.664
+            $result[0].AvailableMemory | Should -Be 86.664
         }
     }
 
@@ -535,7 +535,7 @@ Describe "Get-SensorHistory" -Tag @("PowerShell", "UnitTest") {
 
             $result = Get-SensorHistory -Id 1001
 
-            $result[0].AvailableMemory | Should Be 1.4444
+            $result[0].AvailableMemory | Should -Be 1.4444
         }
     }
 
@@ -546,7 +546,7 @@ Describe "Get-SensorHistory" -Tag @("PowerShell", "UnitTest") {
 
             $result = Get-SensorHistory -Id 1001
 
-            $result[0].AvailableMemory | Should Be 129.9915
+            $result[0].AvailableMemory | Should -Be 129.9915
         }
     }
 
@@ -557,7 +557,7 @@ Describe "Get-SensorHistory" -Tag @("PowerShell", "UnitTest") {
 
             $result = Get-SensorHistory -Id 1001 -Raw
 
-            $result[0].AvailableMemory | Should Be 1.4444
+            $result[0].AvailableMemory | Should -Be 1.4444
         }
     }
 
@@ -567,7 +567,7 @@ Describe "Get-SensorHistory" -Tag @("PowerShell", "UnitTest") {
 
             $result = Get-SensorHistory -Id 1001 -Raw
 
-            $result[0].AvailableMemory | Should Be 86.661
+            $result[0].AvailableMemory | Should -Be 86.661
         }
     }
 
@@ -577,7 +577,7 @@ Describe "Get-SensorHistory" -Tag @("PowerShell", "UnitTest") {
 
             $result = Get-SensorHistory -Id 1001 -Raw
 
-            $result[0].AvailableMemory | Should Be 86.661
+            $result[0].AvailableMemory | Should -Be 86.661
         }
     }
 

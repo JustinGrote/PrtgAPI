@@ -2,7 +2,7 @@
 
     if(!(Get-Module -ListAvailable PSScriptAnalyzer))
     {
-        Install-Package PSScriptAnalyzer -ProviderName PowerShellGet -ForceBootstrap -Force | Out-Null
+        Install-Module PSScriptAnalyzer -Scope CurrentUser -Force -AllowClobber | Out-Null
     }
 
     It "doesn't use 'sort' alias" {

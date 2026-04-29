@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
 
 Describe "Get-PrtgTree" -Tag @("PowerShell", "UnitTest") {
 
@@ -20,7 +20,7 @@ class TreeVisitor : PrtgAPI.Tree.PrtgNodeWalker
 
             $result = Get-PrtgTree
 
-            $result | Should Not BeNullOrEmpty
+            $result | Should -Not -BeNullOrEmpty
         }
 
         It "pipes from an object" {
@@ -30,7 +30,7 @@ class TreeVisitor : PrtgAPI.Tree.PrtgNodeWalker
 
             $result = Get-Probe -Id 1001 | Get-PrtgTree
 
-            $result | Should Not BeNullOrEmpty
+            $result | Should -Not -BeNullOrEmpty
         }
     }
 
@@ -40,7 +40,7 @@ class TreeVisitor : PrtgAPI.Tree.PrtgNodeWalker
 
             $result = Get-PrtgTree -Id 1001
 
-            $result | Should Not BeNullOrEmpty
+            $result | Should -Not -BeNullOrEmpty
         }
     }
 
@@ -57,7 +57,7 @@ class TreeVisitor : PrtgAPI.Tree.PrtgNodeWalker
 
         $visitor.Visit($node)
 
-        $visitor.Names -join ", " | Should Be "Volume IO _Total0, Volume IO _Total1"
+        $visitor.Names -join ", " | Should -Be "Volume IO _Total0, Volume IO _Total1"
     }
 
     It "retrieves lazily" {

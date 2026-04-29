@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\IntegrationTestSafe.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\IntegrationTestSafe.ps1
 
 Describe "Get-SensorHistory_IT" -Tag @("PowerShell", "IntegrationTest") {
     It "retrieves records for the previous hour" {
@@ -11,8 +11,8 @@ Describe "Get-SensorHistory_IT" -Tag @("PowerShell", "IntegrationTest") {
 
         $seconds = [int]($first.DateTime - $last.DateTime).TotalSeconds
 
-        $seconds | Should BeGreaterThan (60 * 57)
-        $seconds | Should BeLessThan (60 * 60 + 1)
+        $seconds | Should -BeGreaterThan (60 * 57)
+        $seconds | Should -BeLessThan (60 * 60 + 1)
     }
 
     It "retrieves records for a specified time frame" {
@@ -28,8 +28,8 @@ Describe "Get-SensorHistory_IT" -Tag @("PowerShell", "IntegrationTest") {
         $first = ($history | select -First 1).DateTime
         $last = ($history | select -Last 1).DateTime
 
-        ($first - $start).TotalSeconds | Should BeLessThan 60
-        ($end - $last).TotalSeconds | Should BeLessThan 60
+        ($first - $start).TotalSeconds | Should -BeLessThan 60
+        ($end - $last).TotalSeconds | Should -BeLessThan 60
     }
 
     
@@ -38,11 +38,11 @@ Describe "Get-SensorHistory_IT" -Tag @("PowerShell", "IntegrationTest") {
 
         $typeName = $history.PSObject.TypeNames[0]
 
-        $typeName | Should BeLike "PrtgAPI.DynamicFormatPSObject*"
+        $typeName | Should -BeLike "PrtgAPI.DynamicFormatPSObject*"
 
         $typeData = Get-FormatData $typeName
 
-        $typeData | Should Not BeNullOrEmpty
+        $typeData | Should -Not -BeNullOrEmpty
     }
 
     It "uses a custom TypeName for A, a different one for B, and the same one for A again" {
@@ -52,23 +52,23 @@ Describe "Get-SensorHistory_IT" -Tag @("PowerShell", "IntegrationTest") {
         $firstTypeName = $first.PSObject.TypeNames[0]
         $secondTypeName = $second.PSObject.TypeNames[0]
 
-        $firstTypeName | Should BeLike "PrtgAPI.DynamicFormatPSObject*"
-        $secondTypeName | Should BeLike "PrtgAPI.DynamicFormatPSObject*"
+        $firstTypeName | Should -BeLike "PrtgAPI.DynamicFormatPSObject*"
+        $secondTypeName | Should -BeLike "PrtgAPI.DynamicFormatPSObject*"
 
         $firstTypeData = Get-FormatData $firstTypeName
         $secondTypeData = Get-FormatData $secondTypeName
 
-        $firstTypeData | Should Not BeNullOrEmpty
-        $secondTypeData | Should Not BeNullOrEmpty
+        $firstTypeData | Should -Not -BeNullOrEmpty
+        $secondTypeData | Should -Not -BeNullOrEmpty
 
         $firstAgain = (Get-Sensor -Id (Settings UpSensor) | Get-SensorHistory)[0]
         $firstAgainTypeName = $first.PSObject.TypeNames[0]
 
-        $firstAgainTypeName | Should Be $firstTypeName
+        $firstAgainTypeName | Should -Be $firstTypeName
 
         $firstAgainTypeData = Get-FormatData $firstAgainTypeName
 
-        $firstTypeData | Should Be $firstAgainTypeName
+        $firstTypeData | Should -Be $firstAgainTypeName
     }
 
     It "does not include unit details in property names" {
@@ -78,7 +78,7 @@ Describe "Get-SensorHistory_IT" -Tag @("PowerShell", "IntegrationTest") {
 
         $channel = $history | select (Settings ChannelName)
 
-        $channel | Should Not BeNullOrEmpty
+        $channel | Should -Not -BeNullOrEmpty
     }
 
     It "parses an object that uses value lookups" {
@@ -87,7 +87,7 @@ Describe "Get-SensorHistory_IT" -Tag @("PowerShell", "IntegrationTest") {
 
         $channel = $sensor | Get-Channel | where DisplayLastValue -EQ "Denied" | select -First 1
 
-        $channel | Should Not BeNullOrEmpty
+        $channel | Should -Not -BeNullOrEmpty
 
         $history = $sensor | Get-SensorHistory
 
@@ -95,21 +95,21 @@ Describe "Get-SensorHistory_IT" -Tag @("PowerShell", "IntegrationTest") {
 
         $lookup = $column | where { $_ -eq "Denied" } | select -First 1
 
-        $lookup | Should Be "Denied"
+        $lookup | Should -Be "Denied"
     }
 
     It "includes all channels when processing traffic sensors" {
 
         $sensor = Get-Sensor -Tags wmiband* -Count 1
 
-        $sensor | Should Not BeNullOrEmpty
+        $sensor | Should -Not -BeNullOrEmpty
 
         $history = $sensor | Get-SensorHistory
 
         if(IsEnglish)
         {
-            $history."Total(volume)" | Should Not BeNullOrEmpty
-            $history."Total(speed)" | Should Not BeNullOrEmpty
+            $history."Total(volume)" | Should -Not -BeNullOrEmpty
+            $history."Total(speed)" | Should -Not -BeNullOrEmpty
         }        
     }
 
@@ -145,8 +145,8 @@ Describe "Get-SensorHistory_IT" -Tag @("PowerShell", "IntegrationTest") {
                 }
             }
 
-            $firstDiff | Should Be 30
-            $secondDiff | Should Be 30
+            $firstDiff | Should -Be 30
+            $secondDiff | Should -Be 30
         }
 
         It "uses a specific average" {
@@ -158,8 +158,8 @@ Describe "Get-SensorHistory_IT" -Tag @("PowerShell", "IntegrationTest") {
             $second = $history[1].DateTime
             $third = $history[2].DateTime
 
-            [int]($first - $second).TotalSeconds | Should Be 300
-            [int]($second - $third).TotalSeconds | Should Be 300
+            [int]($first - $second).TotalSeconds | Should -Be 300
+            [int]($second - $third).TotalSeconds | Should -Be 300
         }
 
         It "uses a non-standard average" {
@@ -171,8 +171,8 @@ Describe "Get-SensorHistory_IT" -Tag @("PowerShell", "IntegrationTest") {
             $second = $history[1].DateTime
             $third = $history[2].DateTime
 
-            [int]($first - $second).TotalSeconds | Should Be 320
-            [int]($second - $third).TotalSeconds | Should Be 320
+            [int]($first - $second).TotalSeconds | Should -Be 320
+            [int]($second - $third).TotalSeconds | Should -Be 320
         }
 
     }
@@ -184,7 +184,7 @@ Describe "Get-SensorHistory_IT" -Tag @("PowerShell", "IntegrationTest") {
 
             $history = $sensor | Get-SensorHistory -Count 10
 
-            $history.Count | Should Be 10
+            $history.Count | Should -Be 10
         }
 
         It "retrieves the specified number of records when an end date and a count is specified" {
@@ -193,20 +193,20 @@ Describe "Get-SensorHistory_IT" -Tag @("PowerShell", "IntegrationTest") {
 
             $history = $sensor | Get-SensorHistory -EndDate (Get-Date).AddDays(-1) -Count 600
 
-            $history.Count | Should Be 600
+            $history.Count | Should -Be 600
         }
 
         It "streams the specified number of records when a large count larger than one page is specified" {
 
             $history = Get-SensorHistory -Id (Settings UpSensor) -EndDate (Get-Date).AddDays(-7) -Count 620
 
-            $history.Count | Should Be 620
+            $history.Count | Should -Be 620
         }
 
         It "streams the specified number of records when a large count smaller than one page is specified" {
             $history = Get-SensorHistory -Id (Settings UpSensor) -EndDate (Get-Date).AddDays(-7) -Count 300
 
-            $history.Count | Should Be 300
+            $history.Count | Should -Be 300
         }
 
         It "adjusts the missing end date when a large count is specified" {
@@ -215,7 +215,7 @@ Describe "Get-SensorHistory_IT" -Tag @("PowerShell", "IntegrationTest") {
 
             $history = $sensor | Get-SensorHistory -Count 240
 
-            $history.Count | Should Be 240
+            $history.Count | Should -Be 240
         }
         
         It "retrieves the specified number of reocords when a small count is specified" {
@@ -224,7 +224,7 @@ Describe "Get-SensorHistory_IT" -Tag @("PowerShell", "IntegrationTest") {
 
             $history = $sensor | Get-SensorHistory -Count 40
 
-            $history.Count | Should Be 40
+            $history.Count | Should -Be 40
         }
 
         It "doesn't adjust the specified end date when a large count is specified" {
@@ -234,12 +234,12 @@ Describe "Get-SensorHistory_IT" -Tag @("PowerShell", "IntegrationTest") {
             
             $sensor = Get-Sensor -Id (Settings UpSensor)
 
-            $sensor.Interval | Should Be "00:00:30"
+            $sensor.Interval | Should -Be "00:00:30"
 
             $history = $sensor | Get-SensorHistory -Count 240 -StartDate $start -EndDate $end
 
-            $history.Count | Should BeLessThan 180
-            $history.Count | Should BeGreaterThan 110
+            $history.Count | Should -BeLessThan 180
+            $history.Count | Should -BeGreaterThan 110
         }
         
         It "adjusts the end date based on an interval of 24 hours" {
@@ -250,17 +250,17 @@ Describe "Get-SensorHistory_IT" -Tag @("PowerShell", "IntegrationTest") {
 
             try
             {
-                $sensor.Interval | Should Not Be "1.00:00:00"
+                $sensor.Interval | Should -Not -Be "1.00:00:00"
 
                 $sensor | Set-ObjectProperty Interval "1.00:00:00"
 
                 $sensor = Get-Sensor -Id (Settings UpSensor)
 
-                $sensor.Interval | Should Be "1.00:00:00"
+                $sensor.Interval | Should -Be "1.00:00:00"
 
                 $history = $sensor | Get-SensorHistory -Count 20
 
-                $history.Count | Should Be 20
+                $history.Count | Should -Be 20
             }
             finally
             {
@@ -272,7 +272,7 @@ Describe "Get-SensorHistory_IT" -Tag @("PowerShell", "IntegrationTest") {
 
             $history = Get-SensorHistory -Id (Settings UpSensor) -Count 70
 
-            $history.Count | Should Be 70
+            $history.Count | Should -Be 70
         }
         
         It "adjusts the missing end date when an average is specified" {
@@ -281,14 +281,14 @@ Describe "Get-SensorHistory_IT" -Tag @("PowerShell", "IntegrationTest") {
 
             $history = $sensor | Get-SensorHistory -Count 80 -Average 300
 
-            $history.Count | Should Be 80
+            $history.Count | Should -Be 80
         }
 
         It "doesn't resolve the sensor ID when an average is specified" {
 
             $history = Get-SensorHistory -Id (Settings UpSensor) -Count 70 -Average 300
 
-            $history.Count | Should Be 70
+            $history.Count | Should -Be 70
         }
     }
 
@@ -296,39 +296,39 @@ Describe "Get-SensorHistory_IT" -Tag @("PowerShell", "IntegrationTest") {
         It "doesn't include downtime by default" {
             $record = Get-Sensor -Id (Settings UpSensor) | Get-SensorHistory | Select -First 1
 
-            $record | Should Not BeNullOrEmpty
+            $record | Should -Not -BeNullOrEmpty
 
             $downtime = $record.PSObject.Properties | where Name -EQ "Downtime"
 
-            $downtime | Should BeNullOrEmpty
+            $downtime | Should -BeNullOrEmpty
         }
 
         It "includes downtime when -Downtime is specified" {
             $record = Get-Sensor -Id (Settings UpSensor) | Get-SensorHistory -Downtime | Select -First 1
 
-            $record | Should Not BeNullOrEmpty
+            $record | Should -Not -BeNullOrEmpty
 
             $downtime = $record.PSObject.Properties | where Name -EQ "Downtime"
 
-            $downtime | Should Not BeNullOrEmpty
-            $downtime.Name | Should Be "Downtime"
+            $downtime | Should -Not -BeNullOrEmpty
+            $downtime.Name | Should -Be "Downtime"
         }
 
         It "includes downtime when an average is specified" {
             $record = Get-Sensor -Id (Settings UpSensor) | Get-SensorHistory -Average 60 | Select -First 1
 
-            $record | Should Not BeNullOrEmpty
+            $record | Should -Not -BeNullOrEmpty
 
             $downtime = $record.PSObject.Properties | where Name -EQ "Downtime"
 
-            $downtime | Should Not BeNullOrEmpty
-            $downtime.Name | Should Be "Downtime"
+            $downtime | Should -Not -BeNullOrEmpty
+            $downtime.Name | Should -Be "Downtime"
         }
 
         It "throws specifying -Downtime with an average of 0" {
             $sensor = Get-Sensor -Id (Settings UpSensor)
 
-            { $sensor | Get-SensorHistory -Average 0 -Downtime } | Should Throw "Cannot retrieve downtime with an Average of 0"
+            { $sensor | Get-SensorHistory -Average 0 -Downtime } | Should -Throw "Cannot retrieve downtime with an Average of 0"
         }
 
         It "retrieves as a readonly user" {
@@ -342,7 +342,7 @@ Describe "Get-SensorHistory_IT" -Tag @("PowerShell", "IntegrationTest") {
 
     Context "Report" {
         It "retrieves a report for all sensors" {
-            Get-Sensor | Get-SensorHistory -Report -EndDate (Get-Date).AddDays(-7) | Should Not BeNullOrEmpty
+            Get-Sensor | Get-SensorHistory -Report -EndDate (Get-Date).AddDays(-7) | Should -Not -BeNullOrEmpty
         }
     }
 }

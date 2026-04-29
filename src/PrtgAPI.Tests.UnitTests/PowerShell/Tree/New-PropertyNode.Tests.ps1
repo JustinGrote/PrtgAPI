@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
 
 Describe "New-PropertyNode" -Tag @("PowerShell", "UnitTest") {
     
@@ -11,8 +11,8 @@ Describe "New-PropertyNode" -Tag @("PowerShell", "UnitTest") {
 
             $node = New-PropertyNode $pair
 
-            $node.Type | Should Be Property
-            $pair | Should Be $pair
+            $node.Type | Should -Be Property
+            $pair | Should -Be $pair
         }
 
         It "pipes a PropertyValuePair" {
@@ -23,8 +23,8 @@ Describe "New-PropertyNode" -Tag @("PowerShell", "UnitTest") {
 
             $node = $pair | New-PropertyNode
 
-            $node.Type | Should Be Property
-            $pair | Should Be $pair
+            $node.Type | Should -Be Property
+            $pair | Should -Be $pair
         }
     }
 
@@ -35,10 +35,10 @@ Describe "New-PropertyNode" -Tag @("PowerShell", "UnitTest") {
 
             $node = Get-Sensor -Count 1 | New-PropertyNode Name potato
 
-            $node.Type | Should Be Property
-            $node.Value.ParentId | Should Be 4000
-            $node.Value.Property | Should Be "Name"
-            $node.Value.Value | Should Be "potato"
+            $node.Type | Should -Be Property
+            $node.Value.ParentId | Should -Be 4000
+            $node.Value.Property | Should -Be "Name"
+            $node.Value.Value | Should -Be "potato"
         }
 
         It "specifies an ObjectProperty" {
@@ -50,8 +50,8 @@ Describe "New-PropertyNode" -Tag @("PowerShell", "UnitTest") {
             $sensor = Run Sensor { Get-Sensor }
 
             $node = $sensor | New-PropertyNode Name
-            $node.Value.Property.Left.GetType().FullName | Should Be "PrtgAPI.ObjectProperty"
-            $node.Value.Property | Should Be "Name"
+            $node.Value.Property.Left.GetType().FullName | Should -Be "PrtgAPI.ObjectProperty"
+            $node.Value.Property | Should -Be "Name"
         }
 
         It "specifies a raw property" {
@@ -64,7 +64,7 @@ Describe "New-PropertyNode" -Tag @("PowerShell", "UnitTest") {
             
             $node = $sensor | New-PropertyNode name_
 
-            $node.Value.Property | Should Be "name_"
+            $node.Value.Property | Should -Be "name_"
         }
 
         It "specifies an ObjectProperty and a value" {
@@ -73,8 +73,8 @@ Describe "New-PropertyNode" -Tag @("PowerShell", "UnitTest") {
 
             $sensor = Get-Sensor -Count 1
             $node = $sensor | New-PropertyNode Name potato
-            $node.Value.Property | Should Be "Name"
-            $node.Value.Value | Should Be "potato"
+            $node.Value.Property | Should -Be "Name"
+            $node.Value.Value | Should -Be "potato"
         }
 
         It "specifies a raw property and a value" {
@@ -82,8 +82,8 @@ Describe "New-PropertyNode" -Tag @("PowerShell", "UnitTest") {
 
             $sensor = Get-Sensor -Count 1
             $node = $sensor | New-PropertyNode name_ potato
-            $node.Value.Property | Should Be "name_"
-            $node.Value.Value | Should Be "potato"
+            $node.Value.Property | Should -Be "name_"
+            $node.Value.Value | Should -Be "potato"
         }
     }
 
@@ -94,8 +94,8 @@ Describe "New-PropertyNode" -Tag @("PowerShell", "UnitTest") {
             )
 
             $node = New-PropertyNode -ID 1001 Name
-            $node.Value.Property.Left.GetType().FullName | Should Be "PrtgAPI.ObjectProperty"
-            $node.Value.Property | Should Be "Name"
+            $node.Value.Property.Left.GetType().FullName | Should -Be "PrtgAPI.ObjectProperty"
+            $node.Value.Property | Should -Be "Name"
         }
 
         It "specifies a raw property" {
@@ -105,23 +105,23 @@ Describe "New-PropertyNode" -Tag @("PowerShell", "UnitTest") {
             
             $node = New-PropertyNode -Id 1001 name_
 
-            $node.Value.Property | Should Be "name_"
+            $node.Value.Property | Should -Be "name_"
         }
 
         It "specifies an ObjectProperty and a value" {
             SetMultiTypeResponse
 
             $node = New-PropertyNode -Id 1001 Name potato
-            $node.Value.Property | Should Be "Name"
-            $node.Value.Value | Should Be "potato"
+            $node.Value.Property | Should -Be "Name"
+            $node.Value.Value | Should -Be "potato"
         }
 
         It "specifies a raw property and a value" {
             SetMultiTypeResponse
 
             $node = New-PropertyNode -Id 1001 name_ potato
-            $node.Value.Property | Should Be "name_"
-            $node.Value.Value | Should Be "potato"
+            $node.Value.Property | Should -Be "name_"
+            $node.Value.Value | Should -Be "potato"
         }
     }
 }

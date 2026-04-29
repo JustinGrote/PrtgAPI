@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
 
 Describe "Set-NotificationTrigger" -Tag @("PowerShell", "UnitTest") {
 
@@ -21,7 +21,7 @@ Describe "Set-NotificationTrigger" -Tag @("PowerShell", "UnitTest") {
 
         $params.Channel = $channel
 
-        { $params | Set-NotificationTrigger } | Should Throw "Channel 'Banana' is not a valid channel"
+        { $params | Set-NotificationTrigger } | Should -Throw "Channel 'Banana' is not a valid channel"
     }
 
     It "throws when setting an enum on a sensor" {
@@ -29,6 +29,6 @@ Describe "Set-NotificationTrigger" -Tag @("PowerShell", "UnitTest") {
 
         $params.Channel = "Primary"
 
-        { $params | Set-NotificationTrigger } | Should Throw "Channel 'Primary' is not a valid value for sensor"
+        { $params | Set-NotificationTrigger } | Should -Throw "Channel 'Primary' is not a valid value for sensor"
     }
 }

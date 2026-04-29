@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\IntegrationTest.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\IntegrationTest.ps1
 
 Describe "Add-NotificationTrigger_IT" -Tag @("PowerShell", "IntegrationTest") {
     Context "Create from scratch" {
@@ -6,7 +6,7 @@ Describe "Add-NotificationTrigger_IT" -Tag @("PowerShell", "IntegrationTest") {
         function AddRemoveTrigger($type) {
 
             $existing = Get-Group -Id (Settings Group) | Get-Trigger -Inherited $false
-            $existing | Should Be $null
+            $existing | Should -Be $null
 
             $param = New-TriggerParameters (Settings Group) $type
             $param | Add-Trigger
@@ -15,10 +15,10 @@ Describe "Add-NotificationTrigger_IT" -Tag @("PowerShell", "IntegrationTest") {
 
             $new | Remove-Trigger -Force
 
-            $new.Count | Should Be 1
+            $new.Count | Should -Be 1
             $afterRemoved = Get-Group -Id (Settings Group) | Get-Trigger -Inherited $false
 
-            $afterRemoved.Count | Should Be 0
+            $afterRemoved.Count | Should -Be 0
         }
 
         It "creates a state trigger"  { AddRemoveTrigger "State" }
@@ -31,8 +31,8 @@ Describe "Add-NotificationTrigger_IT" -Tag @("PowerShell", "IntegrationTest") {
 
             $channel = Get-Sensor -Id (Settings ChannelSensor) | Get-Channel (Settings ChannelName)
 
-            $channel.Count | Should Be 1
-            $channel.Name | Should Be (Settings ChannelName)
+            $channel.Count | Should -Be 1
+            $channel.Name | Should -Be (Settings ChannelName)
 
             $param = New-TriggerParameters (Settings ChannelSensor) Threshold
             $param.Channel = $channel
@@ -40,12 +40,12 @@ Describe "Add-NotificationTrigger_IT" -Tag @("PowerShell", "IntegrationTest") {
             $param | Add-NotificationTrigger
 
             $trigger = Get-Sensor -Id (Settings ChannelSensor) | Get-Trigger -Inherited $false
-            $trigger.Count | Should Be 1
-            $trigger.Channel | Should Be (Settings ChannelName)
+            $trigger.Count | Should -Be 1
+            $trigger.Channel | Should -Be (Settings ChannelName)
 
             $trigger | Remove-Trigger -Force
             $triggersAfterRemoved = Get-Sensor -Id (Settings ChannelSensor) | Get-Trigger -Inherited $false
-            $triggersAfterRemoved.Count | Should Be 0
+            $triggersAfterRemoved.Count | Should -Be 0
         }
 
         It "creates a threshold trigger for a sensor with a Channel ID" {
@@ -56,12 +56,12 @@ Describe "Add-NotificationTrigger_IT" -Tag @("PowerShell", "IntegrationTest") {
             $param | Add-NotificationTrigger
 
             $trigger = Get-Sensor -Id (Settings ChannelSensor) | Get-Trigger -Inherited $false
-            $trigger.Count | Should Be 1
-            $trigger.Channel | Should Be (Settings ChannelName)
+            $trigger.Count | Should -Be 1
+            $trigger.Channel | Should -Be (Settings ChannelName)
 
             $trigger | Remove-Trigger -Force
             $triggersAfterRemoved = Get-Sensor -Id (Settings ChannelSensor) | Get-Trigger -Inherited $false
-            $triggersAfterRemoved.Count | Should Be 0
+            $triggersAfterRemoved.Count | Should -Be 0
         }
 
         It "resolves a new trigger" {
@@ -76,7 +76,7 @@ Describe "Add-NotificationTrigger_IT" -Tag @("PowerShell", "IntegrationTest") {
 
             $diffTrigger = $newTriggers|where {$_.OnNotificationAction.ToString() -EQ "None"}
 
-            $diffTrigger.SubId | Should Be $newTrigger.SubId
+            $diffTrigger.SubId | Should -Be $newTrigger.SubId
         }
 
         It "adds an invalid channel to a sensor" {
@@ -84,21 +84,21 @@ Describe "Add-NotificationTrigger_IT" -Tag @("PowerShell", "IntegrationTest") {
             $param = New-TriggerParameters (Settings ChannelSensor) Threshold
             $param.Channel = 300
 
-            { $param | Add-Trigger } | Should Throw "Channel could not be found"
+            { $param | Add-Trigger } | Should -Throw "Channel could not be found"
         }
 
         It "adds an enum channel to a sensor" {
             $param = New-TriggerParameters (Settings ChannelSensor) Threshold
             $param.Channel = "Total"
 
-            { $param | Add-Trigger } | Should Throw "must refer to a specific Channel"
+            { $param | Add-Trigger } | Should -Throw "must refer to a specific Channel"
         }
 
         It "adds an invalid channel to a device" {
             $param = New-TriggerParameters (Settings Device) Threshold
             $param.Channel = 300
 
-            { $param | Add-Trigger } | Should Throw "must be one of"
+            { $param | Add-Trigger } | Should -Throw "must be one of"
         }
     }
 
@@ -108,18 +108,18 @@ Describe "Add-NotificationTrigger_IT" -Tag @("PowerShell", "IntegrationTest") {
 
             $existing = Get-Device -Id (Settings Device) | Get-Trigger -Type $type -Inherited $false
 
-            $existing.Count | Should Be 1
+            $existing.Count | Should -Be 1
 
             $param = $existing | New-TriggerParameters (Settings Device)
             $param | Add-Trigger
 
             $new = Get-Device -Id (Settings Device) | Get-Trigger -Type $type -Inherited $false
 
-            $new.Count | Should Be 2
+            $new.Count | Should -Be 2
 
             $newOne = @($new|where SubId -NE $existing.SubId)
 
-            $newOne.Count | Should Be 1
+            $newOne.Count | Should -Be 1
             $newOne | Remove-Trigger -Force
         }
 
@@ -143,7 +143,7 @@ Describe "Add-NotificationTrigger_IT" -Tag @("PowerShell", "IntegrationTest") {
             $param | Add-Trigger
 
             $triggers = $sensor | Get-Trigger -Inherited $false
-            $triggers.Count | Should Be 1
+            $triggers.Count | Should -Be 1
 
             # Clone the trigger
 
@@ -151,24 +151,24 @@ Describe "Add-NotificationTrigger_IT" -Tag @("PowerShell", "IntegrationTest") {
             $cloneParams | Add-Trigger
 
             $bothTriggers = $sensor |Get-Trigger -Inherited $false
-            $bothTriggers.Count | Should Be 2
+            $bothTriggers.Count | Should -Be 2
 
             # Remove the triggers
 
             $bothTriggers | Remove-Trigger -Force
 
             $finalTriggers = $sensor | Get-Trigger -Inherited $false
-            $finalTriggers.Count | Should Be 0
+            $finalTriggers.Count | Should -Be 0
         }
 
         It "clones a threshold trigger from a device to a sensor" {
             $trigger = Get-Device -Id (Settings Device) | Get-Trigger -Type Threshold
 
-            $trigger.Count | Should Be 1
+            $trigger.Count | Should -Be 1
 
             $param = $trigger | New-TriggerParameters (Settings ChannelSensor)
 
-            { $param | Add-Trigger } | Should Throw "Channel 'Total' is not a valid value for sensor"
+            { $param | Add-Trigger } | Should -Throw "Channel 'Total' is not a valid value for sensor"
         }
     }
 }

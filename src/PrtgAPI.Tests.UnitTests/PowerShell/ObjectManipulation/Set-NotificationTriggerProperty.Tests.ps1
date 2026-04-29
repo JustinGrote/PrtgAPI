@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
 
 function GetTrigger($type)
 {
@@ -48,8 +48,8 @@ Describe "Set-NotificationTriggerProperty" -Tag @("PowerShell", "UnitTest") {
             $device | Get-Trigger -Type Threshold
         }
 
-        $trigger.Count | Should Be 1
-        $trigger.Inherited | Should Be $false
+        $trigger.Count | Should -Be 1
+        $trigger.Inherited | Should -Be $false
 
         $trigger | Set-NotificationTriggerProperty Channel Primary
     }
@@ -61,9 +61,9 @@ Describe "Set-NotificationTriggerProperty" -Tag @("PowerShell", "UnitTest") {
 
         $trigger = $sensor | Get-Trigger
 
-        $trigger.Inherited | Should Be $false
+        $trigger.Inherited | Should -Be $false
 
-        { $trigger | Set-NotificationTriggerProperty Channel Primary } | Should Throw "Property 'Channel' is not a valid property for a trigger of type 'State'"
+        { $trigger | Set-NotificationTriggerProperty Channel Primary } | Should -Throw "Property 'Channel' is not a valid property for a trigger of type 'State'"
     }
 
     It "processes a state trigger" {
@@ -80,7 +80,7 @@ Describe "Set-NotificationTriggerProperty" -Tag @("PowerShell", "UnitTest") {
     It "processes a channel trigger" {
         
         $trigger = GetTrigger "Change"
-        $trigger.GetType().Name | Should Be "NotificationTrigger"
+        $trigger.GetType().Name | Should -Be "NotificationTrigger"
 
         $trigger | Set-NotificationTriggerProperty OnNotificationAction $null
     }
@@ -100,13 +100,13 @@ Describe "Set-NotificationTriggerProperty" -Tag @("PowerShell", "UnitTest") {
     It "throws trying to edit an inherited trigger" {
         $trigger = Get-Sensor | Get-Trigger
 
-        $trigger.Inherited | Should Be $true
+        $trigger.Inherited | Should -Be $true
 
-        { $trigger | Set-NotificationTriggerProperty Channel Primary } | Should Throw "this trigger is inherited"
+        { $trigger | Set-NotificationTriggerProperty Channel Primary } | Should -Throw "this trigger is inherited"
     }
 
     It "throws when a specified trigger doesn't exist" {
-        { Set-TriggerProperty -ObjectId 1 -SubId 99 OnNotificationAction $null } | Should Throw "Failed to retrieve notification trigger with SubId '99': Notification Trigger does not exist."
+        { Set-TriggerProperty -ObjectId 1 -SubId 99 OnNotificationAction $null } | Should -Throw "Failed to retrieve notification trigger with SubId '99': Notification Trigger does not exist."
     }
 
     It "executes with -WhatIf" {
@@ -120,7 +120,7 @@ Describe "Set-NotificationTriggerProperty" -Tag @("PowerShell", "UnitTest") {
 
         $newTrigger = $trigger | Set-NotificationTriggerProperty Latency 50 -PassThru
 
-        $newTrigger | Should Be $trigger
+        $newTrigger | Should -Be $trigger
     }
 
     It "specifies a NotificationAction wildcard to a normal parameter" {
@@ -153,7 +153,7 @@ Describe "Set-NotificationTriggerProperty" -Tag @("PowerShell", "UnitTest") {
 
         $trigger = Get-Sensor -Count 1 | Get-Trigger | Select -First 1
 
-        { $trigger | Set-TriggerProperty -OnNotificationAction *email* } | Should Throw "Notification Action wildcard '*email*' on parameter 'OnNotificationAction' is ambiguous"
+        { $trigger | Set-TriggerProperty -OnNotificationAction *email* } | Should -Throw "Notification Action wildcard '*email*' on parameter 'OnNotificationAction' is ambiguous"
     }
 
     It "specifies a NotificationAction wildcard to a dynamic parameter" {
@@ -206,7 +206,7 @@ Describe "Set-NotificationTriggerProperty" -Tag @("PowerShell", "UnitTest") {
         $trigger = Get-Sensor -Count 1 | Get-Trigger | Select -First 1
         $trigger.ObjectId = 0
 
-        { $trigger | Set-TriggerProperty OnNotificationAction $true } | Should Throw "Value 'True' could not be assigned to property 'OnNotificationAction'. Expected type: 'PrtgAPI.NotificationAction'. Actual type: 'System.Boolean'."
+        { $trigger | Set-TriggerProperty OnNotificationAction $true } | Should -Throw "Value 'True' could not be assigned to property 'OnNotificationAction'. Expected type: 'PrtgAPI.NotificationAction'. Actual type: 'System.Boolean'."
     }
 
     It "specifies a Channel wildcard to a normal parameter" {
@@ -306,7 +306,7 @@ Describe "Set-NotificationTriggerProperty" -Tag @("PowerShell", "UnitTest") {
 
         SetMultiTypeResponse
 
-        { $trigger | Set-TriggerProperty Channel 2 } | Should Throw "Failed to retrieve channel with ID '2': Channel does not exist."
+        { $trigger | Set-TriggerProperty Channel 2 } | Should -Throw "Failed to retrieve channel with ID '2': Channel does not exist."
     }
 
     It "specifies a standard channel for a sensor" {
@@ -383,7 +383,7 @@ Describe "Set-NotificationTriggerProperty" -Tag @("PowerShell", "UnitTest") {
 
         $trigger = GetTrigger "Volume"
 
-        { $trigger | Set-TriggerProperty Channel $null } | Should Throw "Cannot specify 'null' for parameter 'Channel'"
+        { $trigger | Set-TriggerProperty Channel $null } | Should -Throw "Cannot specify 'null' for parameter 'Channel'"
     }
 
     It "throws when null is assigned to a channel via a dynamic property" {
@@ -391,7 +391,7 @@ Describe "Set-NotificationTriggerProperty" -Tag @("PowerShell", "UnitTest") {
 
         $trigger = GetTrigger "Volume"
 
-        { $trigger | Set-TriggerProperty -Channel $null } | Should Throw "Cannot specify 'null' for parameter 'Channel'"
+        { $trigger | Set-TriggerProperty -Channel $null } | Should -Throw "Cannot specify 'null' for parameter 'Channel'"
     }
 
     It "throws when null is assigned to a non-nullable type via a static property" {
@@ -399,7 +399,7 @@ Describe "Set-NotificationTriggerProperty" -Tag @("PowerShell", "UnitTest") {
 
         $trigger = GetTrigger "Volume"
 
-        { $trigger | Set-TriggerProperty Threshold $null } | Should Throw "Value 'null' could not be assigned to property 'Threshold' of type 'System.Double'. Value cannot be null."
+        { $trigger | Set-TriggerProperty Threshold $null } | Should -Throw "Value 'null' could not be assigned to property 'Threshold' of type 'System.Double'. Value cannot be null."
     }
 
     It "throws when null is assigned to a non-nullable type via a dynamic property" {
@@ -407,6 +407,6 @@ Describe "Set-NotificationTriggerProperty" -Tag @("PowerShell", "UnitTest") {
 
         $trigger = GetTrigger "Volume"
 
-        { $trigger | Set-TriggerProperty -Threshold $null } | Should Throw "Value 'null' could not be assigned to property 'Threshold' of type 'System.Double'. Value cannot be null."
+        { $trigger | Set-TriggerProperty -Threshold $null } | Should -Throw "Value 'null' could not be assigned to property 'Threshold' of type 'System.Double'. Value cannot be null."
     }
 }

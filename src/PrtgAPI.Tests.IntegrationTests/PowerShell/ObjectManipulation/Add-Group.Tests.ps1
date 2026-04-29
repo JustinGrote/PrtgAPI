@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\IntegrationTest.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\IntegrationTest.ps1
 
 Describe "Add-Group_IT" -Tag @("PowerShell", "IntegrationTest") {
     It "adds a new group" {
@@ -12,8 +12,8 @@ Describe "Add-Group_IT" -Tag @("PowerShell", "IntegrationTest") {
         $probe | Add-Group $params
 
         $group = @(Get-Group $name)
-        $group.Count | Should Be 1
-        $group.Name | Should Be $name
+        $group.Count | Should -Be 1
+        $group.Name | Should -Be $name
 
         $group | Remove-Object -Force
     }
@@ -29,11 +29,11 @@ Describe "Add-Group_IT" -Tag @("PowerShell", "IntegrationTest") {
 
         $newGroups = Get-Group
 
-        $newGroups.Count | Should BeGreaterThan $originalGroups.Count
+        $newGroups.Count | Should -BeGreaterThan $originalGroups.Count
 
         $diffGroup = $newGroups|where name -EQ $name
 
-        $diffGroup.Id | Should Be $newGroup.Id
+        $diffGroup.Id | Should -Be $newGroup.Id
 
         $newGroup | Remove-Object -Force
     }

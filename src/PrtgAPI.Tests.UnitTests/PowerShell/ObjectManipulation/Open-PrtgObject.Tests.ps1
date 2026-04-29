@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
 
 Describe "Open-PrtgObject" -Tag @("PowerShell", "UnitTest") {
     $WhatIfPreference = $true
@@ -26,12 +26,12 @@ Describe "Open-PrtgObject" -Tag @("PowerShell", "UnitTest") {
     }
 
     It "throws when an ID doesn't exist" {
-        { Open-PrtgObject -Id 6000 -ErrorAction Stop } | Should Throw "Failed to retrieve object with ID '6000': object does not exist"
+        { Open-PrtgObject -Id 6000 -ErrorAction Stop } | Should -Throw "Failed to retrieve object with ID '6000': object does not exist"
     }
 
     It "throws when an ID does not point to an object with a Url" {
 
-        { Open-PrtgObject -Id 7000 -ErrorAction Stop } | Should Throw "Cannot open object 'Volume IO _Total' of type 'System': object does not have a 'Url' property."
+        { Open-PrtgObject -Id 7000 -ErrorAction Stop } | Should -Throw "Cannot open object 'Volume IO _Total' of type 'System': object does not have a 'Url' property."
     }
 
     $WhatIfPreference = $false

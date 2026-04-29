@@ -7,10 +7,10 @@ function MockInvokePester($action)
 
             $root = Get-SolutionRoot
 
-            $PassThru | Should be $true
-            $OutputFile | Should BeLike (Join-PathEx $root src PrtgAPI.Tests.UnitTests TestResults "PrtgAPI_PowerShell_*.xml")
-            $OutputFormat | Should Be "NUnitXml"
-            $Script | Should Be (Join-PathEx $root src PrtgAPI.Tests.UnitTests PowerShell)
+            $PassThru | Should -be $true
+            $OutputFile | Should -BeLike (Join-PathEx $root src PrtgAPI.Tests.UnitTests TestResults "PrtgAPI_PowerShell_*.xml")
+            $OutputFormat | Should -Be "NUnitXml"
+            $Script | Should -Be (Join-PathEx $root src PrtgAPI.Tests.UnitTests PowerShell)
 
         } -Verifiable
     }
@@ -147,7 +147,7 @@ Describe "Invoke-PrtgTest" -Tag @("PowerShell", "Build") {
 
                 param($TestName)
 
-                $TestName -join "," | Should Be "*dynamic*,*potato*"
+                $TestName -join "," | Should -Be "*dynamic*,*potato*"
             }
         }
 
@@ -215,12 +215,12 @@ Describe "Invoke-PrtgTest" -Tag @("PowerShell", "Build") {
 
                 $root = Get-SolutionRoot
 
-                $PassThru | Should be $true
-                $OutputFile | Should BeLike (Join-PathEx $root src PrtgAPI.Tests.UnitTests TestResults "PrtgAPI_PowerShell_*.xml")
-                $OutputFormat | Should Be "NUnitXml"
-                $Script | Should Be (Join-PathEx $root src PrtgAPI.Tests.UnitTests PowerShell)
-                $Tag[0] | Should Be "UnitTest"
-                $Tag[1] | Should Be "IntegrationTest"
+                $PassThru | Should -be $true
+                $OutputFile | Should -BeLike (Join-PathEx $root src PrtgAPI.Tests.UnitTests TestResults "PrtgAPI_PowerShell_*.xml")
+                $OutputFormat | Should -Be "NUnitXml"
+                $Script | Should -Be (Join-PathEx $root src PrtgAPI.Tests.UnitTests PowerShell)
+                $Tag[0] | Should -Be "UnitTest"
+                $Tag[1] | Should -Be "IntegrationTest"
 
             } -Verifiable
         }

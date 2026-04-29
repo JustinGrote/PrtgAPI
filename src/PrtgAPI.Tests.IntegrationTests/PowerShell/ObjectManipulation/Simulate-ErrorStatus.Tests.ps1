@@ -1,10 +1,10 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\IntegrationTest.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\IntegrationTest.ps1
 
 Describe "Simulate-ErrorStatus_IT" -Tag @("PowerShell", "IntegrationTest") {
     It "simulates an error status" {
         $sensor = Get-Sensor -Id (Settings UpSensor)
 
-        $sensor.Status | Should Be Up
+        $sensor.Status | Should -Be Up
 
         LogTestDetail "Simulating error status"
         $sensor | Simulate-ErrorStatus
@@ -17,26 +17,26 @@ Describe "Simulate-ErrorStatus_IT" -Tag @("PowerShell", "IntegrationTest") {
             $redSensor = WaitForStatus $sensor Down 120
         }
 
-        $redSensor.Status | Should Be Down
+        $redSensor.Status | Should -Be Down
 
         if(IsEnglish)
         {
-            $redSensor.Message | Should BeLike "*simulated error*"
+            $redSensor.Message | Should -BeLike "*simulated error*"
         }
 
         LogTestDetail "Resuming object"
         $redSensor | Resume-Object
 
         $finalSensor = WaitForStatus $redSensor Up 60
-        $finalSensor.Status | Should Be Up
+        $finalSensor.Status | Should -Be Up
     }
 
     It "can simulate errors on multiple in a single request" {
         $ids = ((Settings UpSensor),(Settings ChannelSensor))
 
         $sensors = Get-Sensor -Id $ids
-        $sensors[0].Status | Should Be Up
-        $sensors[1].Status | Should Be Up
+        $sensors[0].Status | Should -Be Up
+        $sensors[1].Status | Should -Be Up
 
         LogTestDetail "Simulating error status on multiple sensors"
         $sensors | Simulate-ErrorStatus
@@ -49,13 +49,13 @@ Describe "Simulate-ErrorStatus_IT" -Tag @("PowerShell", "IntegrationTest") {
             $redSensors = WaitForStatus $sensors Down 120
         }
 
-        $redSensors[0].Status | Should Be Down
-        $redSensors[1].Status | Should Be Down
+        $redSensors[0].Status | Should -Be Down
+        $redSensors[1].Status | Should -Be Down
         
         if(IsEnglish)
         {
-            $redSensors[0].Message | Should BeLike "*simulated error*"
-            $redSensors[1].Message | Should BeLike "*simulated error*"
+            $redSensors[0].Message | Should -BeLike "*simulated error*"
+            $redSensors[1].Message | Should -BeLike "*simulated error*"
         }
 
         LogTestDetail "Resuming object"
@@ -77,7 +77,7 @@ Describe "Simulate-ErrorStatus_IT" -Tag @("PowerShell", "IntegrationTest") {
             $finalSensors = Get-Sensor -Id $ids
         }
 
-        $finalSensors[0].Status | Should Be Up
-        $finalSensors[1].Status | Should Be Up
+        $finalSensors[0].Status | Should -Be Up
+        $finalSensors[1].Status | Should -Be Up
     }
 }

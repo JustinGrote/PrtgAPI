@@ -1,12 +1,37 @@
-﻿#region Initialization
+#region Initialization
 
 . $PSScriptRoot\Init.ps1
 
 function Describe($name, $script) {
+    $canRun = $true
 
-    Pester\Describe $name {
-        BeforeAll { Startup $name.Substring($name.indexof("-") + 1) }
-        AfterAll { Shutdown }
+    try
+    {
+        . $PSScriptRoot\Init.ps1
+        InitializeUnitTestModules
+    }
+    catch
+    {
+        $canRun = $false
+    }
+
+    Pester\Describe $name -Skip:(-not $canRun) {
+
+        if(-not $canRun)
+        {
+            return
+        }
+
+        BeforeAll {
+            . $PSScriptRoot\Init.ps1
+            $currentName = $Pester.CurrentBlock.Name
+            Startup $currentName.Substring($currentName.indexof("-") + 1)
+        }
+
+        AfterAll {
+            . $PSScriptRoot\Init.ps1
+            Shutdown
+        }
 
         & $script
     }
@@ -58,7 +83,7 @@ function Run($objectType, $script)
     {
         $global:tester.SetPrtgSessionState([PrtgAPI.PrtgClient]$oldClient)
         $global:tester = $oldTester
-    }    
+    }
 
     return $result
 }
@@ -217,7 +242,7 @@ function SetAddressValidatorResponse($strArr, $exactMatch = $false)
             $arr = $strArr
         }
     }
-    
+
     SetResponseAndClientWithArguments "AddressValidatorResponse" @($arr, $exactMatch)
 }
 
@@ -345,18 +370,13 @@ function Invoke-Interactive
 
     if($result -eq $ExceptionMessage)
     {
-        $result | Should Be $ExceptionMessage
+        $result | Should -Be $ExceptionMessage
         return
-    }
-    else
-    {
-        if($AlternateExceptionMessage)
-        {
-            foreach($message in $AlternateExceptionMessage)
-            {
-                if($result -like $message)
-                {
-                    $result | Should BeLike $message
+    } else {
+        if ($AlternateExceptionMessage) {
+            foreach ($message in $AlternateExceptionMessage) {
+                if ($result -like $message) {
+                    $result | Should -BeLike $message
                     return
                 }
             }

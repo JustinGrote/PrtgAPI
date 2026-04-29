@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\UnitTest.ps1
+. $PSScriptRoot\UnitTest.ps1
 
 function Clear-Progress {
 
@@ -7,23 +7,44 @@ function Clear-Progress {
     if($val -ne $null)
     {
         $val.Clear()
-    }    
+    }
 }
 
 function Describe($name, $script)
 {
-    Pester\Describe $name {
+    $canRun = $true
+
+    try
+    {
+        . $PSScriptRoot\Init.ps1
+        InitializeUnitTestModules
+    }
+    catch
+    {
+        $canRun = $false
+    }
+
+    Pester\Describe $name -Skip:(-not $canRun) {
+
+        if(-not $canRun)
+        {
+            return
+        }
 
         BeforeAll {
+            . $PSScriptRoot\Init.ps1
             InitializeUnitTestModules
-            InitializeClient
+            & ${function:InitializeClient}
         }
+
         AfterEach {
             [PrtgAPI.Tests.UnitTests.Support.Progress.ProgressQueue]::RecordQueue.Clear()
             Clear-Progress
         }
+
         AfterAll {
-            UninitializeClient
+            . $PSScriptRoot\Init.ps1
+            & ${function:UninitializeClient}
         }
 
         & $script
@@ -41,19 +62,19 @@ function Assert-NoProgress($expr) {
         Invoke-Expression $expr
     }
 
-    { Get-Progress } | Should Throw "Queue empty"
+    { Get-Progress } | Should -Throw "Queue empty"
 }
 
 function Validate($list)    {
 
     foreach($progress in $list)
     {
-        Get-Progress | Should Be $progress
+        Get-Progress | Should -Be $progress
     }
 
     try
     {
-        { $result = Get-Progress; throw "`n`nProgress Queue contains more records than expected. Next record is:`n`n$result`n`n" } | Should Throw "Queue empty"
+        { $result = Get-Progress; throw "`n`nProgress Queue contains more records than expected. Next record is:`n`n$result`n`n" } | Should -Throw "Queue empty"
     }
     catch [exception]
     {

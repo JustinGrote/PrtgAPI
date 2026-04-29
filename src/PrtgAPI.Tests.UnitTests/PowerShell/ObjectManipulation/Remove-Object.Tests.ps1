@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
 
 Describe "Remove-Object" -Tag @("PowerShell", "UnitTest") {
     
@@ -42,7 +42,7 @@ Describe "Remove-Object" -Tag @("PowerShell", "UnitTest") {
 
         $newSensor = $sensor | Remove-Object -Force -PassThru -Batch:$false
 
-        $newSensor | Should Be $sensor
+        $newSensor | Should -Be $sensor
     }
 
     It "passes through with -Batch:`$true" {
@@ -52,7 +52,7 @@ Describe "Remove-Object" -Tag @("PowerShell", "UnitTest") {
 
         $newSensor = $sensor | Remove-Object -Force -PassThru -Batch:$true
 
-        $newSensor | Should Be $sensor
+        $newSensor | Should -Be $sensor
     }
 
     It "specifies an ID" {

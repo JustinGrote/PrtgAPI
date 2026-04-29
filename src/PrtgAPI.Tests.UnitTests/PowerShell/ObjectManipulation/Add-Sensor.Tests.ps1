@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
 
 Describe "Add-Sensor" -Tag @("PowerShell", "UnitTest") {
 
@@ -17,7 +17,7 @@ Describe "Add-Sensor" -Tag @("PowerShell", "UnitTest") {
 
         $device = Run Device { Get-Device }
 
-        { $device | Add-Sensor $params -Resolve:$false } | Should Throw "'ExeFile' requires a value"
+        { $device | Add-Sensor $params -Resolve:$false } | Should -Throw "'ExeFile' requires a value"
     }
 
     It "executes with -WhatIf" {
@@ -37,7 +37,7 @@ Describe "Add-Sensor" -Tag @("PowerShell", "UnitTest") {
 
         $sensor = $device | Add-Sensor $params -Resolve
 
-        $sensor.Id | Should Be 1002,1003
+        $sensor.Id | Should -Be 1002,1003
     }
 
     function GetItemSubset($skip, $select)
@@ -64,7 +64,7 @@ Describe "Add-Sensor" -Tag @("PowerShell", "UnitTest") {
 
         $services = $device | Get-SensorTarget WmiService
 
-        $services.Count | Should BeGreaterThan 30
+        $services.Count | Should -BeGreaterThan 30
 
         $params = New-SensorParameters WmiService $services
 
@@ -101,7 +101,7 @@ Describe "Add-Sensor" -Tag @("PowerShell", "UnitTest") {
 
         $services = @($device | Get-SensorTarget WmiService | Select -First 1)
 
-        $services.Count | Should Be 1
+        $services.Count | Should -Be 1
 
         $params = New-SensorParameters WmiService $services
 
@@ -121,7 +121,7 @@ Describe "Add-Sensor" -Tag @("PowerShell", "UnitTest") {
     }
 
     It "throws piping sensors not created by Get-SensorTarget" {
-        { New-SensorParameters ExeXml | Add-Sensor } | Should Throw "Only sensor parameters created by Get-SensorTarget can be piped"
+        { New-SensorParameters ExeXml | Add-Sensor } | Should -Throw "Only sensor parameters created by Get-SensorTarget can be piped"
     }
 
     It "ignores sensor query targets" {
@@ -183,6 +183,6 @@ Describe "Add-Sensor" -Tag @("PowerShell", "UnitTest") {
 
         $device = Run Device { Get-Device }
 
-        { $device | Add-Sensor $params -Resolve:$false } | Should Throw "Failed to process request for sensor type 'oracletablespace': sensor query target parameters did not include mandatory parameter 'database_'."
+        { $device | Add-Sensor $params -Resolve:$false } | Should -Throw "Failed to process request for sensor type 'oracletablespace': sensor query target parameters did not include mandatory parameter 'database_'."
     }
 }

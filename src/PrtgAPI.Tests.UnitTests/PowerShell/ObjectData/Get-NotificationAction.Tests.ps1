@@ -1,10 +1,10 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\UnitTest.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\UnitTest.ps1
 
 Describe "Get-NotificationAction" -Tag @("PowerShell", "UnitTest") {
 
     It "can deserialize" {
         $actions = Get-NotificationAction
-        $actions.Count | Should Be 1
+        $actions.Count | Should -Be 1
     }
 
     It "can filter by Id" {
@@ -45,7 +45,7 @@ Describe "Get-NotificationAction" -Tag @("PowerShell", "UnitTest") {
 
         WithItems ($obj1, $obj2) {
             $actions = Get-NotificationAction -Tags *apple*,"peaches"
-            $actions.Count | Should Be 1
+            $actions.Count | Should -Be 1
         }
     }
 
@@ -63,7 +63,7 @@ Describe "Get-NotificationAction" -Tag @("PowerShell", "UnitTest") {
 
         WithItems ($obj1, $obj2, $obj3) {
             $actions = Get-NotificationAction -Tag *apple*
-            $actions.Count | Should Be 2
+            $actions.Count | Should -Be 2
         }
     }
 }

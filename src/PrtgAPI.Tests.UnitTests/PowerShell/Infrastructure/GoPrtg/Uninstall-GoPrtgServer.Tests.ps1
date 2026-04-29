@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\..\Support\PowerShell\GoPrtg.ps1
+. $PSScriptRoot\..\..\..\Support\PowerShell\GoPrtg.ps1
 
 Describe "Uninstall-GoPrtgServer" -Tag @("PowerShell", "UnitTest") {
 
@@ -22,7 +22,7 @@ Describe "Uninstall-GoPrtgServer" -Tag @("PowerShell", "UnitTest") {
 
         $content = gc $Profile -Raw
 
-        $content | Should BeNullOrEmpty
+        $content | Should -BeNullOrEmpty
     }
 
     It "uninstalls correctly in profile with single existing line" {
@@ -32,7 +32,7 @@ Describe "Uninstall-GoPrtgServer" -Tag @("PowerShell", "UnitTest") {
 
         $content = gc $Profile -Raw
 
-        $content | Should Be "Write-Host `"hello`"$nl"
+        $content | Should -Be "Write-Host `"hello`"$nl"
     }
 
     It "uninstalls correctly in profile with multiple existing lines" {
@@ -42,7 +42,7 @@ Describe "Uninstall-GoPrtgServer" -Tag @("PowerShell", "UnitTest") {
 
         $content = gc $Profile -Raw
 
-        $content | Should Be "Write-Host `"hello`"$($nl)Write-Host `"`what what?`"$nl"
+        $content | Should -Be "Write-Host `"hello`"$($nl)Write-Host `"`what what?`"$nl"
     }
 
     It "uninstalls correctly in profile between lines" {
@@ -54,7 +54,7 @@ Describe "Uninstall-GoPrtgServer" -Tag @("PowerShell", "UnitTest") {
 
         $content = gc $Profile -Raw
 
-        $content | Should Be "Write-Host `"hello`"$($nl)Write-Host `"`what what?`"$($nl)Write-Host `"test1`"$nl"
+        $content | Should -Be "Write-Host `"hello`"$($nl)Write-Host `"`what what?`"$($nl)Write-Host `"test1`"$nl"
     }
 
     It "uninstalls single entry when server specified" {
@@ -72,7 +72,7 @@ Describe "Uninstall-GoPrtgServer" -Tag @("PowerShell", "UnitTest") {
 
         $expected = $expected.Replace("``", "````")
 
-        $content | Should BeLike $expected
+        $content | Should -BeLike $expected
     }
 
     It "uninstalls matching entries when wildcard server specified" {
@@ -106,7 +106,7 @@ Describe "Uninstall-GoPrtgServer" -Tag @("PowerShell", "UnitTest") {
 
         $expected = $expected.Replace("``", "````")
 
-        $content | Should BeLike $expected
+        $content | Should -BeLike $expected
 
         Uninstall-GoPrtgServer prtg.*
 
@@ -120,7 +120,7 @@ Describe "Uninstall-GoPrtgServer" -Tag @("PowerShell", "UnitTest") {
 
         $finalExpected = $finalExpected.Replace("``", "````")
 
-        $finalContent | Should BeLike $finalExpected
+        $finalContent | Should -BeLike $finalExpected
     }
 
     It "uninstalls everything when last wildcard server specified" {
@@ -130,7 +130,7 @@ Describe "Uninstall-GoPrtgServer" -Tag @("PowerShell", "UnitTest") {
 
         $contents = gc $Profile -Raw
 
-        $contents | Should BeNullOrEmpty
+        $contents | Should -BeNullOrEmpty
     }
     
     It "uninstalls when alias specified" {
@@ -148,7 +148,7 @@ Describe "Uninstall-GoPrtgServer" -Tag @("PowerShell", "UnitTest") {
 
         $expected = $expected.Replace("``", "````")
 
-        $contents | Should BeLike $expected
+        $contents | Should -BeLike $expected
     }
 
     It "uninstalls all when -Force specified" {
@@ -159,18 +159,18 @@ Describe "Uninstall-GoPrtgServer" -Tag @("PowerShell", "UnitTest") {
 
         $contents = gc $Profile -Raw
 
-        $contents | Should BeNullOrEmpty
+        $contents | Should -BeNullOrEmpty
     }
 
     It "removes getServers function from global scope" {
         Install-GoPrtgServer
 
         $servers = __goPrtgGetServers
-        $servers | Should Not BeNullOrEmpty
+        $servers | Should -Not -BeNullOrEmpty
 
         Uninstall-GoPrtgServer
 
-        { __goPrtgGetServers } | Should Throw "The term '__goPrtgGetServers' is not recognized"
+        { __goPrtgGetServers } | Should -Throw "The term '__goPrtgGetServers' is not recognized"
     }
 
     It "removes the global function" {
@@ -178,7 +178,7 @@ Describe "Uninstall-GoPrtgServer" -Tag @("PowerShell", "UnitTest") {
         
         Uninstall-GoPrtgServer
 
-        { __goPrtgGetServers } | Should Throw "The term '__goPrtgGetServers' is not recognized"
+        { __goPrtgGetServers } | Should -Throw "The term '__goPrtgGetServers' is not recognized"
     }
 
     It "updates the global function" {
@@ -197,28 +197,28 @@ Describe "Uninstall-GoPrtgServer" -Tag @("PowerShell", "UnitTest") {
 
         Uninstall-GoPrtgServer prtg.example.com
 
-        Get-GoPrtgServer | Should Be "@{[!]=[ ]; Server=prtg.example2.com; Alias=; UserName=username2}"
+        Get-GoPrtgServer | Should -Be "@{[!]=[ ]; Server=prtg.example2.com; Alias=; UserName=username2}"
     }
 
     It "throws when server specified that doesn't exist" {
         InstallMultipleInProfile
 
-        { Uninstall-GoPrtgServer banana } | Should Throw "'banana' is not a valid server name or alias. To view all saved servers, run Get-GoPrtgServer"
+        { Uninstall-GoPrtgServer banana } | Should -Throw "'banana' is not a valid server name or alias. To view all saved servers, run Get-GoPrtgServer"
     }
 
     It "throws uninstalling when not installed" {
         New-Item -Type File $Profile -Force
-        { Uninstall-GoPrtgServer } | Should Throw "No GoPrtg servers are installed. To install a GoPrtg server, run Install-GoPrtgServer"
+        { Uninstall-GoPrtgServer } | Should -Throw "No GoPrtg servers are installed. To install a GoPrtg server, run Install-GoPrtgServer"
     }
 
     It "throws uninstalling when profile doesn't exist" {
-        { Uninstall-GoPrtgServer } | Should Throw "No GoPrtg servers are installed. To install a GoPrtg server, run Install-GoPrtgServer."
+        { Uninstall-GoPrtgServer } | Should -Throw "No GoPrtg servers are installed. To install a GoPrtg server, run Install-GoPrtgServer."
     }
 
     It "throws uninstalling with multiple entries and server not specified" {
         InstallMultipleInProfile
 
-        { Uninstall-GoPrtgServer } | Should Throw "Cannot remove servers; server name or alias must be specified when multiple entries exist. To remove all servers, specify -Force"
+        { Uninstall-GoPrtgServer } | Should -Throw "Cannot remove servers; server name or alias must be specified when multiple entries exist. To remove all servers, specify -Force"
     }
 
     It "throws when getServers function is missing" {
@@ -226,7 +226,7 @@ Describe "Uninstall-GoPrtgServer" -Tag @("PowerShell", "UnitTest") {
 
         Remove-Item Function:\__goPrtgGetServers
 
-        { Uninstall-GoPrtgServer } | Should Throw "GoPrtg header and footer are present in PowerShell profile, however __goPrtgGetServers function was not loaded into the current session. Please verify the function has not been corrupted or remove the GoPrtg header and footer and re-run Install-GoPrtgServer."
+        { Uninstall-GoPrtgServer } | Should -Throw "GoPrtg header and footer are present in PowerShell profile, however __goPrtgGetServers function was not loaded into the current session. Please verify the function has not been corrupted or remove the GoPrtg header and footer and re-run Install-GoPrtgServer."
     }
 
     It "throws when GoPrtg start block is missing" {
@@ -238,7 +238,7 @@ Describe "Uninstall-GoPrtgServer" -Tag @("PowerShell", "UnitTest") {
 
         Set-Content $Profile $newContents
 
-        { Uninstall-GoPrtgServer } | Should Throw "GoPrtg Servers start line '########################### Start GoPrtg Servers ###########################' has been removed from PowerShell profile. Please reinstate line or remove all lines pertaining to GoPrtg from your profile."
+        { Uninstall-GoPrtgServer } | Should -Throw "GoPrtg Servers start line '########################### Start GoPrtg Servers ###########################' has been removed from PowerShell profile. Please reinstate line or remove all lines pertaining to GoPrtg from your profile."
     }
 
     It "throws when GoPrtg end block is missing" {
@@ -250,12 +250,12 @@ Describe "Uninstall-GoPrtgServer" -Tag @("PowerShell", "UnitTest") {
 
         Set-Content $Profile $newContents
 
-        { Uninstall-GoPrtgServer } | Should Throw "GoPrtg Servers end line '############################ End GoPrtg Servers ############################' has been removed from PowerShell profile. Please reinstate line or remove all lines pertaining to GoPrtg from your profile."
+        { Uninstall-GoPrtgServer } | Should -Throw "GoPrtg Servers end line '############################ End GoPrtg Servers ############################' has been removed from PowerShell profile. Please reinstate line or remove all lines pertaining to GoPrtg from your profile."
     }
     
     It "throws when both the header and footer have been removed" {
         InstallInProfileFunctionWithoutHeaderFooter
 
-        { Uninstall-GoPrtgServer } | Should Throw "GoPrtg Servers start line '########################### Start GoPrtg Servers ###########################' and end line"
+        { Uninstall-GoPrtgServer } | Should -Throw "GoPrtg Servers start line '########################### Start GoPrtg Servers ###########################' and end line"
     }
 }

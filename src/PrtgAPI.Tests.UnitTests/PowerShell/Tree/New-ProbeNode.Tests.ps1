@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
 
 Describe "New-ProbeNode" -Tag @("PowerShell", "UnitTest") {
     It "creates a new node from a Probe" {
@@ -11,8 +11,8 @@ Describe "New-ProbeNode" -Tag @("PowerShell", "UnitTest") {
 
         $node = New-ProbeNode $device
 
-        $node.Type | Should Be Probe
-        $node.Value | Should Be $device
+        $node.Type | Should -Be Probe
+        $node.Value | Should -Be $device
     }
 
     It "pipes in an existing Probe" {
@@ -25,8 +25,8 @@ Describe "New-ProbeNode" -Tag @("PowerShell", "UnitTest") {
 
         $node = $device | New-ProbeNode
 
-        $node.Type | Should Be Probe
-        $node.Value | Should Be $device
+        $node.Type | Should -Be Probe
+        $node.Value | Should -Be $device
     }
 
     It "filters by name" {
@@ -35,7 +35,7 @@ Describe "New-ProbeNode" -Tag @("PowerShell", "UnitTest") {
         )
 
         $node = New-ProbeNode *127*
-        $node.Count | Should Be 2
+        $node.Count | Should -Be 2
     }
 
     It "creates a tree from a ScriptBlock with a value" {
@@ -49,9 +49,9 @@ Describe "New-ProbeNode" -Tag @("PowerShell", "UnitTest") {
             New-TriggerNode -ObjectId 1000 -Type Change
         }
 
-        $node.Type | Should Be Probe
-        $node.Children.Count | Should Be 1
-        $node.Children[0].Value.ObjectId | Should Be 1000
+        $node.Type | Should -Be Probe
+        $node.Children.Count | Should -Be 1
+        $node.Children[0].Value.ObjectId | Should -Be 1000
     }
 
     It "creates a tree from a ScriptBlock with an ID" {
@@ -63,9 +63,9 @@ Describe "New-ProbeNode" -Tag @("PowerShell", "UnitTest") {
             TriggerNode -ObjectId 1000 -Type Change
         }
 
-        $node.Type | Should Be Probe
-        $node.Children.Count | Should Be 1
-        $node.Children[0].Value.ObjectId | Should Be 1000
+        $node.Type | Should -Be Probe
+        $node.Children.Count | Should -Be 1
+        $node.Children[0].Value.ObjectId | Should -Be 1000
     }
 
     It "creates a tree from a ScriptBlock with a name" {
@@ -77,9 +77,9 @@ Describe "New-ProbeNode" -Tag @("PowerShell", "UnitTest") {
             TriggerNode -ObjectId 1000 -Type Change
         }
 
-        $node.Type | Should Be Probe
-        $node.Children.Count | Should Be 1
-        $node.Children[0].Value.ObjectId | Should Be 1000
+        $node.Type | Should -Be Probe
+        $node.Children.Count | Should -Be 1
+        $node.Children[0].Value.ObjectId | Should -Be 1000
     }
 
     It "specifies multiple IDs" {
@@ -88,7 +88,7 @@ Describe "New-ProbeNode" -Tag @("PowerShell", "UnitTest") {
         )
 
         $nodes = New-ProbeNode -Id 1000,1001
-        $nodes.Count | Should Be 2
+        $nodes.Count | Should -Be 2
     }
 
     It "pipes in multiple child nodes with value" {
@@ -102,10 +102,10 @@ Describe "New-ProbeNode" -Tag @("PowerShell", "UnitTest") {
         $device = Get-Probe -Count 1
 
         $node = $trigger1,$trigger2 | New-ProbeNode $device
-        $node.Type | Should Be Probe
-        $node.Children.Count | Should Be 2
-        $node.Children[0].Value | Should Be $trigger1.Value
-        $node.Children[1].Value | Should Be $trigger2.Value
+        $node.Type | Should -Be Probe
+        $node.Children.Count | Should -Be 2
+        $node.Children[0].Value | Should -Be $trigger1.Value
+        $node.Children[1].Value | Should -Be $trigger2.Value
     }
 
     It "pipes in multiple child nodes with manual" {
@@ -117,13 +117,13 @@ Describe "New-ProbeNode" -Tag @("PowerShell", "UnitTest") {
         $trigger2 = New-TriggerNode -ObjectId 3000 -Type Speed
 
         $node = $trigger1,$trigger2 | New-ProbeNode -Id 1000
-        $node.Type | Should Be Probe
-        $node.Children.Count | Should Be 2
-        $node.Children[0].Value | Should Be $trigger1.Value
-        $node.Children[1].Value | Should Be $trigger2.Value
+        $node.Type | Should -Be Probe
+        $node.Children.Count | Should -Be 2
+        $node.Children[0].Value | Should -Be $trigger1.Value
+        $node.Children[1].Value | Should -Be $trigger2.Value
     }
 
     It "throws attempting to create a sensor under a device" {
-        { New-SensorNode -Id 4000 | New-ProbeNode -Id 1000 } | Should Throw "Node 'Volume IO _Total0 (ID: 4000)' of type 'Sensor' cannot be a child of a node of type 'Probe'."
+        { New-SensorNode -Id 4000 | New-ProbeNode -Id 1000 } | Should -Throw "Node 'Volume IO _Total0 (ID: 4000)' of type 'Sensor' cannot be a child of a node of type 'Probe'."
     }
 }

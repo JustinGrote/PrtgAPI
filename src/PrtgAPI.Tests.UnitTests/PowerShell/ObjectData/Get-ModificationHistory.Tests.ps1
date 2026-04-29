@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\UnitTest.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\UnitTest.ps1
 
 Describe "Get-ModificationHistory" -Tag @("PowerShell", "UnitTest") {
     It "retrieves history" {
@@ -8,7 +8,7 @@ Describe "Get-ModificationHistory" -Tag @("PowerShell", "UnitTest") {
 
         $history = $sensor | Get-ModificationHistory
 
-        $history.UserName | Should Be "PRTG System Administrator"
-        $history.Message | Should Be "Created. 17.2.31.2018"
+        $history.UserName | Should -Be "PRTG System Administrator"
+        $history.Message | Should -Be "Created. 17.2.31.2018"
     }
 }

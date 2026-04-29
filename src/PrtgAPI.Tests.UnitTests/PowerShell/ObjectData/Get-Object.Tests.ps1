@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\UnitTest.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\UnitTest.ps1
 
 Describe "Get-Object" -Tag @("PowerShell", "UnitTest") {
 
@@ -16,8 +16,8 @@ Describe "Get-Object" -Tag @("PowerShell", "UnitTest") {
 
     It "can deserialize" {
         $objects = Get-Object
-        $objects.Count | Should Be 1
-        $objects.GetType().Name | Should Be "PrtgObject"
+        $objects.Count | Should -Be 1
+        $objects.GetType().Name | Should -Be "PrtgObject"
     }
 
     $cases = @(
@@ -41,7 +41,7 @@ Describe "Get-Object" -Tag @("PowerShell", "UnitTest") {
             Get-Object -Id $id
         }
 
-        $result | Should Be $objName
+        $result | Should -Be $objName
     }
 
     It "can resolve multiple objects" {
@@ -50,28 +50,28 @@ Describe "Get-Object" -Tag @("PowerShell", "UnitTest") {
 
         $obj = Get-Object -Id 1000,2000
 
-        $obj.Count | Should Be 2
-        $obj[0].Name | Should Be "127.0.0.10"
-        $obj[0].GetType().Name | Should Be "PrtgObject"
-        $obj[1].Name | Should Be "Windows Infrastructure0"
-        $obj[1].GetType().Name | Should Be "PrtgObject"
+        $obj.Count | Should -Be 2
+        $obj[0].Name | Should -Be "127.0.0.10"
+        $obj[0].GetType().Name | Should -Be "PrtgObject"
+        $obj[1].Name | Should -Be "Windows Infrastructure0"
+        $obj[1].GetType().Name | Should -Be "PrtgObject"
 
         $resolved = Get-Object -Id 1000,2000 -Resolve
 
-        $resolved[0].Name | Should Be "127.0.0.10"
-        $resolved[0].GetType().Name | Should Be "Probe"
-        $resolved[1].Name | Should Be "Windows Infrastructure0"
-        $resolved[1].GetType().Name | Should Be "Group"
+        $resolved[0].Name | Should -Be "127.0.0.10"
+        $resolved[0].GetType().Name | Should -Be "Probe"
+        $resolved[1].Name | Should -Be "Windows Infrastructure0"
+        $resolved[1].GetType().Name | Should -Be "Group"
     }
 
     It "can resolve all types" {
         $objs = Get-Object -Resolve
-        $objs[0].GetType().Name | Should Be "Sensor"
-        $objs[1].GetType().Name | Should Be "Device"
-        $objs[2].GetType().Name | Should Be "Group"
-        $objs[3].GetType().Name | Should Be "Probe"
-        $objs[4].GetType().Name | Should Be "Schedule"
-        $objs[5].GetType().Name | Should Be "NotificationAction"
+        $objs[0].GetType().Name | Should -Be "Sensor"
+        $objs[1].GetType().Name | Should -Be "Device"
+        $objs[2].GetType().Name | Should -Be "Group"
+        $objs[3].GetType().Name | Should -Be "Probe"
+        $objs[4].GetType().Name | Should -Be "Schedule"
+        $objs[5].GetType().Name | Should -Be "NotificationAction"
     }
 
     It "doesn't resolve any objects" {
@@ -81,7 +81,7 @@ Describe "Get-Object" -Tag @("PowerShell", "UnitTest") {
             Get-Object -Id 1001
         }
 
-        $result | Should Be $null
+        $result | Should -Be $null
     }
 
     It "filters by enum types" {
@@ -92,8 +92,8 @@ Describe "Get-Object" -Tag @("PowerShell", "UnitTest") {
 
         $objs = Get-Object -Type Device
 
-        $objs.Count | Should Be 1
-        $objs.Type | Should Be "Device"
+        $objs.Count | Should -Be 1
+        $objs.Type | Should -Be "Device"
     }
 
     It "filters by string types" {
@@ -103,9 +103,9 @@ Describe "Get-Object" -Tag @("PowerShell", "UnitTest") {
         )
         
         $objs = Get-Object -Type wmilogicaldiskv2
-        $objs.Count | Should Be 1
-        $objs.Type | Should Be "Sensor (wmilogicaldiskv2)"
-        $objs.Type.StringValue | Should Be "wmilogicaldiskv2"
+        $objs.Count | Should -Be 1
+        $objs.Type | Should -Be "Sensor (wmilogicaldiskv2)"
+        $objs.Type.StringValue | Should -Be "wmilogicaldiskv2"
     }
 
     It "filters by enum types and string types at once" {
@@ -115,10 +115,10 @@ Describe "Get-Object" -Tag @("PowerShell", "UnitTest") {
         )
         
         $objs = Get-Object -Type wmilogicaldiskv2,device
-        $objs.Count | Should Be 2
-        $objs[0].Type | Should Be "Device"
-        $objs[1].Type | Should Be "Sensor (wmilogicaldiskv2)"
-        $objs[1].Type.StringValue | Should Be "wmilogicaldiskv2"
+        $objs.Count | Should -Be 2
+        $objs[0].Type | Should -Be "Device"
+        $objs[1].Type | Should -Be "Sensor (wmilogicaldiskv2)"
+        $objs[1].Type.StringValue | Should -Be "wmilogicaldiskv2"
     }
 
     It "doesn't filter types when specifying sensors server side" {
@@ -130,10 +130,10 @@ Describe "Get-Object" -Tag @("PowerShell", "UnitTest") {
 
         $objs = Get-Object -Type Sensor,Device
 
-        $objs.Count | Should Be 2
-        $objs[0].Type | Should Be "Device"
-        $objs[1].Type | Should Be "Sensor (wmilogicaldiskv2)"
-        $objs[1].Type.StringValue | Should Be "wmilogicaldiskv2"
+        $objs.Count | Should -Be 2
+        $objs[0].Type | Should -Be "Device"
+        $objs[1].Type | Should -Be "Sensor (wmilogicaldiskv2)"
+        $objs[1].Type.StringValue | Should -Be "wmilogicaldiskv2"
     }
 
     It "pipes from another object" {

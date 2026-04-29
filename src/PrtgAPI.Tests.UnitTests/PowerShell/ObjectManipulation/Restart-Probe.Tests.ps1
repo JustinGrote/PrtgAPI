@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
 
 Describe "Restart-Probe" -Tag @("PowerShell", "UnitTest") {
     It "restarts all probes" {
@@ -22,7 +22,7 @@ Describe "Restart-Probe" -Tag @("PowerShell", "UnitTest") {
             }
         }
 
-        $probes.Count | Should Be 2
+        $probes.Count | Should -Be 2
 
         SetAddressValidatorResponse @(
             [Request]::Get("api/restartprobes.htm?id=1")
@@ -49,13 +49,13 @@ Describe "Restart-Probe" -Tag @("PowerShell", "UnitTest") {
     It "times out waiting for all probes to restart" {
         SetResponseAndClient "RestartProbeResponse"
 
-        { Restart-Probe -Timeout 1 -Force } | Should Throw "Timed out waiting for 2 probes to restart"
+        { Restart-Probe -Timeout 1 -Force } | Should -Throw "Timed out waiting for 2 probes to restart"
     }
 
     It "times out waiting for some probes to restart" {
         SetResponseAndClient "RestartProbeResponse"
 
-        { Restart-Probe -Timeout 19 -Force } | Should Throw "Timed out waiting for 1 probe to restart"
+        { Restart-Probe -Timeout 19 -Force } | Should -Throw "Timed out waiting for 1 probe to restart"
     }
 
     It "passes through when waiting" {
@@ -65,7 +65,7 @@ Describe "Restart-Probe" -Tag @("PowerShell", "UnitTest") {
 
         $newProbe = $probe | Restart-Probe -Wait -PassThru -Force
 
-        $newProbe | Should Be $probe
+        $newProbe | Should -Be $probe
     }
 
     It "passes through when not waiting" {
@@ -73,7 +73,7 @@ Describe "Restart-Probe" -Tag @("PowerShell", "UnitTest") {
 
         $newProbe = $probe | Restart-Probe -Wait:$false -PassThru -Force
 
-        $newProbe | Should Be $probe
+        $newProbe | Should -Be $probe
     }
 
     It "specifies an ID" {
@@ -88,6 +88,6 @@ Describe "Restart-Probe" -Tag @("PowerShell", "UnitTest") {
     It "specifies an invalid ID" {
         SetMultiTypeResponse
 
-        { Restart-Probe -Id 300 -Force } | Should Throw "ID '300' is not a valid probe."
+        { Restart-Probe -Id 300 -Force } | Should -Throw "ID '300' is not a valid probe."
     }
 }

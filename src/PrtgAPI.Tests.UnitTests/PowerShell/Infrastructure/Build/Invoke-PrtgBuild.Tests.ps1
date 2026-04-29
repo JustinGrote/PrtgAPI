@@ -123,7 +123,7 @@ Describe "Invoke-PrtgBuild" -Tag @("PowerShell", "Build") {
     }
 
     It "throws when more than one project is specified" {
-        { Invoke-PrtgBuild *test* } | Should Throw "Can only specify one project at a time, however wildcard '*test*' matched multiple projects: PowerShell.TestAdapter, PrtgAPI.Tests.IntegrationTests, PrtgAPI.Tests.UnitTests"
+        { Invoke-PrtgBuild *test* } | Should -Throw "Can only specify one project at a time, however wildcard '*test*' matched multiple projects: PowerShell.TestAdapter, PrtgAPI.Tests.IntegrationTests, PrtgAPI.Tests.UnitTests"
     }
 
     It "executes MSBuild in debug mode on core" {

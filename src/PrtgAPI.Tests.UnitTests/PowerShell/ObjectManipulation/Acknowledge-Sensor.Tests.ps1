@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
 
 Describe "Acknowledge-Sensor" -Tag @("PowerShell", "UnitTest") {
 
@@ -52,7 +52,7 @@ Describe "Acknowledge-Sensor" -Tag @("PowerShell", "UnitTest") {
     }
 
     It "throws when a duration is less than 1" {
-        { $sensor | Acknowledge-Sensor -Until (Get-Date) } | Should Throw "Duration evaluated to less than one minute"
+        { $sensor | Acknowledge-Sensor -Until (Get-Date) } | Should -Throw "Duration evaluated to less than one minute"
     }
 
     It "executes with -WhatIf" {
@@ -91,7 +91,7 @@ Describe "Acknowledge-Sensor" -Tag @("PowerShell", "UnitTest") {
 
         $newSensor = $sensor | Acknowledge-Sensor -Forever -PassThru -Batch:$false
 
-        $newSensor | Should Be $sensor
+        $newSensor | Should -Be $sensor
     }
 
     It "passes through with -Batch:`$true" {
@@ -101,7 +101,7 @@ Describe "Acknowledge-Sensor" -Tag @("PowerShell", "UnitTest") {
 
         $newSensor = $sensor | Acknowledge-Sensor -Forever -PassThru -Batch:$true
 
-        $newSensor | Should Be $sensor
+        $newSensor | Should -Be $sensor
     }
 
     It "acknowledges for a duration with an ID" {

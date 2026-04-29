@@ -1,37 +1,37 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
 
 function ResolvesAllItems($sensorType, $targetType)
 {
     $items = $device | Get-SensorTarget $sensorType
 
-    $items.Count | Should BeGreaterThan 1
+    $items.Count | Should -BeGreaterThan 1
 
     $item = $items | Select -First 1
 
-    $item | Should Not BeNullOrEmpty
+    $item | Should -Not -BeNullOrEmpty
 
-    $item.GetType().Name | Should Be $targetType
+    $item.GetType().Name | Should -Be $targetType
 }
 
 function FilterReturnedItems($sensorType, $goodFilter)
 {
     $item = @($device | Get-SensorTarget $sensorType $goodFilter)
 
-    $item.Count | Should Be 1
+    $item.Count | Should -Be 1
 
-    $item.Name | Should Be $goodFilter
+    $item.Name | Should -Be $goodFilter
 
     $nothing = $device | Get-SensorTarget $sensorType "fake_prtgapi_item"
 
-    $nothing | Should BeNullOrEmpty
+    $nothing | Should -BeNullOrEmpty
 }
 
 function CreateParameters($sensorType, $goodFilter, $paramsType, $criticalValue)
 {
     $params = $device | Get-SensorTarget $sensorType $goodFilter -Params
 
-    $params.GetType().Name | Should Be $paramsType
-    $params.$criticalValue.Name | Should Be $goodFilter
+    $params.GetType().Name | Should -Be $paramsType
+    $params.$criticalValue.Name | Should -Be $goodFilter
 }
 
 Describe "Get-SensorTarget" -Tag @("PowerShell", "UnitTest") {
@@ -62,9 +62,9 @@ Describe "Get-SensorTarget" -Tag @("PowerShell", "UnitTest") {
 
             $files = $device | Get-SensorTarget ExeXml
 
-            $files.Count | Should BeGreaterThan 1
+            $files.Count | Should -BeGreaterThan 1
 
-            { $device | Get-SensorTarget ExeXml -Params } | Should Throw "cannot be used against multiple targets in a single request"
+            { $device | Get-SensorTarget ExeXml -Params } | Should -Throw "cannot be used against multiple targets in a single request"
         }
     }
 
@@ -105,7 +105,7 @@ Describe "Get-SensorTarget" -Tag @("PowerShell", "UnitTest") {
 
             $err = "Creating sensor parameters for sensor type 'SqlServerDB' is not supported"
 
-            { CreateParameters "SqlServerDB" $query "SqlServerDBSensorParameters" "QueryFile" } | Should Throw $err
+            { CreateParameters "SqlServerDB" $query "SqlServerDBSensorParameters" "QueryFile" } | Should -Throw $err
         }
     }
 
@@ -115,47 +115,47 @@ Describe "Get-SensorTarget" -Tag @("PowerShell", "UnitTest") {
         It "resolves raw EXE files" {
             $items = $device | Get-SensorTarget -RawType exexml
 
-            $items.Count | Should BeGreaterThan 1
+            $items.Count | Should -BeGreaterThan 1
 
             $item = $items | Select -First 1
 
-            $item | Should Not BeNullOrEmpty
+            $item | Should -Not -BeNullOrEmpty
 
-            $item.GetType().Name | Should Be "GenericSensorTarget"
+            $item.GetType().Name | Should -Be "GenericSensorTarget"
         }
 
         It "specifies a table name" {
             $items = $device | Get-SensorTarget -RawType exexml -Table exefile
 
-            $items.Count | Should BeGreaterThan 1
+            $items.Count | Should -BeGreaterThan 1
 
             $item = $items | Select -First 1
 
-            $item | Should Not BeNullOrEmpty
+            $item | Should -Not -BeNullOrEmpty
 
-            $item.GetType().Name | Should Be "GenericSensorTarget"
+            $item.GetType().Name | Should -Be "GenericSensorTarget"
         }
 
         it "specifies an invalid table name" {
-            { $device | Get-SensorTarget -RawType exexml -Table blah } | Should Throw "Cannot find any tables named 'blah'. Available tables: 'exefile'."
+            { $device | Get-SensorTarget -RawType exexml -Table blah } | Should -Throw "Cannot find any tables named 'blah'. Available tables: 'exefile'."
         }
 
         It "filters returned EXE files" {
             $item = @($device | Get-SensorTarget -RawType exexml *test*)
 
-            $item.Count | Should Be 1
+            $item.Count | Should -Be 1
 
-            $item.Name | Should Be "testScript.bat"
+            $item.Name | Should -Be "testScript.bat"
 
             $nothing = $device | Get-SensorTarget -RawType "exexml" "fake_prtgapi_item"
 
-            $nothing | Should BeNullOrEmpty
+            $nothing | Should -BeNullOrEmpty
         }
 
         It "specifies -rt" {
             $item = @($device | Get-SensorTarget -rt exexml *test*)
 
-            $item.Count | Should Be 1
+            $item.Count | Should -Be 1
         }
     }
 
@@ -172,7 +172,7 @@ Describe "Get-SensorTarget" -Tag @("PowerShell", "UnitTest") {
 
             $target = $device | Get-SensorType snmplibrary | select -ExpandProperty QueryTargets|select -First 1
 
-            $target | Should Be "APC UPS.oidlib"
+            $target | Should -Be "APC UPS.oidlib"
 
             $device | Get-SensorTarget -RawType snmplibrary -qt $target
         }
@@ -195,7 +195,7 @@ Describe "Get-SensorTarget" -Tag @("PowerShell", "UnitTest") {
                 [Request]::SensorTypes(40) # Get initial target from wildcard
             )
 
-            { $device | Get-SensorTarget -RawType snmplibrary -qt *potato* } | Should Throw "Could not find a query target matching the wildcard expression '*potato*'. Please specify one of the following parameters: 'APC UPS.oidlib',"
+            { $device | Get-SensorTarget -RawType snmplibrary -qt *potato* } | Should -Throw "Could not find a query target matching the wildcard expression '*potato*'. Please specify one of the following parameters: 'APC UPS.oidlib',"
         }
 
         It "throws when a sensor query target wildcard is ambiguous" {
@@ -203,7 +203,7 @@ Describe "Get-SensorTarget" -Tag @("PowerShell", "UnitTest") {
                 [Request]::SensorTypes(40) # Get initial target from wildcard
             )
 
-            { $device | Get-SensorTarget -RawType snmplibrary -qt *apc* } | Should Throw "Query target wildcard '*apc*' is ambiguous between the following parameters: 'APC UPS.oidlib', 'APCSensorstationlib.oidlib'. Please specify a more specific identifier."
+            { $device | Get-SensorTarget -RawType snmplibrary -qt *apc* } | Should -Throw "Query target wildcard '*apc*' is ambiguous between the following parameters: 'APC UPS.oidlib', 'APCSensorstationlib.oidlib'. Please specify a more specific identifier."
         }
 
         It "throws when a sensor query target is invalid" {
@@ -211,7 +211,7 @@ Describe "Get-SensorTarget" -Tag @("PowerShell", "UnitTest") {
                 [Request]::SensorTypes(40) # Get initial target from wildcard
             )
 
-            { $device | Get-SensorTarget -RawType snmplibrary -qt potato } | Should Throw "Query target 'potato' is not a valid target for sensor type 'snmplibrary' on device ID 40. Please specify one of the following targets: 'APC UPS.oidlib',"
+            { $device | Get-SensorTarget -RawType snmplibrary -qt potato } | Should -Throw "Query target 'potato' is not a valid target for sensor type 'snmplibrary' on device ID 40. Please specify one of the following targets: 'APC UPS.oidlib',"
         }
 
         It "throws when target is not required" {
@@ -219,7 +219,7 @@ Describe "Get-SensorTarget" -Tag @("PowerShell", "UnitTest") {
                 [Request]::SensorTypes(40)
             )
 
-            { $device | Get-SensorTarget -RawType ptfadsreplfailurexml -qt potato } | Should Throw "Cannot specify query target 'potato' on sensor type 'ptfadsreplfailurexml': type does not support query targets."
+            { $device | Get-SensorTarget -RawType ptfadsreplfailurexml -qt potato } | Should -Throw "Cannot specify query target 'potato' on sensor type 'ptfadsreplfailurexml': type does not support query targets."
         }
 
         It "throws when target is missing" {
@@ -227,7 +227,7 @@ Describe "Get-SensorTarget" -Tag @("PowerShell", "UnitTest") {
                 [Request]::SensorTypes(40)
             )
 
-            { $device | Get-SensorTarget -RawType snmplibrary } | Should Throw "Failed to process query for sensor type 'snmplibrary': a sensor query target is required, however none was specified. Please specify one of the following targets: 'APC UPS.oidlib',"
+            { $device | Get-SensorTarget -RawType snmplibrary } | Should -Throw "Failed to process query for sensor type 'snmplibrary': a sensor query target is required, however none was specified. Please specify one of the following targets: 'APC UPS.oidlib',"
         }
 
         It "parses a set of sensor query target parameters" {
@@ -254,7 +254,7 @@ Describe "Get-SensorTarget" -Tag @("PowerShell", "UnitTest") {
                 [Request]::SensorTypes(40)
             )
 
-            { $device | Get-SensorTarget -RawType ptfadsreplfailurexml -qt *ups* } | Should Throw "Cannot specify query target '*ups*' on sensor type 'ptfadsreplfailurexml': type does not support query targets."
+            { $device | Get-SensorTarget -RawType ptfadsreplfailurexml -qt *ups* } | Should -Throw "Cannot specify query target '*ups*' on sensor type 'ptfadsreplfailurexml': type does not support query targets."
         }
 
         It "throws when a sensor query target parameter is missing" {
@@ -263,7 +263,7 @@ Describe "Get-SensorTarget" -Tag @("PowerShell", "UnitTest") {
                 [Request]::BeginAddSensorQuery(40, "ptfadsreplfailurexml")
             )
 
-            { $device | Get-SensorTarget -RawType ptfadsreplfailurexml } | Should Throw "Failed to process request for sensor type 'oracletablespace': sensor query target parameters are required, however none were specified. Please retry the request specifying the parameters 'database_',"
+            { $device | Get-SensorTarget -RawType ptfadsreplfailurexml } | Should -Throw "Failed to process request for sensor type 'oracletablespace': sensor query target parameters are required, however none were specified. Please retry the request specifying the parameters 'database_',"
         }
     }
 
@@ -273,20 +273,20 @@ Describe "Get-SensorTarget" -Tag @("PowerShell", "UnitTest") {
 
         $files = $device | Get-SensorTarget ExeXml -Timeout 3
 
-        $files.Count | Should BeGreaterThan 1
+        $files.Count | Should -BeGreaterThan 1
     }
 
     It "retrieves targets from an unsupported sensor type" {
-        { $device | Get-SensorTarget Http } | Should Throw "Sensor type 'Http' is not currently supported"
+        { $device | Get-SensorTarget Http } | Should -Throw "Sensor type 'Http' is not currently supported"
     }
 
     It "specifies a list of values" {
         SetResponseAndClient "WmiServiceTargetResponse"
 
         $targets = $device | Get-SensorTarget WmiService prtgcoreservice,prtgprobeservice
-        $targets.Count | Should Be 2
+        $targets.Count | Should -Be 2
 
-        $targets[0].Name | Should Be "PRTGCoreService"
-        $targets[1].Name | Should Be "PRTGProbeService"
+        $targets[0].Name | Should -Be "PRTGCoreService"
+        $targets[1].Name | Should -Be "PRTGProbeService"
     }
 }

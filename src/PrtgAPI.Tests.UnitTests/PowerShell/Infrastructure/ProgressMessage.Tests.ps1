@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\Progress.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\Progress.ps1
 
 function TestMessage
 {
@@ -12,7 +12,7 @@ function TestMessage
     )
 
     $result = (Invoke-Expression "$Expression -Verbose 4>&1" | where { $_ -like "Performing the operation*" }) -join ", "
-    $result | Should Be $WhatIfMessage
+    $result | Should -Be $WhatIfMessage
 
     if(!$Progress)
     {

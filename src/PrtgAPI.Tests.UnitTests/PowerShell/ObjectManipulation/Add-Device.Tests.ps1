@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
 
 Describe "Add-Device" -Tag @("PowerShell", "UnitTest") {
 
@@ -49,7 +49,7 @@ Describe "Add-Device" -Tag @("PowerShell", "UnitTest") {
 
         $device = $probe | Add-Device $params -Resolve
 
-        $device.Id | Should Be 1002
+        $device.Id | Should -Be 1002
     }
 
     It "adds a device and auto-discovers with specified templates" {
@@ -69,6 +69,6 @@ Describe "Add-Device" -Tag @("PowerShell", "UnitTest") {
 
         $group = Get-Group -Count 1
 
-        { $group | Add-Device dc-1 -AutoDiscover -Template *banana* -Resolve:$false } | Should Throw "No device templates could be found that match the specified template names '*banana*'"
+        { $group | Add-Device dc-1 -AutoDiscover -Template *banana* -Resolve:$false } | Should -Throw "No device templates could be found that match the specified template names '*banana*'"
     }
 }

@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\IntegrationTest.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\IntegrationTest.ps1
 
 Describe "Rename-Object_IT" -Tag @("PowerShell", "IntegrationTest") {
 
@@ -16,19 +16,19 @@ Describe "Rename-Object_IT" -Tag @("PowerShell", "IntegrationTest") {
 
         $obj = & $query
 
-        $obj.Name | Should Not Be $newName
+        $obj.Name | Should -Not -Be $newName
 
         $obj | Rename-Object $newName
 
         $newObj = & $query
 
-        $newObj.Name | Should Be $newName
+        $newObj.Name | Should -Be $newName
 
         $newObj | Rename-Object $obj.Name
 
         $finalObj = & $query
 
-        $finalObj.Name | Should Be $obj.Name
+        $finalObj.Name | Should -Be $obj.Name
     }
 
     It "can rename multiple in a single request" {
@@ -37,19 +37,19 @@ Describe "Rename-Object_IT" -Tag @("PowerShell", "IntegrationTest") {
 
         $newName = "multiName"
 
-        $sensor.Name | Should Not Be $newName
-        $device.Name | Should Not Be $newName
+        $sensor.Name | Should -Not -Be $newName
+        $device.Name | Should -Not -Be $newName
 
         $list = $sensor,$device
 
-        $list.Count | Should Be 2
+        $list.Count | Should -Be 2
 
         $list | Rename-Object $newName
 
         $newSensor = Get-Sensor -Id (Settings UpSensor)
         $newDevice = Get-Device -Id (Settings Device)
 
-        $newSensor.Name | Should Be $newName
-        $newDevice.Name | Should Be $newName
+        $newSensor.Name | Should -Be $newName
+        $newDevice.Name | Should -Be $newName
     }
 }

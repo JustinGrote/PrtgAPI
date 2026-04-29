@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\..\Support\PowerShell\GoPrtg.ps1
+. $PSScriptRoot\..\..\..\Support\PowerShell\GoPrtg.ps1
 
 Describe "Install-GoPrtgServer" -Tag @("PowerShell", "UnitTest") {
 
@@ -36,7 +36,7 @@ Describe "Install-GoPrtgServer" -Tag @("PowerShell", "UnitTest") {
 
             $content = gc $Profile -Raw
 
-            $content | Should BeLike $baseExpected
+            $content | Should -BeLike $baseExpected
         }
         finally
         {
@@ -54,7 +54,7 @@ Describe "Install-GoPrtgServer" -Tag @("PowerShell", "UnitTest") {
 
         $content = gc $Profile -Raw
 
-        $content | Should BeLike $baseExpected
+        $content | Should -BeLike $baseExpected
     }
 
     It "installs correctly in existing empty profile" {
@@ -74,7 +74,7 @@ Describe "Install-GoPrtgServer" -Tag @("PowerShell", "UnitTest") {
 
         $content = gc $Profile -Raw
 
-        $content | Should BeLike $expected
+        $content | Should -BeLike $expected
     }
 
     It "installs multiple servers in new profile" {
@@ -118,7 +118,7 @@ Describe "Install-GoPrtgServer" -Tag @("PowerShell", "UnitTest") {
 
         $expected = $expected.Replace("``", "````")
 
-        $content | Should BeLike $expected
+        $content | Should -BeLike $expected
     }
 
     It "installs multiple servers correctly in profile adding content, server, content, then another server" {
@@ -155,7 +155,7 @@ Describe "Install-GoPrtgServer" -Tag @("PowerShell", "UnitTest") {
 
         $expected = $expected.Replace("``", "````")
 
-        $content | Should BeLike $expected
+        $content | Should -BeLike $expected
     }
 
     It "installs with alias" {
@@ -171,7 +171,7 @@ Describe "Install-GoPrtgServer" -Tag @("PowerShell", "UnitTest") {
 
         $expected = $expected.Replace("``", "````")
 
-        $content | Should BeLike $expected
+        $content | Should -BeLike $expected
     }
 
     It "installs with a null alias" {
@@ -187,7 +187,7 @@ Describe "Install-GoPrtgServer" -Tag @("PowerShell", "UnitTest") {
 
         $expected = $expected.Replace("``", "````")
 
-        $content | Should BeLike $expected
+        $content | Should -BeLike $expected
     }
 
     It "installs with an empty string alias" {
@@ -203,7 +203,7 @@ Describe "Install-GoPrtgServer" -Tag @("PowerShell", "UnitTest") {
 
         $expected = $expected.Replace("``", "````")
 
-        $content | Should BeLike $expected
+        $content | Should -BeLike $expected
     }
 
     It "treats a null and empty alias as being the same with the same server but different usernames" {
@@ -215,7 +215,7 @@ Describe "Install-GoPrtgServer" -Tag @("PowerShell", "UnitTest") {
 
             $client = Get-PrtgClient
 
-            { Install-GoPrtgServer "" } | Should Throw "Cannot add server '$($client.Server)': a record for the server already exists without an alias. Please update the alias of this record with Set-GoPrtgAlias and try again."
+            { Install-GoPrtgServer "" } | Should -Throw "Cannot add server '$($client.Server)': a record for the server already exists without an alias. Please update the alias of this record with Set-GoPrtgAlias and try again."
         }
         finally
         {
@@ -250,7 +250,7 @@ Describe "Install-GoPrtgServer" -Tag @("PowerShell", "UnitTest") {
 
         $expected = $expected.Replace("``", "````")
 
-        $contents | Should BeLike $expected
+        $contents | Should -BeLike $expected
     }
 
     It "installs multiple with alias" {
@@ -282,7 +282,7 @@ Describe "Install-GoPrtgServer" -Tag @("PowerShell", "UnitTest") {
 
         $expected = $expected.Replace("``", "````")
 
-        $contents | Should BeLike $expected
+        $contents | Should -BeLike $expected
     }
 
     It "throws when username for server exists already" {
@@ -291,10 +291,10 @@ Describe "Install-GoPrtgServer" -Tag @("PowerShell", "UnitTest") {
 
         Install-GoPrtgServer
 
-        { Install-GoPrtgServer } | Should Throw "Cannot add server '$($client.Server)': a record for the user '$($client.UserName)' already exists."
+        { Install-GoPrtgServer } | Should -Throw "Cannot add server '$($client.Server)': a record for the user '$($client.UserName)' already exists."
     }
 
-    #todo: update-goprtgserver should allow specifying the server to update explicitly
+    #todo: update-goprtgserver Should -allow specifying the server to update explicitly
 
     It "throws when server exists with alias but new record for same server is missing alias" {
 
@@ -306,7 +306,7 @@ Describe "Install-GoPrtgServer" -Tag @("PowerShell", "UnitTest") {
 
             $client = Get-PrtgClient
 
-            { Install-GoPrtgServer } | Should Throw "Cannot add server '$($client.Server)': an alias must be specified to differentiate this connection from an existing connection with the same server address."
+            { Install-GoPrtgServer } | Should -Throw "Cannot add server '$($client.Server)': an alias must be specified to differentiate this connection from an existing connection with the same server address."
         }
         finally
         {
@@ -324,7 +324,7 @@ Describe "Install-GoPrtgServer" -Tag @("PowerShell", "UnitTest") {
 
             $client = Get-PrtgClient
 
-            { Install-GoPrtgServer } | Should Throw "Cannot add server '$($client.Server)': a record for the server already exists without an alias. Please update the alias of this record with Set-GoPrtgAlias and try again."
+            { Install-GoPrtgServer } | Should -Throw "Cannot add server '$($client.Server)': a record for the server already exists without an alias. Please update the alias of this record with Set-GoPrtgAlias and try again."
         }
         finally
         {
@@ -339,7 +339,7 @@ Describe "Install-GoPrtgServer" -Tag @("PowerShell", "UnitTest") {
         {
             Connect-PrtgServer prtg.example2.com (New-Credential username2 12345678) -PassHash -Force
 
-            { Install-GoPrtgServer prod } | Should Throw "Cannot add server 'prtg.example2.com' with alias 'prod': a record for the alias already exists. For more information see 'Get-GoPrtgServer prod'"
+            { Install-GoPrtgServer prod } | Should -Throw "Cannot add server 'prtg.example2.com' with alias 'prod': a record for the alias already exists. For more information see 'Get-GoPrtgServer prod'"
         }
         finally
         {
@@ -349,7 +349,7 @@ Describe "Install-GoPrtgServer" -Tag @("PowerShell", "UnitTest") {
 
     It "throws installing a duplicate username/server combination even with a different alias" {
         Install-GoPrtgServer prod
-        { Install-GoPrtgServer dev } | Should Throw "Cannot add server 'prtg.example.com': a record for the user 'username' already exists. To update the alias of this record use Set-GoPrtgAlias. To reinstall this record, first uninstall with Uninstall-GoPrtgServer and then re-run Install-GoPrtgServer."
+        { Install-GoPrtgServer dev } | Should -Throw "Cannot add server 'prtg.example.com': a record for the user 'username' already exists. To update the alias of this record use Set-GoPrtgAlias. To reinstall this record, first uninstall with Uninstall-GoPrtgServer and then re-run Install-GoPrtgServer."
     }
 
     It "throws when getServers function is missing" {
@@ -363,7 +363,7 @@ Describe "Install-GoPrtgServer" -Tag @("PowerShell", "UnitTest") {
         {
             Connect-PrtgServer prtg.example2.com (New-Credential username2 12345678) -PassHash -Force
 
-            { Install-GoPrtgServer dev } | Should Throw "GoPrtg header and footer are present in PowerShell profile, however __goPrtgGetServers function was not loaded into the current session. Please verify the function has not been corrupted or remove the GoPrtg header and footer and re-run Install-GoPrtgServer."
+            { Install-GoPrtgServer dev } | Should -Throw "GoPrtg header and footer are present in PowerShell profile, however __goPrtgGetServers function was not loaded into the current session. Please verify the function has not been corrupted or remove the GoPrtg header and footer and re-run Install-GoPrtgServer."
         }
         finally
         {
@@ -380,7 +380,7 @@ Describe "Install-GoPrtgServer" -Tag @("PowerShell", "UnitTest") {
 
         Set-Content $Profile $newContents
 
-        { Install-GoPrtgServer } | Should Throw "GoPrtg Servers start line '########################### Start GoPrtg Servers ###########################' has been removed from PowerShell profile. Please reinstate line or remove all lines pertaining to GoPrtg from your profile."
+        { Install-GoPrtgServer } | Should -Throw "GoPrtg Servers start line '########################### Start GoPrtg Servers ###########################' has been removed from PowerShell profile. Please reinstate line or remove all lines pertaining to GoPrtg from your profile."
     }
 
     It "throws when GoPrtg end block is missing" {
@@ -392,7 +392,7 @@ Describe "Install-GoPrtgServer" -Tag @("PowerShell", "UnitTest") {
 
         Set-Content $Profile $newContents
 
-        { Install-GoPrtgServer } | Should Throw "GoPrtg Servers end line '############################ End GoPrtg Servers ############################' has been removed from PowerShell profile. Please reinstate line or remove all lines pertaining to GoPrtg from your profile."
+        { Install-GoPrtgServer } | Should -Throw "GoPrtg Servers end line '############################ End GoPrtg Servers ############################' has been removed from PowerShell profile. Please reinstate line or remove all lines pertaining to GoPrtg from your profile."
     }
 
     It "throws when both the header and footer have been removed" {
@@ -403,7 +403,7 @@ Describe "Install-GoPrtgServer" -Tag @("PowerShell", "UnitTest") {
         {
             Connect-PrtgServer prtg.example2.com (New-Credential username2 12345678) -PassHash -Force
 
-            { Install-GoPrtgServer } | Should Throw "GoPrtg Servers start line '########################### Start GoPrtg Servers ###########################' and end line"
+            { Install-GoPrtgServer } | Should -Throw "GoPrtg Servers start line '########################### Start GoPrtg Servers ###########################' and end line"
         }
         finally
         {

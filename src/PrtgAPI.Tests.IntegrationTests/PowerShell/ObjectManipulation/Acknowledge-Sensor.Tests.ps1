@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\IntegrationTest.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\IntegrationTest.ps1
 
 Describe "Acknowledge-Sensor_IT" -Tag @("PowerShell", "IntegrationTest") {
 
@@ -7,7 +7,7 @@ Describe "Acknowledge-Sensor_IT" -Tag @("PowerShell", "IntegrationTest") {
     It "can acknowledge indefinitely" {
 
         $sensor = Get-Sensor -Id (Settings DownSensor)
-        $sensor.Status | Should Be Down
+        $sensor.Status | Should -Be Down
 
         LogTestDetail "Acknowledging sensor indefinitely"
         $sensor | Acknowledge-Sensor -Forever -Message $message
@@ -18,8 +18,8 @@ Describe "Acknowledge-Sensor_IT" -Tag @("PowerShell", "IntegrationTest") {
 
         $acknowledgedSensor = Get-Sensor -Id (Settings DownSensor)
 
-        $acknowledgedSensor.Message | Should BeLike "*$message*"
-        $acknowledgedSensor.Status | Should Be DownAcknowledged
+        $acknowledgedSensor.Message | Should -BeLike "*$message*"
+        $acknowledgedSensor.Status | Should -Be DownAcknowledged
 
         LogTestDetail "Pausing object for 1 minute and sleeping 5 seconds"
         $acknowledgedSensor | Pause-Object -Duration 1
@@ -35,18 +35,18 @@ Describe "Acknowledge-Sensor_IT" -Tag @("PowerShell", "IntegrationTest") {
         Sleep 10
 
         $finalSensor = Get-Sensor -Id (Settings DownSensor)
-        $finalSensor.Status | Should Be Down
+        $finalSensor.Status | Should -Be Down
     }
 
     It "can acknowledge for duration" {
         $sensor = Get-Sensor -Id (Settings DownSensor)
-        $sensor.Status | Should Be Down
+        $sensor.Status | Should -Be Down
 
         LogTestDetail "Acknowledging sensor for 1 minute"
         $sensor | Acknowledge-Sensor -Duration 1
 
         $acknowledgedSensor = Get-Sensor -Id (Settings DownSensor)
-        $acknowledgedSensor.Status | Should Be DownAcknowledged
+        $acknowledgedSensor.Status | Should -Be DownAcknowledged
 
         LogTestDetail "Sleeping for 60 seconds"
         Sleep 60
@@ -56,19 +56,19 @@ Describe "Acknowledge-Sensor_IT" -Tag @("PowerShell", "IntegrationTest") {
         Sleep 30
 
         $finalSensor = Get-Sensor -Id (Settings DownSensor)
-        $finalSensor.Status | Should Be Down
+        $finalSensor.Status | Should -Be Down
     }
 
     It "can acknowledge until" {
         $sensor = Get-Sensor -Id (Settings DownSensor)
-        $sensor.Status | Should Be Down
+        $sensor.Status | Should -Be Down
 
         $until = (Get-Date).AddMinutes(1)
         LogTestDetail "Acknowledging sensor until $until"
         $sensor | Acknowledge-Sensor -Until $until
 
         $acknowledgedSensor = Get-Sensor -Id (Settings DownSensor)
-        $acknowledgedSensor.Status | Should Be DownAcknowledged
+        $acknowledgedSensor.Status | Should -Be DownAcknowledged
 
         LogTestDetail "Sleeping for 60 seconds"
         Sleep 60
@@ -78,15 +78,15 @@ Describe "Acknowledge-Sensor_IT" -Tag @("PowerShell", "IntegrationTest") {
         Sleep 30
 
         $finalSensor = Get-Sensor -Id (Settings DownSensor)
-        $finalSensor.Status | Should Be Down
+        $finalSensor.Status | Should -Be Down
     }
     
     It "can acknowledge multiple in a single request" {
         $upSensor = Get-Sensor -Id (Settings UpSensor)
-        $upSensor.Status | Should Be Up
+        $upSensor.Status | Should -Be Up
 
         $downSensor = Get-Sensor -Id (Settings DownSensor)
-        $downSensor.Status | Should Be Down
+        $downSensor.Status | Should -Be Down
 
         LogTestDetail "Simulating error status on Up Sensor"
         $upSensor | Simulate-ErrorStatus
@@ -110,12 +110,12 @@ Describe "Acknowledge-Sensor_IT" -Tag @("PowerShell", "IntegrationTest") {
             $newUpSensor = Get-Sensor -Id (Settings UpSensor)
         }
 
-        $newUpSensor.Status | Should Be Down
+        $newUpSensor.Status | Should -Be Down
 
         $downIds = ((Settings UpSensor),(Settings DownSensor))
 
         $downSensors = Get-Sensor -Id $downIds
-        $downSensors.Count | Should Be 2
+        $downSensors.Count | Should -Be 2
 
         LogTestDetail "Acknowledging for 1 minute"
         $downSensors | Acknowledge-Sensor -Duration 1
@@ -126,8 +126,8 @@ Describe "Acknowledge-Sensor_IT" -Tag @("PowerShell", "IntegrationTest") {
 
         LogTestDetail "Checking sensors are acknowledged"
         $newDownSensors = Get-Sensor -Id $downIds
-        $newDownSensors[0].Status | Should Be DownAcknowledged
-        $newDownSensors[1].Status | Should Be DownAcknowledged
+        $newDownSensors[0].Status | Should -Be DownAcknowledged
+        $newDownSensors[1].Status | Should -Be DownAcknowledged
 
         LogTestDetail "Sleeping for 60 seconds"
         Sleep 60
@@ -137,8 +137,8 @@ Describe "Acknowledge-Sensor_IT" -Tag @("PowerShell", "IntegrationTest") {
         Sleep 30
 
         $finalSensors = Get-Sensor -Id $downIds
-        $finalSensors[0].Status | Should Be Down
-        $finalSensors[1].Status | Should Be Down
+        $finalSensors[0].Status | Should -Be Down
+        $finalSensors[1].Status | Should -Be Down
 
         $finalSensors[0] | Resume-Object
         LogTestDetail "Waiting for 30 seconds while Up Sensor resumes"
@@ -159,6 +159,6 @@ Describe "Acknowledge-Sensor_IT" -Tag @("PowerShell", "IntegrationTest") {
             $finalUpSensor = Get-Sensor -Id (Settings UpSensor)
         }
 
-        $finalUpSensor.Status | Should Be Up
+        $finalUpSensor.Status | Should -Be Up
     }
 }

@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\..\Support\PowerShell\Build.ps1
+. $PSScriptRoot\..\..\..\Support\PowerShell\Build.ps1
 
 Describe "Update-PrtgVersion" -Tag @("PowerShell", "Build") {
     It "updates all versions" {
@@ -39,17 +39,17 @@ Describe "Update-PrtgVersion" -Tag @("PowerShell", "Build") {
             Mock "Set-CIVersion" {
                 param($Version)
 
-                $Version | Should Be "1.2.4.4"
+                $Version | Should -Be "1.2.4.4"
             }
         }
 
         $result = Update-PrtgVersion
 
-        $result.Package | Should Be "1.2.3 -> 1.2.4"
-        $result.Assembly | Should Be "1.2.0.0"
-        $result.File | Should Be "1.2.3.4 -> 1.2.4.4"
-        $result.Module | Should Be "1.2.3 -> 1.2.4"
-        $result.ModuleTag | Should Be "v1.2.3 -> v1.2.4"
-        $result.PreviousTag | Should Be "v1.2.3"
+        $result.Package | Should -Be "1.2.3 -> 1.2.4"
+        $result.Assembly | Should -Be "1.2.0.0"
+        $result.File | Should -Be "1.2.3.4 -> 1.2.4.4"
+        $result.Module | Should -Be "1.2.3 -> 1.2.4"
+        $result.ModuleTag | Should -Be "v1.2.3 -> v1.2.4"
+        $result.PreviousTag | Should -Be "v1.2.3"
     }
 }

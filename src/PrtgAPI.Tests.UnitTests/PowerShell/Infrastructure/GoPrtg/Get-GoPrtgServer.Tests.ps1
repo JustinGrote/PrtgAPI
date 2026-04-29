@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\..\Support\PowerShell\GoPrtg.ps1
+. $PSScriptRoot\..\..\..\Support\PowerShell\GoPrtg.ps1
 
 Describe "Get-GoPrtgServer" -Tag @("PowerShell", "UnitTest") {
 
@@ -16,11 +16,11 @@ Describe "Get-GoPrtgServer" -Tag @("PowerShell", "UnitTest") {
 
         $servers = Get-GoPrtgServer
 
-        $servers | Should Not BeNullOrEmpty
+        $servers | Should -Not -BeNullOrEmpty
 
-        $servers.Server | Should Be prtg.example.com
-        $servers.Alias | Should Be dev
-        $servers.UserName | Should Be username
+        $servers.Server | Should -Be prtg.example.com
+        $servers.Alias | Should -Be dev
+        $servers.UserName | Should -Be username
     }
 
     It "sets empty aliases to null" {
@@ -28,7 +28,7 @@ Describe "Get-GoPrtgServer" -Tag @("PowerShell", "UnitTest") {
 
         $server = Get-GoPrtgServer
 
-        $server.Alias | Should Be $null
+        $server.Alias | Should -Be $null
     }
 
     It "can retrieve servers by server name" {
@@ -36,7 +36,7 @@ Describe "Get-GoPrtgServer" -Tag @("PowerShell", "UnitTest") {
 
         $server = Get-GoPrtgServer prtg.example2.com
 
-        $server.Server | Should Be prtg.example2.com
+        $server.Server | Should -Be prtg.example2.com
     }
 
     It "can retrieve servers by server wildcard" {
@@ -55,9 +55,9 @@ Describe "Get-GoPrtgServer" -Tag @("PowerShell", "UnitTest") {
 
         $servers = Get-GoPrtgServer prtg.*
 
-        $servers.Count | Should Be 2
-        $servers[0].Server | Should Be prtg.example.com
-        $servers[1].Server | Should Be prtg.example2.com
+        $servers.Count | Should -Be 2
+        $servers[0].Server | Should -Be prtg.example.com
+        $servers[1].Server | Should -Be prtg.example2.com
     }
 
     It "can retrieve servers by alias" {
@@ -65,15 +65,15 @@ Describe "Get-GoPrtgServer" -Tag @("PowerShell", "UnitTest") {
 
         $server = Get-GoPrtgServer dev
 
-        $server.Server | Should Be prtg.example2.com
-        $server.Alias | Should Be dev
+        $server.Server | Should -Be prtg.example2.com
+        $server.Alias | Should -Be dev
     }
 
     It "warns when GoPrtg isn't installed" {
-        Get-GoPrtgServer | Should Be "`nGoPrtg is not installed. Run Install-GoPrtgServer first to install a GoPrtg server.`n"
+        Get-GoPrtgServer | Should -Be "`nGoPrtg is not installed. Run Install-GoPrtgServer first to install a GoPrtg server.`n"
     }
 
     It "warns when profile doesn't exist" {
-        Get-GoPrtgServer | Should Be "`nGoPrtg is not installed. Run Install-GoPrtgServer first to install a GoPrtg server.`n"
+        Get-GoPrtgServer | Should -Be "`nGoPrtg is not installed. Run Install-GoPrtgServer first to install a GoPrtg server.`n"
     }
 }

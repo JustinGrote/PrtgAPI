@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
 
 function SetLogAddressValidatorResponse($str)
 {
@@ -17,7 +17,7 @@ Describe "Get-ObjectLog" -Tag @("PowerShell", "UnitTest") {
     It "retrieves logs from an unspecified object" {
         SetLogAddressValidatorResponse "count=500&filter_drel=today"
 
-        (Get-ObjectLog).Count | Should Be 2
+        (Get-ObjectLog).Count | Should -Be 2
     }
 
     It "streams from an unspecified object" {
@@ -123,7 +123,7 @@ Describe "Get-ObjectLog" -Tag @("PowerShell", "UnitTest") {
 
         $logs = Get-ObjectLog
 
-        $logs.Count | Should Be 0
+        $logs.Count | Should -Be 0
     }
 
     It "forces streaming with a date piped from a variable and returns no results" {
@@ -140,7 +140,7 @@ Describe "Get-ObjectLog" -Tag @("PowerShell", "UnitTest") {
 
         $groups | Get-ObjectLog
 
-        $logs.Count | Should Be 0
+        $logs.Count | Should -Be 0
     }
 
     It "filters by name" {
@@ -148,9 +148,9 @@ Describe "Get-ObjectLog" -Tag @("PowerShell", "UnitTest") {
 
         $logs = Get-Device -Count 1 | Get-ObjectLog "WMI Remote Ping1"
 
-        $logs.Count | Should Be 1
+        $logs.Count | Should -Be 1
 
-        $logs.Name | Should Be "WMI Remote Ping1"
+        $logs.Name | Should -Be "WMI Remote Ping1"
     }
 
     It "streams when requesting more than 20000 items" {
@@ -161,7 +161,7 @@ Describe "Get-ObjectLog" -Tag @("PowerShell", "UnitTest") {
 
         $logs = Get-ObjectLog -Count 20500
 
-        $logs.Count | Should Be 20500
+        $logs.Count | Should -Be 20500
     }
 
     It "retrieves logs by Id" {
@@ -170,7 +170,7 @@ Describe "Get-ObjectLog" -Tag @("PowerShell", "UnitTest") {
 
         $logs = Get-ObjectLog -Id 3000
 
-        $logs.Count | Should BeGreaterThan 0
+        $logs.Count | Should -BeGreaterThan 0
     }
 
     It "retrieves logs by Id with an EndDate" {
@@ -180,7 +180,7 @@ Describe "Get-ObjectLog" -Tag @("PowerShell", "UnitTest") {
 
         $logs = Get-ObjectLog -Id 3000 -EndDate $date
 
-        $logs.Count | Should BeGreaterThan 0
+        $logs.Count | Should -BeGreaterThan 0
     }
 
     It "filters by name specifying a count" {
@@ -193,7 +193,7 @@ Describe "Get-ObjectLog" -Tag @("PowerShell", "UnitTest") {
 
         $logs = Get-ObjectLog "WMI Remote Ping0" -Count 3
 
-        $logs.Count | Should Be 1
+        $logs.Count | Should -Be 1
     }
 
     Context "Take Iterator" {
@@ -202,7 +202,7 @@ Describe "Get-ObjectLog" -Tag @("PowerShell", "UnitTest") {
 
             $logs = Get-ObjectLog -Count 2
 
-            $logs.Count | Should Be 2
+            $logs.Count | Should -Be 2
         }
 
         It "specifies a count greater than the number that are available" {
@@ -210,7 +210,7 @@ Describe "Get-ObjectLog" -Tag @("PowerShell", "UnitTest") {
 
             $logs = Get-ObjectLog -Count 2
 
-            $logs.Count | Should Be 1
+            $logs.Count | Should -Be 1
         }
 
         It "specifies a count and a filter" {
@@ -218,7 +218,7 @@ Describe "Get-ObjectLog" -Tag @("PowerShell", "UnitTest") {
 
             $logs = Get-ObjectLog ping -Count 2
 
-            $logs.Count | Should Be 2
+            $logs.Count | Should -Be 2
         }
 
         It "specifies a count and forces streaming"  {
@@ -226,7 +226,7 @@ Describe "Get-ObjectLog" -Tag @("PowerShell", "UnitTest") {
 
             $logs = Get-ObjectLog -Count 2 -Period All
 
-            $logs.Count | Should Be 2
+            $logs.Count | Should -Be 2
         }
 
         It "specifies a count and a filter and forces streaming"  {
@@ -234,7 +234,7 @@ Describe "Get-ObjectLog" -Tag @("PowerShell", "UnitTest") {
 
             $logs = Get-ObjectLog ping -Count 2 -Period All
 
-            $logs.Count | Should Be 2
+            $logs.Count | Should -Be 2
         }
 
         It "requests a full page after repeatedly failing to retrieve all required items" {
@@ -242,7 +242,7 @@ Describe "Get-ObjectLog" -Tag @("PowerShell", "UnitTest") {
 
             $logs = Get-ObjectLog ping -Count 2
 
-            $logs.Count | Should Be 1
+            $logs.Count | Should -Be 1
         }
 
         It "forces streaming and requests a full page after repeatedly failing to retrieve all required items" {
@@ -250,7 +250,7 @@ Describe "Get-ObjectLog" -Tag @("PowerShell", "UnitTest") {
 
             $logs = Get-ObjectLog ping -Count 2 -Period All
 
-            $logs.Count | Should Be 1
+            $logs.Count | Should -Be 1
         }
 
         It "tries to request a full page but there is only 1 record left after repeatedly failing to retrieve all required items" {
@@ -258,7 +258,7 @@ Describe "Get-ObjectLog" -Tag @("PowerShell", "UnitTest") {
 
             $logs = Get-ObjectLog ping -Count 2
 
-            $logs.Count | Should Be 1
+            $logs.Count | Should -Be 1
         }
 
         It "tries to request a full page but there are no records left after repeatedly failing to retrieve all required items" {
@@ -266,7 +266,7 @@ Describe "Get-ObjectLog" -Tag @("PowerShell", "UnitTest") {
 
             $logs = Get-ObjectLog ping -Count 2
 
-            $logs.Count | Should Be 1
+            $logs.Count | Should -Be 1
         }
 
         It "tries to request a full page but there are negative records left after repeatedly failing to retrieve all required items" {
@@ -274,7 +274,7 @@ Describe "Get-ObjectLog" -Tag @("PowerShell", "UnitTest") {
 
             $logs = Get-ObjectLog ping -Count 2
 
-            $logs.Count | Should Be 1
+            $logs.Count | Should -Be 1
         }
 
         It "forces streaming and tries to request a full page but there is only 1 record left after repeatedly failing to retrieve all required items" {
@@ -282,7 +282,7 @@ Describe "Get-ObjectLog" -Tag @("PowerShell", "UnitTest") {
 
             $logs = Get-ObjectLog ping -Count 2 -Period All
 
-            $logs.Count | Should Be 1
+            $logs.Count | Should -Be 1
         }
 
         It "forces streaming and tries to request a full page but there are no records left after repeatedly failing to retrieve all required items" {
@@ -290,7 +290,7 @@ Describe "Get-ObjectLog" -Tag @("PowerShell", "UnitTest") {
 
             $logs = Get-ObjectLog ping -Count 2 -Period All
 
-            $logs.Count | Should Be 0
+            $logs.Count | Should -Be 0
         }
     }
     
@@ -301,7 +301,7 @@ Describe "Get-ObjectLog" -Tag @("PowerShell", "UnitTest") {
 
             $logs = Get-ObjectLog -Tail -Interval 0 | select -First 7
 
-            $logs.Count | Should Be 7
+            $logs.Count | Should -Be 7
         }
 
         It "filters watched logs by name" {
@@ -309,7 +309,7 @@ Describe "Get-ObjectLog" -Tag @("PowerShell", "UnitTest") {
 
             $logs = Get-ObjectLog "Item 2","Item 7" -Tail -Interval 0  | select -First 2
 
-            $logs.Count | Should Be 2
+            $logs.Count | Should -Be 2
         }
 
         It "filters watched logs by status" {
@@ -317,7 +317,7 @@ Describe "Get-ObjectLog" -Tag @("PowerShell", "UnitTest") {
 
             $logs = Get-ObjectLog -Id 2304 -Status Connected,Disconnected -Tail -Interval 0  | select -First 2
 
-            $logs.Count | Should Be 2
+            $logs.Count | Should -Be 2
         }
 
         It "specifies a custom start time" {
@@ -341,7 +341,7 @@ Describe "Get-ObjectLog" -Tag @("PowerShell", "UnitTest") {
 
             $output = [string]::Join("`n",(&{try { Get-ObjectLog -Interval 0 -Tail -EndDate (Get-Date).AddDays(-3) 3>&1 | %{$_.Message} | select -First 1  } catch [exception] { }}))
 
-            $output | Should Be "Ignoring -EndDate as cmdlet is executing in Watch Mode. To specify a start time use -StartDate"
+            $output | Should -Be "Ignoring -EndDate as cmdlet is executing in Watch Mode. To specify a start time use -StartDate"
         }
     }
 }

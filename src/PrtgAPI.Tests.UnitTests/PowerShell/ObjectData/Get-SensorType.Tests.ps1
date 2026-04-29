@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
 
 Describe "Get-SensorType" -Tag @("PowerShell", "UnitTest") {
 
@@ -12,7 +12,7 @@ Describe "Get-SensorType" -Tag @("PowerShell", "UnitTest") {
 
         $types = Get-SensorType
 
-        $types.Count | Should Be 9
+        $types.Count | Should -Be 9
     }
 
     It "retrieves sensor types from an object" {
@@ -24,7 +24,7 @@ Describe "Get-SensorType" -Tag @("PowerShell", "UnitTest") {
 
         $types = Get-Device | select -First 1 | Get-SensorType
 
-        $types.Count | Should Be 9
+        $types.Count | Should -Be 9
     }
 
     It "retrieves types by ID" {
@@ -42,8 +42,8 @@ Describe "Get-SensorType" -Tag @("PowerShell", "UnitTest") {
 
         $types = Get-SensorType *repl*
 
-        $types.Count | Should Be 1
+        $types.Count | Should -Be 1
 
-        $types.Name | Should Be "Active Directory Replication Errors"
+        $types.Name | Should -Be "Active Directory Replication Errors"
     }
 }

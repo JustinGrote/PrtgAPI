@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\Standalone.ps1
 
 function Connect
 {
@@ -20,11 +20,11 @@ Describe "Set-PrtgClient" -Tag @("PowerShell", "UnitTest") {
 
         $client = (Get-PrtgClient)
 
-        $client | Should Not BeNullOrEmpty
+        $client | Should -Not -BeNullOrEmpty
 
         $original = $client.$name
 
-        $original | Should Not Be $newValue
+        $original | Should -Not -Be $newValue
 
         $splat = @{
             $name = $newValue
@@ -32,7 +32,7 @@ Describe "Set-PrtgClient" -Tag @("PowerShell", "UnitTest") {
 
         Set-PrtgClient @splat
 
-        $client.$name | Should Be $newValue
+        $client.$name | Should -Be $newValue
 
         Disconnect-PrtgServer
     }
@@ -49,12 +49,12 @@ Describe "Set-PrtgClient" -Tag @("PowerShell", "UnitTest") {
 
         $newClient = Get-PrtgClient
 
-        $newClient.RetryCount | Should Be $original.RetryCount
-        $newClient.RetryDelay | Should Be $original.RetryDelay
-        $newClient.LogLevel | Should Be $original.LogLevel
+        $newClient.RetryCount | Should -Be $original.RetryCount
+        $newClient.RetryDelay | Should -Be $original.RetryDelay
+        $newClient.LogLevel | Should -Be $original.LogLevel
 
         $original.RetryCount = 30
-        $newClient.RetryCount | Should Not Be $original.RetryCount
+        $newClient.RetryCount | Should -Not -Be $original.RetryCount
 
         Disconnect-PrtgServer
     }
@@ -67,7 +67,7 @@ Describe "Set-PrtgClient" -Tag @("PowerShell", "UnitTest") {
 
         $new = Set-PrtgClient -IgnoreSSL -RetryCount 5 -PassThru
 
-        $original.RetryCount | Should Not Be $new.RetryCount
+        $original.RetryCount | Should -Not -Be $new.RetryCount
 
         Disconnect-PrtgServer
     }
@@ -80,8 +80,8 @@ Describe "Set-PrtgClient" -Tag @("PowerShell", "UnitTest") {
 
         Set-PrtgClient -RetryCount 10 -LogLevel trace,response
 
-        $client.RetryCount | Should Be 10
-        $client.LogLevel | Should Be "Trace, Response"
+        $client.RetryCount | Should -Be 10
+        $client.LogLevel | Should -Be "Trace, Response"
 
         Disconnect-PrtgServer
     }
@@ -92,9 +92,9 @@ Describe "Set-PrtgClient" -Tag @("PowerShell", "UnitTest") {
 
         $client = Get-PrtgClient
 
-        Set-PrtgClient -RetryCount 10 -PassThru | Should Be $client
+        Set-PrtgClient -RetryCount 10 -PassThru | Should -Be $client
 
-        Set-PrtgClient -RetryCount 15 -IgnoreSSL -PassThru | Should Not Be $client
+        Set-PrtgClient -RetryCount 15 -IgnoreSSL -PassThru | Should -Not -Be $client
 
         Disconnect-PrtgServer
     }
@@ -109,6 +109,6 @@ Describe "Set-PrtgClient" -Tag @("PowerShell", "UnitTest") {
     }
 
     It "requires a connection to a PRTG Server" {
-        { Set-PrtgClient -RetryDelay 5 } | Should Throw "You are not connected to a PRTG Server"
+        { Set-PrtgClient -RetryDelay 5 } | Should -Throw "You are not connected to a PRTG Server"
     }
 }

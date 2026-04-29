@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\IntegrationTestSafe.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\IntegrationTestSafe.ps1
 
 Describe "Get-Object_IT" -Tag @("PowerShell", "IntegrationTest") {
 
@@ -6,7 +6,7 @@ Describe "Get-Object_IT" -Tag @("PowerShell", "IntegrationTest") {
 
         $objects = Get-Object -Type System
 
-        $objects.Count | Should BeGreaterThan 0
+        $objects.Count | Should -BeGreaterThan 0
 
         $objects | Assert-All { $_.Type -eq "System" }
     }
@@ -14,7 +14,7 @@ Describe "Get-Object_IT" -Tag @("PowerShell", "IntegrationTest") {
     It "filters by string types" {
         $objects = Get-Object -Type ping
 
-        $objects.Count | Should BeGreaterThan 0
+        $objects.Count | Should -BeGreaterThan 0
 
         $objects | Assert-All { $_.Type -eq "ping" }
     }
@@ -35,11 +35,11 @@ Describe "Get-Object_IT" -Tag @("PowerShell", "IntegrationTest") {
         $notifications = Get-Object -Id -3 | Get-Object
 
         $actions = Get-NotificationAction
-        $notifications.Count | Should Be $actions.Count
+        $notifications.Count | Should -Be $actions.Count
 
         foreach($action in $notifications)
         {
-            $action.Type | Should Be "Notification"
+            $action.Type | Should -Be "Notification"
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿. $PSScriptRoot\..\..\..\Support\PowerShell\GoPrtg.ps1
+. $PSScriptRoot\..\..\..\Support\PowerShell\GoPrtg.ps1
 
 Describe "Set-GoPrtgAlias" -Tag @("PowerShell", "UnitTest") {
     BeforeAll { GoPrtgBeforeAll    }
@@ -25,7 +25,7 @@ Describe "Set-GoPrtgAlias" -Tag @("PowerShell", "UnitTest") {
 
         $expected = $expected.Replace("``", "````")
 
-        $content | Should BeLike $expected
+        $content | Should -BeLike $expected
     }
 
     It "sets an alias on a record that does have one" {
@@ -43,7 +43,7 @@ Describe "Set-GoPrtgAlias" -Tag @("PowerShell", "UnitTest") {
 
         $expected = $expected.Replace("``", "````")
 
-        $content | Should BeLike $expected
+        $content | Should -BeLike $expected
     }
 
     It "sets an alias on the first server when multiple servers are installed" {
@@ -77,7 +77,7 @@ Describe "Set-GoPrtgAlias" -Tag @("PowerShell", "UnitTest") {
 
         $expected = $expected.Replace("``", "````")
 
-        $content | Should BeLike $expected
+        $content | Should -BeLike $expected
     }
 
     It "sets an alias on the last server when multiple servers are installed" {
@@ -111,7 +111,7 @@ Describe "Set-GoPrtgAlias" -Tag @("PowerShell", "UnitTest") {
 
         $expected = $expected.Replace("``", "````")
 
-        $content | Should BeLike $expected
+        $content | Should -BeLike $expected
     }
 
     It "sets an alias when profile has content before function" {
@@ -132,7 +132,7 @@ Describe "Set-GoPrtgAlias" -Tag @("PowerShell", "UnitTest") {
 
         $expected = $expected.Replace("``", "````")
 
-        $content | Should BeLike $expected
+        $content | Should -BeLike $expected
     }
 
     It "sets an alias when profile has content before and after function" {
@@ -156,7 +156,7 @@ Describe "Set-GoPrtgAlias" -Tag @("PowerShell", "UnitTest") {
 
         $expected = $expected.Replace("``", "````")
 
-        $content | Should BeLike $expected
+        $content | Should -BeLike $expected
     }
 
     It "removes an alias on a record that has one" {
@@ -174,7 +174,7 @@ Describe "Set-GoPrtgAlias" -Tag @("PowerShell", "UnitTest") {
 
         $expected = $expected.Replace("``", "````")
 
-        $content | Should BeLike $expected
+        $content | Should -BeLike $expected
     }
 
     It "removes an alias on a record that doesn't have one" {
@@ -192,14 +192,14 @@ Describe "Set-GoPrtgAlias" -Tag @("PowerShell", "UnitTest") {
 
         $expected = $expected.Replace("``", "````")
 
-        $content | Should BeLike $expected
+        $content | Should -BeLike $expected
     }
 
     It "updates the global function" {
         Install-GoPrtgServer prod
         Set-GoPrtgAlias dev
 
-        Get-GoPrtgServer dev | Should Be "@{[!]=[*]; Server=prtg.example.com; Alias=dev; UserName=username}"
+        Get-GoPrtgServer dev | Should -Be "@{[!]=[*]; Server=prtg.example.com; Alias=dev; UserName=username}"
     }
 
     It "throws setting a duplicate alias" {
@@ -218,7 +218,7 @@ Describe "Set-GoPrtgAlias" -Tag @("PowerShell", "UnitTest") {
 
         Connect-GoPrtgServer dev
 
-        { Set-GoPrtgAlias prod } | Should Throw "Cannot set alias for server 'prtg.example2.com': a record with alias 'prod' already exists. For more information see Get-GoPrtgServer."
+        { Set-GoPrtgAlias prod } | Should -Throw "Cannot set alias for server 'prtg.example2.com': a record with alias 'prod' already exists. For more information see Get-GoPrtgServer."
     }
 
     It "throws removing an alias on a duplicate server" {
@@ -237,7 +237,7 @@ Describe "Set-GoPrtgAlias" -Tag @("PowerShell", "UnitTest") {
 
         Connect-GoPrtgServer dev
 
-        { Set-GoPrtgAlias } | Should Throw "Cannot remove alias of server: multiple entries for server 'prtg.example.com' are stored within GoPrtg. To remove this alias uninstall all other entries for this server. For more information see Get-GoPrtgServer."
+        { Set-GoPrtgAlias } | Should -Throw "Cannot remove alias of server: multiple entries for server 'prtg.example.com' are stored within GoPrtg. To remove this alias uninstall all other entries for this server. For more information see Get-GoPrtgServer."
     }
 
     It "throws when not connected to a PRTG Server" {
@@ -245,17 +245,17 @@ Describe "Set-GoPrtgAlias" -Tag @("PowerShell", "UnitTest") {
 
         Disconnect-PrtgServer
 
-        { Set-GoPrtgAlias } | Should Throw "You are not connected to a PRTG Server. Please connect first using GoPrtg [<server>]."
+        { Set-GoPrtgAlias } | Should -Throw "You are not connected to a PRTG Server. Please connect first using GoPrtg [<server>]."
     }
 
     It "throws when GoPrtg is not installed" {
         New-Item $Profile -Type File -Force
 
-        { Set-GoPrtgAlias } | Should Throw "GoPrtg is not installed. Run Install-GoPrtgServer <alias> to install a server with the specified alias."
+        { Set-GoPrtgAlias } | Should -Throw "GoPrtg is not installed. Run Install-GoPrtgServer <alias> to install a server with the specified alias."
     }
 
     It "throws when profile doesn't exist" {
-        { Set-GoPrtgAlias } | Should Throw "No GoPrtg servers are installed. To install a GoPrtg server, run Install-GoPrtgServer."
+        { Set-GoPrtgAlias } | Should -Throw "No GoPrtg servers are installed. To install a GoPrtg server, run Install-GoPrtgServer."
     }
 
     It "throws when the connected PRTG Server is not a GoPrtg server" {
@@ -265,7 +265,7 @@ Describe "Set-GoPrtgAlias" -Tag @("PowerShell", "UnitTest") {
         {
             Connect-PrtgServer prtg.example2.com (New-Credential username2 12345678) -PassHash -Force
 
-            { Set-GoPrtgAlias } | Should Throw "Server 'prtg.example2.com' is not a valid GoPrtg server. To install this server, run Install-GoPrtgServer [<alias>]"
+            { Set-GoPrtgAlias } | Should -Throw "Server 'prtg.example2.com' is not a valid GoPrtg server. To install this server, run Install-GoPrtgServer [<alias>]"
         }
         finally
         {
@@ -280,7 +280,7 @@ Describe "Set-GoPrtgAlias" -Tag @("PowerShell", "UnitTest") {
         {
             Connect-PrtgServer prtg.example.com (New-Credential username2 12345678) -PassHash -Force
 
-            { Set-GoPrtgAlias second } | Should Throw "is a valid GoPrtg server, however you are not authenticated as a valid user"
+            { Set-GoPrtgAlias second } | Should -Throw "is a valid GoPrtg server, however you are not authenticated as a valid user"
         }
         finally
         {
@@ -291,7 +291,7 @@ Describe "Set-GoPrtgAlias" -Tag @("PowerShell", "UnitTest") {
     It "throws when both the header and footer have been removed" {
         InstallInProfileFunctionWithoutHeaderFooter
 
-        { Set-GoPrtgAlias dev } | Should Throw "GoPrtg Servers start line '########################### Start GoPrtg Servers ###########################' and end line"
+        { Set-GoPrtgAlias dev } | Should -Throw "GoPrtg Servers start line '########################### Start GoPrtg Servers ###########################' and end line"
     }
 
     <#
@@ -303,6 +303,6 @@ dont allow when doing install-goprtgserver <look those up>
 throws when not connected to a prtg server
 throws when the goprtgserver is not installed
 throws when its been installed twice with the same name using different aliases
--should we maybe prevent that with install-goprtgserver even if they are using different aliases?
+-Should -we maybe prevent that with install-goprtgserver even if they are using different aliases?
     #>
 }

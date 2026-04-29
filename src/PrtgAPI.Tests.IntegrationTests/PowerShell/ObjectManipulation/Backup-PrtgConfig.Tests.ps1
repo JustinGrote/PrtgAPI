@@ -1,10 +1,10 @@
-﻿. $PSScriptRoot\..\..\Support\PowerShell\IntegrationTestSafe.ps1
+. $PSScriptRoot\..\..\Support\PowerShell\IntegrationTestSafe.ps1
 
 Describe "Backup-PrtgConfig_IT" -Tag @("PowerShell", "IntegrationTest") {
     It "can execute" {
         $originalFiles = [PrtgAPI.Tests.IntegrationTests.ObjectManipulation.AdminToolTests]::GetBackupFiles() | select -ExpandProperty FullName
 
-        $originalFiles.Count | Should BeGreaterThan 0
+        $originalFiles.Count | Should -BeGreaterThan 0
 
         Backup-PrtgConfig
 
@@ -13,11 +13,11 @@ Describe "Backup-PrtgConfig_IT" -Tag @("PowerShell", "IntegrationTest") {
 
         $newFiles = [PrtgAPI.Tests.IntegrationTests.ObjectManipulation.AdminToolTests]::GetBackupFiles() | select -ExpandProperty FullName
 
-        $newFiles.Count | Should Be ($originalFiles.Count + 1)
+        $newFiles.Count | Should -Be ($originalFiles.Count + 1)
 
         $diff = @($newFiles | where { $originalFiles -notcontains $_ })
 
-        $diff.Count | Should Be 1
+        $diff.Count | Should -Be 1
 
         $firstFile = $diff | select -First 1
 
